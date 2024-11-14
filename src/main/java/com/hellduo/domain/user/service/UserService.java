@@ -3,6 +3,7 @@ package com.hellduo.domain.user.service;
 import com.hellduo.domain.user.dto.request.UserLoginReq;
 import com.hellduo.domain.user.dto.request.UserSignupReq;
 import com.hellduo.domain.user.dto.response.UserLoginRes;
+import com.hellduo.domain.user.dto.response.UserOwnProfileGetRes;
 import com.hellduo.domain.user.dto.response.UserSignupRes;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.UserRoleType;
@@ -101,5 +102,25 @@ public class UserService {
         refreshTokenService.saveRefreshToken(refreshToken, user.getId());
 
         return new UserLoginRes("로그인 완료");
+    }
+
+    public UserOwnProfileGetRes getOwnProfile(Long userId) {
+        User user = userRepository.findUserByIdWithThrow(userId);
+
+        String email = user.getEmail();          // 이메일
+        String gender = user.getGender();        // 성별
+        Integer age = user.getAge();             // 나이
+        String phoneNumber = user.getPhoneNumber(); // 전화번호
+        String nickname = user.getNickname();    // 닉네임
+        Double weight = user.getWeight();        // 체중
+        Double height = user.getHeight();        // 키
+        return new UserOwnProfileGetRes(user.getId(),
+                email,
+                gender,
+                age,
+                phoneNumber,
+                nickname,
+                weight,
+                height);
     }
 }
