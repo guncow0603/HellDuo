@@ -1,12 +1,17 @@
 package com.hellduo.domain.user.service;
 
+import com.hellduo.domain.user.dto.request.UserLoginReq;
 import com.hellduo.domain.user.dto.request.UserSignupReq;
+import com.hellduo.domain.user.dto.response.UserLoginRes;
 import com.hellduo.domain.user.dto.response.UserSignupRes;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.UserRoleType;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
+import com.hellduo.global.jwt.JwtUtil;
+import com.hellduo.global.redis.RefreshTokenService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,12 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 @Transactional
 @Slf4j
 public class UserService {
+    private final RefreshTokenService refreshTokenService;
+    private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
@@ -76,4 +82,24 @@ public class UserService {
         return new UserSignupRes("회원 가입 완료");
     }
 
+    public UserLoginRes login(UserLoginReq req, HttpServletResponse res) {
+        String email = req.email();
+        String password = req.password();
+
+        User user1 = userRepository.findUserByEmailWithThrow(email);
+        User user = userRepository.findUserByIdWithThrow(user1.getId());
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(UserErrorCode.BAD_LOGIN);
+        }
+
+        String accessToken = jwtUtil.createAccessToken(user.getEmail(), user.getRole());
+        String refreshToken = jwtUtil.createRefreshToken(user.getEmail());
+
+        jwtUtil.addAccessJwtToCookie(accessToken, res);
+        jwtUtil.addRefreshJwtToCookie(refreshToken, res);
+        refreshTokenService.saveRefreshToken(refreshToken, user.getId());
+
+        return new UserLoginRes("로그인 완료");
+    }
 }
