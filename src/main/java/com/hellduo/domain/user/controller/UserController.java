@@ -3,17 +3,17 @@ package com.hellduo.domain.user.controller;
 import com.hellduo.domain.user.dto.response.UserLoginRes;
 import com.hellduo.domain.user.dto.request.UserSignupReq;
 import com.hellduo.domain.user.dto.request.UserLoginReq;
+import com.hellduo.domain.user.dto.response.UserOwnProfileGetRes;
 import com.hellduo.domain.user.dto.response.UserSignupRes;
 import com.hellduo.domain.user.service.UserService;
+import com.hellduo.global.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,6 +33,13 @@ public class UserController {
                                               HttpServletResponse res) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.login(req, res));
+    }
+
+    @GetMapping
+    public ResponseEntity<UserOwnProfileGetRes> getOwnProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getOwnProfile(userDetails.getUser().getId()));
     }
 
 }

@@ -5,11 +5,13 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -107,5 +109,18 @@ public class JwtUtil {
 
         // add Cookie to Response
         res.addCookie(cookie);
+    }
+
+    public String getTokenFromRequest(HttpServletRequest req, String header) {
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(header)) {
+                    return URLDecoder.decode(cookie.getValue().replaceAll("Bearer%20", ""),
+                            StandardCharsets.UTF_8); // decode value
+                }
+            }
+        }
+        return null;
     }
 }
