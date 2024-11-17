@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {
+    ALREADY_EXIST_NAME(HttpStatus.BAD_REQUEST, "이미 가입된 이름 입니다."),
     NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "해당 리프레시 토큰을 찾을 수 없습니다."),
     BAD_LOGIN(HttpStatus.BAD_REQUEST, "패스워드를 확인해주세요."),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "해당 회원을 찾을 수 없습니다."),
