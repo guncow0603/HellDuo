@@ -1,5 +1,7 @@
 package com.hellduo.domain.user.controller;
 
+import com.hellduo.domain.user.dto.request.TrainerSignupReq;
+import com.hellduo.domain.user.dto.response.TrainerSignupRes;
 import com.hellduo.domain.user.dto.response.UserLoginRes;
 import com.hellduo.domain.user.dto.request.UserSignupReq;
 import com.hellduo.domain.user.dto.request.UserLoginReq;
@@ -26,6 +28,12 @@ public class UserController {
     public ResponseEntity<UserSignupRes> signup(@Valid @RequestBody UserSignupReq req) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.signup(req));
+    }
+
+    @PostMapping("/trainerSignup")
+    public ResponseEntity<TrainerSignupRes> signup(@Valid @RequestBody TrainerSignupReq req) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.trainerSignup(req));
     }
 
     @PostMapping("/login")

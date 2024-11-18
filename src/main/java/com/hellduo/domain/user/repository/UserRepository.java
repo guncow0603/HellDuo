@@ -12,6 +12,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByNickname(String nickname);
     Optional<User> findByPhoneNumber(String phoneNumber);
+    Optional<User> findByName(String name);
 
     @Cacheable(value = "user", key = "#email")
     default User findUserByEmailWithThrow(String email) {
