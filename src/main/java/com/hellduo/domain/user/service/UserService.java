@@ -1,12 +1,7 @@
 package com.hellduo.domain.user.service;
 
-import com.hellduo.domain.user.dto.request.TrainerSignupReq;
-import com.hellduo.domain.user.dto.request.UserLoginReq;
-import com.hellduo.domain.user.dto.request.UserSignupReq;
-import com.hellduo.domain.user.dto.response.TrainerSignupRes;
-import com.hellduo.domain.user.dto.response.UserLoginRes;
-import com.hellduo.domain.user.dto.response.UserOwnProfileGetRes;
-import com.hellduo.domain.user.dto.response.UserSignupRes;
+import com.hellduo.domain.user.dto.request.*;
+import com.hellduo.domain.user.dto.response.*;
 import com.hellduo.domain.user.entity.Specialization;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.UserRoleType;
@@ -136,10 +131,7 @@ public class UserService {
         String password = req.password();
         User user1;
         User user;
-//        Trainer trainer1;
-//        Trainer trainer;
 
-        if(req.isUserTypeTrainer().equals(true)) {
             user1 = userRepository.findUserByEmailWithThrow(email);
             user = userRepository.findUserByIdWithThrow(user1.getId());
 
@@ -153,24 +145,6 @@ public class UserService {
             jwtUtil.addAccessJwtToCookie(accessToken, res);
             jwtUtil.addRefreshJwtToCookie(refreshToken, res);
             refreshTokenService.saveRefreshToken(refreshToken, user.getId());
-        }
-//        else
-//        {
-//            trainer1 = trainerRepository.findTrainerByEmailWithThrow(email);
-//            trainer = trainerRepository.findTrainerByIdWithThrow(trainer1.getId());
-//
-//            if (!passwordEncoder.matches(password, trainer.getPassword())) {
-//                throw new UserException(UserErrorCode.BAD_LOGIN);
-//            }
-//
-//            String accessToken = jwtUtil.createAccessToken(trainer.getEmail(), trainer.getRole());
-//            String refreshToken = jwtUtil.createRefreshToken(trainer.getEmail());
-//
-//            jwtUtil.addAccessJwtToCookie(accessToken, res);
-//            jwtUtil.addRefreshJwtToCookie(refreshToken, res);
-//            refreshTokenService.saveRefreshToken(refreshToken, trainer.getId());
-//        }
-
 
         return new UserLoginRes("로그인 완료");
     }
@@ -193,5 +167,27 @@ public class UserService {
                 nickname,
                 weight,
                 height);
+    }
+
+    public TrainerOwnProfileGetRes getOwnTrainerProfile(Long userId) {
+        User trainer = userRepository.findUserByIdWithThrow(userId);
+
+        String email = trainer.getEmail();          // 이메일
+        String name = trainer.getName();        // 성별          // 나이
+        String phoneNumber = trainer.getPhoneNumber(); // 전화번호
+        String gender = trainer.getGender();    // 닉네임
+        Specialization specialization = trainer.getSpecialization();        // 체중
+        Integer experience = trainer.getExperience();        // 키
+        String certifications = trainer.getCertifications();
+        String bio = trainer.getBio();
+        return new TrainerOwnProfileGetRes(trainer.getId(),
+                email,
+                name,
+                phoneNumber,
+                gender,
+                specialization,
+                experience,
+                certifications,
+                bio);
     }
 }

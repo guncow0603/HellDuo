@@ -1,12 +1,7 @@
 package com.hellduo.domain.user.controller;
 
-import com.hellduo.domain.user.dto.request.TrainerSignupReq;
-import com.hellduo.domain.user.dto.response.TrainerSignupRes;
-import com.hellduo.domain.user.dto.response.UserLoginRes;
-import com.hellduo.domain.user.dto.request.UserSignupReq;
-import com.hellduo.domain.user.dto.request.UserLoginReq;
-import com.hellduo.domain.user.dto.response.UserOwnProfileGetRes;
-import com.hellduo.domain.user.dto.response.UserSignupRes;
+import com.hellduo.domain.user.dto.request.*;
+import com.hellduo.domain.user.dto.response.*;
 import com.hellduo.domain.user.service.UserService;
 import com.hellduo.global.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,6 +43,12 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return  ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getOwnProfile(userDetails.getUser().getId()));
+    }
+    @GetMapping("/trainer")
+    public ResponseEntity<TrainerOwnProfileGetRes> getOwnTrainerProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getOwnTrainerProfile(userDetails.getUser().getId()));
     }
 
 }

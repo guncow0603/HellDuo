@@ -14,9 +14,7 @@ public record UserLoginReq(
         @Pattern( regexp = "^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#!@$ %^])[a-zA-Z0-9@#$%^!]*$",
                 message = "영어, 숫자, 특수문자(!,@,#,$,%,^) 조합으로 입력해주세요.")
         @Size(min = 8, max = 25, message = "최소 8자, 최대 20자로 입력해주세요.")
-        String password,// 비밀번호
-
-        Boolean isUserTypeTrainer
+        String password// 비밀번호
 
 ) {
 }
