@@ -5,10 +5,12 @@ import com.hellduo.domain.user.dto.request.UserSignupReq;
 import com.hellduo.domain.user.dto.response.UserLoginRes;
 import com.hellduo.domain.user.dto.response.UserOwnProfileGetRes;
 import com.hellduo.domain.user.dto.response.UserSignupRes;
+import com.hellduo.domain.user.entity.Trainer;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.UserRoleType;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
+import com.hellduo.domain.user.repository.TrainerRepository;
 import com.hellduo.domain.user.repository.UserRepository;
 import com.hellduo.global.jwt.JwtUtil;
 import com.hellduo.global.redis.RefreshTokenService;
@@ -29,6 +31,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final TrainerRepository trainerRepository;
 
     @Value("${admin-token}")
     private String ADMIN_TOKEN;
@@ -86,20 +89,43 @@ public class UserService {
     public UserLoginRes login(UserLoginReq req, HttpServletResponse res) {
         String email = req.email();
         String password = req.password();
+        User user1;
+        User user;
+        Trainer trainer1;
+        Trainer trainer;
 
-        User user1 = userRepository.findUserByEmailWithThrow(email);
-        User user = userRepository.findUserByIdWithThrow(user1.getId());
+        if(req.isUserTypeTrainer().equals(true)) {
+            user1 = userRepository.findUserByEmailWithThrow(email);
+            user = userRepository.findUserByIdWithThrow(user1.getId());
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new UserException(UserErrorCode.BAD_LOGIN);
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                throw new UserException(UserErrorCode.BAD_LOGIN);
+            }
+
+            String accessToken = jwtUtil.createAccessToken(user.getEmail(), user.getRole());
+            String refreshToken = jwtUtil.createRefreshToken(user.getEmail());
+
+            jwtUtil.addAccessJwtToCookie(accessToken, res);
+            jwtUtil.addRefreshJwtToCookie(refreshToken, res);
+            refreshTokenService.saveRefreshToken(refreshToken, user.getId());
+        }
+        else
+        {
+            trainer1 = trainerRepository.findTrainerByEmailWithThrow(email);
+            trainer = trainerRepository.findTrainerByIdWithThrow(trainer1.getId());
+
+            if (!passwordEncoder.matches(password, trainer.getPassword())) {
+                throw new UserException(UserErrorCode.BAD_LOGIN);
+            }
+
+            String accessToken = jwtUtil.createAccessToken(trainer.getEmail(), trainer.getRole());
+            String refreshToken = jwtUtil.createRefreshToken(trainer.getEmail());
+
+            jwtUtil.addAccessJwtToCookie(accessToken, res);
+            jwtUtil.addRefreshJwtToCookie(refreshToken, res);
+            refreshTokenService.saveRefreshToken(refreshToken, trainer.getId());
         }
 
-        String accessToken = jwtUtil.createAccessToken(user.getEmail(), user.getRole());
-        String refreshToken = jwtUtil.createRefreshToken(user.getEmail());
-
-        jwtUtil.addAccessJwtToCookie(accessToken, res);
-        jwtUtil.addRefreshJwtToCookie(refreshToken, res);
-        refreshTokenService.saveRefreshToken(refreshToken, user.getId());
 
         return new UserLoginRes("로그인 완료");
     }
