@@ -51,4 +51,12 @@ public class UserController {
                 .body(userService.getOwnTrainerProfile(userDetails.getUser().getId()));
     }
 
+    @PutMapping
+    public ResponseEntity<UserProfileUpdateRes> updateUserProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestBody UserProfileUpdateReq req){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.updateUserProfile(userDetails.getUser().getId(),req));
+    }
+
 }

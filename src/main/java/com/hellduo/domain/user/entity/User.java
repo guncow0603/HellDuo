@@ -99,4 +99,25 @@ public class User extends BaseEntity {
         this.bio = bio;
     }
 
+    public void updateUserNickName(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void updateAge(Integer age) {
+        this.age = age;
+    }
+
+    public void updateWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public void updateHeight(Double height) {
+        this.height = height;
+    }
+
+
 }

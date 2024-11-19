@@ -190,4 +190,44 @@ public class UserService {
                 certifications,
                 bio);
     }
+
+    public UserProfileUpdateRes updateUserProfile(Long userId, UserProfileUpdateReq req) {
+        User user = userRepository.findUserByIdWithThrow(userId);
+        String phoneNumber = req.phoneNumber(); // 전화번호
+        Integer age = req.age();             // 나이
+        String nickname = req.nickname();    // 닉네임
+        Double weight = req.weight();        // 체중
+        Double height = req.height();        // 키
+
+        if (userRepository.findByPhoneNumber(phoneNumber).isPresent()) {
+            throw new UserException(UserErrorCode.ALREADY_EXIST_PHONE_NUMBER);
+        }
+
+        if (userRepository.findByNickname(nickname).isPresent()) {
+            throw new UserException(UserErrorCode.ALREADY_EXIST_NICKNAME);
+        }
+
+        // 전화번호 업데이트
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            user.updatePhoneNumber(req.phoneNumber());
+        }
+        // 나이 업데이트
+        if (age != null) {
+            user.updateAge(age);
+        }
+        // 닉네임 업데이트
+        if (nickname != null && !nickname.isEmpty()) {
+            user.updatePhoneNumber(nickname);
+        }
+        // 체중 업데이트
+        if (weight != null) {
+            user.updateWeight(weight);
+        }
+        // 키 업데이트
+        if (height != null) {
+            user.updateHeight(height);
+        }
+
+        return new UserProfileUpdateRes("수정 완료");
+    }
 }
