@@ -79,8 +79,10 @@ public class User extends BaseEntity {
     private String bio;  // 자기소개
 
     @Builder
-    public User(String email, String password, UserRoleType role, String nickname,String gender,
-                Integer age, Double weight,Double height, String phoneNumber) {
+    public User(String email, String password, UserRoleType role, String nickname, String gender,
+                Integer age, Double weight, Double height, String phoneNumber,
+                String name, Specialization specialization, Integer experience,
+                String certifications, String bio) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -90,16 +92,7 @@ public class User extends BaseEntity {
         this.age = age;
         this.weight = weight;
         this.height = height;
-    }
-    @Builder(builderMethodName = "trainerBuilder")
-    public User(String email, String password, String gender, UserRoleType role, String name, String phoneNumber,
-                   Specialization specialization, Integer experience, String certifications, String bio){
-        this.email = email;
-        this.password = password;
-        this.gender = gender;
-        this.role = role;
         this.name = name;
-        this.phoneNumber = phoneNumber;
         this.specialization = specialization;
         this.experience = experience;
         this.certifications = certifications;

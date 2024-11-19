@@ -109,7 +109,7 @@ public class UserService {
             throw new UserException(UserErrorCode.INVALID_PASSWORD_CHECK);
         }
 
-        User trainer = User.trainerBuilder()
+        User trainer = User.builder()
                 .email(email)
                 .password(password)
                 .role(role)
