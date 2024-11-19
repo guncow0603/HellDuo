@@ -202,32 +202,49 @@ public class UserService {
         if (userRepository.findByPhoneNumber(phoneNumber).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_PHONE_NUMBER);
         }
-
         if (userRepository.findByNickname(nickname).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_NICKNAME);
         }
-
         // 전화번호 업데이트
-        if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            user.updatePhoneNumber(req.phoneNumber());
-        }
+        if (phoneNumber != null && !phoneNumber.isEmpty()) { user.updatePhoneNumber(req.phoneNumber()); }
         // 나이 업데이트
-        if (age != null) {
-            user.updateAge(age);
-        }
+        if (age != null) { user.updateAge(age); }
         // 닉네임 업데이트
-        if (nickname != null && !nickname.isEmpty()) {
-            user.updatePhoneNumber(nickname);
-        }
+        if (nickname != null && !nickname.isEmpty()) { user.updateNickName(nickname); }
         // 체중 업데이트
-        if (weight != null) {
-            user.updateWeight(weight);
-        }
+        if (weight != null) { user.updateWeight(weight); }
         // 키 업데이트
-        if (height != null) {
-            user.updateHeight(height);
-        }
+        if (height != null) { user.updateHeight(height); }
 
         return new UserProfileUpdateRes("수정 완료");
+    }
+
+    public TrainerProfileUpdateRes updateTrainerProfile(Long userId, TrainerProfileUpdateReq req) {
+        User trainer = userRepository.findUserByIdWithThrow(userId);
+
+        String phoneNumber = req.phoneNumber(); // 전화번호
+        Specialization specialization = req.specialization(); // 전문 분야
+        Integer experience = req.experience();  // 경력 연수
+        String certifications = req.certifications(); // 자격증 정보
+        String bio = req.bio();                 // 자기소개
+
+        if (userRepository.findByPhoneNumber(phoneNumber).isPresent()) {
+            throw new UserException(UserErrorCode.ALREADY_EXIST_PHONE_NUMBER);
+        }
+
+        // 전화번호 업데이트
+        if (phoneNumber != null && !phoneNumber.isEmpty()) { trainer.updatePhoneNumber(phoneNumber); }
+        // 전문 분야 업데이트
+        if (specialization != null) { trainer.updateSpecialization(specialization); }
+        // 경력 연수 업데이트
+        if (experience != null) { trainer.updateExperience(experience); }
+        // 자격증 정보 업데이트
+        if (certifications != null && !certifications.isEmpty()) {
+            trainer.updateCertifications(certifications);
+        }
+        // 자기소개 업데이트
+        if (bio != null && !bio.isEmpty()) { trainer.updateBio(bio); }
+
+        return new TrainerProfileUpdateRes("수정 완료");
     }
 }
