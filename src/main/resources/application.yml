@@ -18,6 +18,17 @@ spring:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+cloud: # S3
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: ${s3_bucket_name}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 data:
   redis:
     host: localhost
