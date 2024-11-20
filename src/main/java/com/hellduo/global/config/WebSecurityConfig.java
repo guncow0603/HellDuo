@@ -56,21 +56,24 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf((csrf) -> csrf.disable());
+        http.csrf((csrf) -> csrf.disable()); // CSRF 비활성화
 
         http.sessionManagement((sessionManagement) ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안함
         );
 
+        // URL별 권한 설정
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .anyRequest().permitAll()  // 모든 요청을 인증 없이 허용
+                        .requestMatchers("/api/v1/users/signup", "/api/v1/users/trainerSignup", "/api/v1/users/login")
+                        .permitAll() // signup, trainerSignup, login은 인증 없이 접근 가능
+                        .requestMatchers("/api/v1/users/logout","/api/v1/users/withdrawal", "/api/v1/users", "/api/v1/users/trainer", "/api/v1/users/update")
+                        .authenticated() // 로그아웃은 인증된 사용자만 접근 가능
+                        .anyRequest().denyAll()  // 나머지 요청은 모두 거부
         );
 
-        // filter
-        http.addFilterBefore(jwtAuthorizationFilter(),
-                UsernamePasswordAuthenticationFilter.class); // username~ 전에 jwtAuthor 먼저
+        // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
