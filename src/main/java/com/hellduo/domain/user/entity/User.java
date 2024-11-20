@@ -78,6 +78,11 @@ public class User extends BaseEntity {
     @Column(name = "bio")
     private String bio;  // 자기소개
 
+    @Comment("탈퇴 여부")
+    @Column(name = "deleted")
+    private boolean deleted = false; ;
+
+
     @Builder
     public User(String email, String password, UserRoleType role, String nickname, String gender,
                 Integer age, Double weight, Double height, String phoneNumber,
@@ -124,5 +129,5 @@ public class User extends BaseEntity {
     public void updateBio(String bio) {
         this.bio = bio;
     }
-
+    public void withdrawal() { this.deleted = true; }
 }

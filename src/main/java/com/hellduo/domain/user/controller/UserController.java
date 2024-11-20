@@ -4,6 +4,7 @@ import com.hellduo.domain.user.dto.request.*;
 import com.hellduo.domain.user.dto.response.*;
 import com.hellduo.domain.user.service.UserService;
 import com.hellduo.global.security.UserDetailsImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,15 @@ public class UserController {
             @Valid @RequestBody TrainerProfileUpdateReq req){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.updateTrainerProfile(userDetails.getUser().getId(),req));
+    }
+
+    @PutMapping("/withdrawal")
+    public ResponseEntity<UserWithdrawalRes> withdrawal(@RequestBody UserWithdrawalReq req,
+                                                    @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                        HttpServletRequest request,
+                                                        HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.withdrawal(req, userDetails.getUser().getId(),request,response));
     }
 
 }

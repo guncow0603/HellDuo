@@ -10,10 +10,13 @@ import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
 import com.hellduo.global.jwt.JwtUtil;
 import com.hellduo.global.redis.RefreshTokenService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -138,6 +141,9 @@ public class UserService {
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new UserException(UserErrorCode.BAD_LOGIN);
             }
+            if(user.isDeleted()){
+                throw new UserException(UserErrorCode.DELETED_USER);
+            }
 
             String accessToken = jwtUtil.createAccessToken(user.getEmail(), user.getRole());
             String refreshToken = jwtUtil.createRefreshToken(user.getEmail());
@@ -246,5 +252,40 @@ public class UserService {
         if (bio != null && !bio.isEmpty()) { trainer.updateBio(bio); }
 
         return new TrainerProfileUpdateRes("수정 완료");
+    }
+
+    public UserWithdrawalRes withdrawal(UserWithdrawalReq req, Long userId, HttpServletRequest request, HttpServletResponse response) {
+        String password = req.password();
+
+        // 사용자 정보 조회
+        User user = userRepository.findUserByIdWithThrow(userId);
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(UserErrorCode.BAD_LOGIN);
+        }
+
+        // 탈퇴 처리
+        user.withdrawal();
+
+        // 로그아웃 직접 처리
+        triggerLogout(request, response);
+
+        return new UserWithdrawalRes("탈퇴 완료");
+    }
+
+    private void triggerLogout(HttpServletRequest request, HttpServletResponse response) {
+        SecurityContextHolder.clearContext();
+
+        Cookie accessTokenCookie = new Cookie("AccessToken", null);
+        accessTokenCookie.setMaxAge(0);
+        accessTokenCookie.setPath("/");
+
+        Cookie refreshTokenCookie = new Cookie("RefreshToken", null);
+        refreshTokenCookie.setMaxAge(0);
+        refreshTokenCookie.setPath("/");
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
     }
 }
