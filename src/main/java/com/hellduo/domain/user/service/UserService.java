@@ -11,7 +11,6 @@ import com.hellduo.domain.user.repository.UserRepository;
 import com.hellduo.global.jwt.JwtUtil;
 import com.hellduo.global.redis.RefreshTokenService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -254,7 +253,7 @@ public class UserService {
         return new TrainerProfileUpdateRes("수정 완료");
     }
 
-    public UserWithdrawalRes withdrawal(UserWithdrawalReq req, Long userId, HttpServletRequest request, HttpServletResponse response) {
+    public UserWithdrawalRes withdrawal(UserWithdrawalReq req, Long userId, HttpServletResponse response) {
         String password = req.password();
 
         // 사용자 정보 조회
@@ -269,12 +268,12 @@ public class UserService {
         user.withdrawal();
 
         // 로그아웃 직접 처리
-        triggerLogout(request, response);
+        triggerLogout(response);
 
         return new UserWithdrawalRes("탈퇴 완료");
     }
 
-    private void triggerLogout(HttpServletRequest request, HttpServletResponse response) {
+    private void triggerLogout(HttpServletResponse response) {
         SecurityContextHolder.clearContext();
 
         Cookie accessTokenCookie = new Cookie("AccessToken", null);
@@ -287,5 +286,10 @@ public class UserService {
 
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
+    }
+
+    public UserLogoutRes logout(HttpServletResponse response) {
+        triggerLogout(response);
+        return new UserLogoutRes("로그아웃 완료");
     }
 }

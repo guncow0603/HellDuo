@@ -68,24 +68,6 @@ public class WebSecurityConfig {
                         .anyRequest().permitAll()  // 모든 요청을 인증 없이 허용
         );
 
-        http.logout(logout -> logout
-                .logoutUrl("/api/v1/users/logout")
-                .logoutSuccessUrl("/api/v1")  // Add a leading slash here
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    // Clear privileges upon successful logout
-                    SecurityContextHolder.clearContext();
-
-                    // Additional logout processing logic can be added here
-                    log.info("Logout successful. Redirecting to /api/v1");
-                    // send response
-                    response.setStatus(HttpStatus.OK.value());
-                    response.setContentType("application/json; charset=UTF-8");
-                    response.getWriter()
-                            .write(objectMapper.writeValueAsString(new UserLogoutRes("Logout complete")));
-                })
-                .deleteCookies("AccessToken", "RefreshToken"));
-
-
         // filter
         http.addFilterBefore(jwtAuthorizationFilter(),
                 UsernamePasswordAuthenticationFilter.class); // username~ 전에 jwtAuthor 먼저
