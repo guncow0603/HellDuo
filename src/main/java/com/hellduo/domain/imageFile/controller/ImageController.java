@@ -19,17 +19,19 @@ public class ImageController {
 
     private final ImageFileService imageFileService;
 
+    // 프로필 이미지 업로드
     @PostMapping("/userImage/profile")
-    public ResponseEntity<UserImageCreateRes> userImageCreate(
+    public ResponseEntity<UserImageCreateRes> uploadUserProfileImage(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "file", required = false) MultipartFile multipartFile){
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.userImageCreate(userDetails.getUser().getId(),multipartFile));
+            @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.uploadUserProfileImage(userDetails.getUser().getId(), multipartFile));
     }
 
+    // 자격증 이미지 업로드
     @PostMapping("/userImage/certifications")
-    public ResponseEntity<UserImageCreateRes> userImageCreate(
+    public ResponseEntity<UserImageCreateRes> uploadUserCertificationImages(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles){
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.userImageCreateCerts(userDetails.getUser().getId(),multipartFiles));
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.uploadUserCertificationImages(userDetails.getUser().getId(), multipartFiles));
     }
 }

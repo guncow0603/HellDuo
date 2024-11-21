@@ -23,39 +23,36 @@ import java.util.List;
 public class ImageFileService {
 
     private final S3Uploader s3Uploader;
-
     private final UserRepository userRepository;
-
     private final UserImageRepository userImageRepository;
 
-    public UserImageCreateRes userImageCreate(Long userId, MultipartFile multipartFile) {
+    // 프로필 이미지 업로드
+    public UserImageCreateRes uploadUserProfileImage(Long userId, MultipartFile multipartFile) {
         User user = userRepository.findUserByIdWithThrow(userId);
-        String fileUrl = s3Upload(multipartFile, userId,"users/profiles/");
+        String fileUrl = uploadFileToS3(multipartFile, userId, "users/profiles/");
 
         UserImage userImage = UserImage.builder()
-                                       .user(user)
-                                       .userImageUrl(fileUrl)
-                                       .type(ImageType.PROFILE_IMG)
-                                       .build();
+                .user(user)
+                .userImageUrl(fileUrl)
+                .type(ImageType.PROFILE_IMG)
+                .build();
 
         userImageRepository.save(userImage);
         return new UserImageCreateRes("이미지 등록 완료");
     }
 
-
-    public UserImageCreateRes userImageCreateCerts(Long userId, List<MultipartFile> multipartFiles) {
-        
+    // 자격증 이미지 업로드
+    public UserImageCreateRes uploadUserCertificationImages(Long userId, List<MultipartFile> multipartFiles) {
         User user = userRepository.findUserByIdWithThrow(userId);
-        
-        List <String> fileUrlList = s3Uploads(multipartFiles, userId,"users/certifications/");
+        List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "users/certifications/");
 
-        userImageRepository.saveAll(userImageList(fileUrlList,user));
+        List<UserImage> userImageList = createUserImageList(fileUrlList, user);
+        userImageRepository.saveAll(userImageList);
         return new UserImageCreateRes("이미지 등록 완료");
     }
 
-
-
-    public String s3Upload(MultipartFile multipartFile, Long userId, String filePath) {
+    // 단일 파일 S3 업로드
+    private String uploadFileToS3(MultipartFile multipartFile, Long userId, String filePath) {
         // 업로드 경로 설정
         String userImageUrl = filePath + userId;
 
@@ -63,31 +60,31 @@ public class ImageFileService {
         return s3Uploader.uploadSingleFileToS3(multipartFile, userImageUrl);
     }
 
-    public List<String> s3Uploads(List<MultipartFile> multipartFiles, Long userId, String filePath) {
-        List<String> fileUrl = new ArrayList<>();
+    // 다수 파일 S3 업로드
+    private List<String> uploadFilesToS3(List<MultipartFile> multipartFiles, Long userId, String filePath) {
+        List<String> fileUrls = new ArrayList<>();
 
         // 업로드 경로 설정
         String userImageUrl = filePath + userId;
-        
-        // 업로드 경로 설정
-        List<String> userImage = s3Uploader.uploadFileToS3(multipartFiles, userImageUrl);;
-        fileUrl.addAll(userImage);
-                
-        // 파일을 업로드하고 URL 반환
-        return fileUrl;
+
+        // 파일을 업로드하고 URL 목록 반환
+        List<String> uploadedFileUrls = s3Uploader.uploadFileToS3(multipartFiles, userImageUrl);
+        fileUrls.addAll(uploadedFileUrls);
+
+        return fileUrls;
     }
 
-    public List<UserImage> userImageList(List<String> fileUrlList, User user) {
-        List<UserImage> iamgeList = new ArrayList<>();
-        for (String fileUrl : fileUrlList) {
-            UserImage userImage =
-                    UserImage.builder()
-                            .user(user)
-                            .userImageUrl(fileUrl)
-                            .type(ImageType.CERTS_IMG)
-                            .build();
-            iamgeList.add(userImage);
+    // UserImage 객체 리스트 생성
+    private List<UserImage> createUserImageList(List<String> fileUrls, User user) {
+        List<UserImage> userImageList = new ArrayList<>();
+        for (String fileUrl : fileUrls) {
+            UserImage userImage = UserImage.builder()
+                    .user(user)
+                    .userImageUrl(fileUrl)
+                    .type(ImageType.CERTS_IMG)
+                    .build();
+            userImageList.add(userImage);
         }
-        return iamgeList;
+        return userImageList;
     }
 }
