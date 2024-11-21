@@ -2,6 +2,7 @@ package com.hellduo.domain.board.service;
 
 import com.hellduo.domain.board.dto.request.BoardCreateReq;
 import com.hellduo.domain.board.dto.response.BoardCreateRes;
+import com.hellduo.domain.board.dto.response.BoardReadRes;
 import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.repository.BoardRepository;
 import com.hellduo.domain.user.entity.User;
@@ -27,5 +28,10 @@ public class BoardService {
                 .build();
         boardRepository.save(board);
         return new BoardCreateRes("글 작성 완료");
+    }
+
+    public BoardReadRes getBoardById(Long boardId) {
+        Board board = boardRepository.findBoardByIdWithThrow(boardId);
+        return new BoardReadRes(board.getTitle(), board.getContent());
     }
 }
