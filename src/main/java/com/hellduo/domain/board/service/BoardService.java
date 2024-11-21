@@ -1,13 +1,18 @@
 package com.hellduo.domain.board.service;
 
 import com.hellduo.domain.board.dto.request.BoardCreateReq;
+import com.hellduo.domain.board.dto.request.BoardUpdateReq;
 import com.hellduo.domain.board.dto.response.BoardCreateRes;
 import com.hellduo.domain.board.dto.response.BoardReadRes;
+import com.hellduo.domain.board.dto.response.BoardUpdateRes;
 import com.hellduo.domain.board.dto.response.BoardsReadRes;
 import com.hellduo.domain.board.entity.Board;
+import com.hellduo.domain.board.exception.BoardErrorCode;
+import com.hellduo.domain.board.exception.BoardException;
 import com.hellduo.domain.board.repository.BoardRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
@@ -47,5 +53,16 @@ public class BoardService {
         }
 
         return boardsReadResList; // BoardsReadRes 리스트 반환
+    }
+
+    public BoardUpdateRes updateBoard(Long boardId, Long userId, BoardUpdateReq req) {
+        Board board = boardRepository.findBoardByIdWithThrow(boardId);
+        User user = userRepository.findUserByIdWithThrow(userId);
+        if(!board.getUser().getId() .equals(user.getId()) ) {
+            throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
+        }
+        if(req.title() != null) {board.updateTitle(req.title());}
+        if(req.content() != null) {board.updateContent(req.content());}
+        return new BoardUpdateRes("수정 완료 되었습니다.");
     }
 }

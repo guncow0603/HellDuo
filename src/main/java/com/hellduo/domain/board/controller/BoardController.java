@@ -1,8 +1,10 @@
 package com.hellduo.domain.board.controller;
 
-import com.hellduo.domain.board.dto.response.BoardReadRes;
 import com.hellduo.domain.board.dto.request.BoardCreateReq;
+import com.hellduo.domain.board.dto.request.BoardUpdateReq;
 import com.hellduo.domain.board.dto.response.BoardCreateRes;
+import com.hellduo.domain.board.dto.response.BoardReadRes;
+import com.hellduo.domain.board.dto.response.BoardUpdateRes;
 import com.hellduo.domain.board.dto.response.BoardsReadRes;
 import com.hellduo.domain.board.service.BoardService;
 import com.hellduo.global.security.UserDetailsImpl;
@@ -37,6 +39,14 @@ public class BoardController{
     @GetMapping
     public ResponseEntity<List<BoardsReadRes>> getBoards() {
         return ResponseEntity.status(HttpStatus.OK).body( boardService.getBoards());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BoardUpdateRes>updateBoard(@RequestBody BoardUpdateReq req,
+                                                         @PathVariable Long id,
+                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                boardService.updateBoard(id, userDetails.getUser().getId(),req));
     }
 
 }
