@@ -2,10 +2,7 @@ package com.hellduo.domain.board.controller;
 
 import com.hellduo.domain.board.dto.request.BoardCreateReq;
 import com.hellduo.domain.board.dto.request.BoardUpdateReq;
-import com.hellduo.domain.board.dto.response.BoardCreateRes;
-import com.hellduo.domain.board.dto.response.BoardReadRes;
-import com.hellduo.domain.board.dto.response.BoardUpdateRes;
-import com.hellduo.domain.board.dto.response.BoardsReadRes;
+import com.hellduo.domain.board.dto.response.*;
 import com.hellduo.domain.board.service.BoardService;
 import com.hellduo.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -43,10 +40,17 @@ public class BoardController{
 
     @PutMapping("/{id}")
     public ResponseEntity<BoardUpdateRes>updateBoard(@RequestBody BoardUpdateReq req,
-                                                         @PathVariable Long id,
+                                                     @PathVariable Long id,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 boardService.updateBoard(id, userDetails.getUser().getId(),req));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BoardDeleteRes>deleteBoard(@PathVariable Long id,
+                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                boardService.deleteBoard(id, userDetails.getUser().getId()));
     }
 
 }

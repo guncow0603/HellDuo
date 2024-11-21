@@ -2,10 +2,7 @@ package com.hellduo.domain.board.service;
 
 import com.hellduo.domain.board.dto.request.BoardCreateReq;
 import com.hellduo.domain.board.dto.request.BoardUpdateReq;
-import com.hellduo.domain.board.dto.response.BoardCreateRes;
-import com.hellduo.domain.board.dto.response.BoardReadRes;
-import com.hellduo.domain.board.dto.response.BoardUpdateRes;
-import com.hellduo.domain.board.dto.response.BoardsReadRes;
+import com.hellduo.domain.board.dto.response.*;
 import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.exception.BoardErrorCode;
 import com.hellduo.domain.board.exception.BoardException;
@@ -64,5 +61,15 @@ public class BoardService {
         if(req.title() != null) {board.updateTitle(req.title());}
         if(req.content() != null) {board.updateContent(req.content());}
         return new BoardUpdateRes("수정 완료 되었습니다.");
+    }
+
+    public BoardDeleteRes deleteBoard(Long boardId, Long userId) {
+        Board board = boardRepository.findBoardByIdWithThrow(boardId);
+        User user = userRepository.findUserByIdWithThrow(userId);
+        if(!board.getUser().getId() .equals(user.getId()) ) {
+            throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
+        }
+        boardRepository.delete(board);
+        return new BoardDeleteRes("게시글이 삭제 되었습니다.");
     }
 }
