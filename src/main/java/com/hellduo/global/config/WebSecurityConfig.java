@@ -56,39 +56,24 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf((csrf) -> csrf.disable());
+        http.csrf((csrf) -> csrf.disable()); // CSRF 비활성화
 
         http.sessionManagement((sessionManagement) ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안함
         );
 
+        // URL별 권한 설정
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .anyRequest().permitAll()  // 모든 요청을 인증 없이 허용
+                        .requestMatchers("/api/v1/users/signup", "/api/v1/users/trainerSignup", "/api/v1/users/login")
+                        .permitAll() // signup, trainerSignup, login은 인증 없이 접근 가능
+                        .requestMatchers("/api/v1/users/logout","/api/v1/users/withdrawal", "/api/v1/users", "/api/v1/users/trainer", "/api/v1/users/update","/api/v1/userImage/**")
+                        .authenticated() //인증된 사용자만 접근 가능
+                        .anyRequest().denyAll()  // 나머지 요청은 모두 거부
         );
 
-        http.logout(logout -> logout
-                .logoutUrl("/api/v1/users/logout")
-                .logoutSuccessUrl("/api/v1")  // Add a leading slash here
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    // Clear privileges upon successful logout
-                    SecurityContextHolder.clearContext();
-
-                    // Additional logout processing logic can be added here
-                    log.info("Logout successful. Redirecting to /api/v1");
-                    // send response
-                    response.setStatus(HttpStatus.OK.value());
-                    response.setContentType("application/json; charset=UTF-8");
-                    response.getWriter()
-                            .write(objectMapper.writeValueAsString(new UserLogoutRes("Logout complete")));
-                })
-                .deleteCookies("AccessToken", "RefreshToken"));
-
-
-        // filter
-        http.addFilterBefore(jwtAuthorizationFilter(),
-                UsernamePasswordAuthenticationFilter.class); // username~ 전에 jwtAuthor 먼저
+        // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
