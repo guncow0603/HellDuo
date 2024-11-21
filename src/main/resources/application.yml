@@ -26,6 +26,7 @@ cloud: # S3
       access-key: ${AWS_ACCESS_KEY_ID}
       secret-key: ${AWS_SECRET_ACCESS_KEY}
     s3:
+      url: ${S3_URL}
       bucket: ${s3_bucket_name}
     region:
       static: ap-northeast-2
@@ -35,3 +36,5 @@ data:
   redis:
     host: localhost
     port: 6379
+
+

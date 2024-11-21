@@ -1,6 +1,7 @@
 package com.hellduo.domain.imageFile.controller;
 
 import com.hellduo.domain.imageFile.dto.response.UserImageCreateRes;
+import com.hellduo.domain.imageFile.dto.response.UserImageReadRes;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -34,4 +35,14 @@ public class ImageController {
             @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.uploadUserCertificationImages(userDetails.getUser().getId(), multipartFiles));
     }
+
+    // 프로필 이미지 업로드
+    @GetMapping("/userImage/profile")
+    public ResponseEntity<UserImageReadRes> readUserProfileImage(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readUserProfileImage(userDetails.getUser().getId()));
+    }
+
+
+
 }
