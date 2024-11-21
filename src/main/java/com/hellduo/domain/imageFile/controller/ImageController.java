@@ -17,7 +17,7 @@ public class ImageController {
 
     private final ImageFileService imageFileService;
 
-    @PostMapping("/userImage")
+    @PostMapping("/userImage/profile")
     public ResponseEntity<UserImageCreateRes> userImageCreate(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(value = "file", required = false) MultipartFile multipartFiles){
