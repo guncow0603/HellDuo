@@ -22,12 +22,13 @@ public class ImageController {
 
     private final ImageFileService imageFileService;
 
-    // 프로필 이미지 업로드
+    // 프로필 이미지 수정
     @PostMapping("/profile")
-    public ResponseEntity<UserImageCreateRes> uploadUserProfileImage(
+    public ResponseEntity<UserImageCreateRes> updateUserProfileImage(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.uploadUserProfileImage(userDetails.getUser().getId(), multipartFile));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(imageFileService.updateUserProfileImage(userDetails.getUser().getId(), multipartFile));
     }
 
     // 자격증 이미지 업로드

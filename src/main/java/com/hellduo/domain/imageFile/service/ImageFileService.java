@@ -35,19 +35,34 @@ public class ImageFileService {
     @Value("${s3.url}")
     private String s3Url;
 
-    // 프로필 이미지 업로드
-    public UserImageCreateRes uploadUserProfileImage(Long userId, MultipartFile multipartFile) {
-        User user = userRepository.findUserByIdWithThrow(userId);
+    public UserImageCreateRes updateUserProfileImage(Long userId, MultipartFile multipartFile) {
+        // 기존 프로필 이미지 조회 (있으면 삭제)
+        UserImage userImage = userImageRepository.findProfileByUserIdAndType(userId, ImageType.PROFILE_IMG)
+                .orElse(null);
+
+        // 기존 이미지가 있으면 S3에서 삭제하고 DB에서 삭제
+        if (userImage != null) {
+            String imageUrl = userImage.getUserImageUrl();
+            String s3Key = imageUrl.replace(s3Url, ""); // s3Url을 정확히 지정했는지 확인
+            s3Uploader.deleteS3(s3Key); // 기존 이미지 S3에서 삭제
+            userImageRepository.delete(userImage); // DB에서 삭제
+        }
+
+        // 새로운 이미지 파일을 S3에 업로드
         String fileUrl = uploadFileToS3(multipartFile, userId, "users/profiles/");
 
-        UserImage userImage = UserImage.builder()
+        User user = userRepository.findUserByIdWithThrow(userId);
+        // 새로운 프로필 이미지 저장
+        UserImage newUserImage = UserImage.builder()
                 .user(user)
-                .userImageUrl(s3Url+fileUrl)
-                .type(ImageType.PROFILE_IMG)
+                .userImageUrl(s3Url + fileUrl) // s3Url과 fileUrl을 결합하여 완전한 URL 생성
+                .type(ImageType.PROFILE_IMG)   // 이미지 타입 설정
                 .build();
 
-        userImageRepository.save(userImage);
-        return new UserImageCreateRes("이미지 등록 완료");
+        userImageRepository.save(newUserImage); // DB에 새로운 이미지 저장
+
+        // 수정 완료 응답
+        return new UserImageCreateRes("이미지 수정 완료");
     }
 
     // 자격증 이미지 업로드
