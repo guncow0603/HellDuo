@@ -1,5 +1,6 @@
 package com.hellduo.domain.imageFile.service;
 
+import com.hellduo.domain.imageFile.dto.response.UserCertsReadRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageCreateRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageDeleteRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageReadRes;
@@ -59,28 +60,35 @@ public class ImageFileService {
         return new UserImageCreateRes("이미지 등록 완료");
     }
 
-    // 단일 파일 S3 업로드
-    private String uploadFileToS3(MultipartFile multipartFile, Long userId, String filePath) {
-        // 업로드 경로 설정
-        String userImageUrl = filePath + userId;
-
-        // 파일을 업로드하고 URL 반환
-        return s3Uploader.uploadSingleFileToS3(multipartFile, userImageUrl);
+    // 프로필 이미지 조회
+    public UserImageReadRes readUserProfileImage(Long userId) {
+        UserImage userImage = userImageRepository.findProfileByUserIdAndType(userId, ImageType.PROFILE_IMG)
+                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
+        return new UserImageReadRes(userImage.getUserImageUrl());
     }
 
-    // 다수 파일 S3 업로드
-    private List<String> uploadFilesToS3(List<MultipartFile> multipartFiles, Long userId, String filePath) {
-        List<String> fileUrls = new ArrayList<>();
+    // 자격증 이미지 조회
+    public List<UserCertsReadRes> readUserCertImages(Long trainerId) {
+        // 자격증 이미지들을 조회
+        List<UserImage> userImages = userImageRepository.findCertificationsByUserIdAndType(trainerId, ImageType.CERTS_IMG);
 
-        // 업로드 경로 설정
-        String userImageUrl = filePath + userId;
+        if (userImages.isEmpty()) {
+            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE); // 자격증 이미지가 없을 경우 예외 처리
+        }
 
-        // 파일을 업로드하고 URL 목록 반환
-        List<String> uploadedFileUrls = s3Uploader.uploadFileToS3(multipartFiles, userImageUrl);
-        fileUrls.addAll(uploadedFileUrls);
+        // 결과를 담을 리스트
+        List<UserCertsReadRes> response = new ArrayList<>();
 
-        return fileUrls;
+        // UserImage 객체들을 UserCertsReadRes로 변환하여 리스트에 추가
+        for (UserImage userImage : userImages) {
+            response.add(new UserCertsReadRes(userImage.getUserImageUrl()));
+        }
+
+        // 변환된 리스트 반환
+        return response;
     }
+
+
 
     // 단일 자격증 이미지 삭제
     public UserImageDeleteRes deleteUserCertificationImage(Long userId, Long imageId) {
@@ -102,6 +110,13 @@ public class ImageFileService {
         return new UserImageDeleteRes("삭제 완료");
     }
 
+
+
+
+
+
+
+
     // UserImage 객체 리스트 생성
     private List<UserImage> createUserImageList(List<String> fileUrls, User user) {
         List<UserImage> userImageList = new ArrayList<>();
@@ -116,10 +131,26 @@ public class ImageFileService {
         return userImageList;
     }
 
-    // 프로필 이미지 조회
-    public UserImageReadRes readUserProfileImage(Long userId) {
-        UserImage userImage = userImageRepository.findProfileByUserIdAndType(userId, ImageType.PROFILE_IMG)
-                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
-        return new UserImageReadRes(userImage.getUserImageUrl());
+    // 단일 파일 S3 업로드
+    private String uploadFileToS3(MultipartFile multipartFile, Long userId, String filePath) {
+        // 업로드 경로 설정
+        String userImageUrl = filePath + userId;
+
+        // 파일을 업로드하고 URL 반환
+        return s3Uploader.uploadSingleFileToS3(multipartFile, userImageUrl);
+    }
+
+    // 다수 파일 S3 업로드
+    private List<String> uploadFilesToS3(List<MultipartFile> multipartFiles, Long userId, String filePath) {
+        List<String> fileUrls = new ArrayList<>();
+
+        // 업로드 경로 설정
+        String userImageUrl = filePath + userId;
+
+        // 파일을 업로드하고 URL 목록 반환
+        List<String> uploadedFileUrls = s3Uploader.uploadFileToS3(multipartFiles, userImageUrl);
+        fileUrls.addAll(uploadedFileUrls);
+
+        return fileUrls;
     }
 }

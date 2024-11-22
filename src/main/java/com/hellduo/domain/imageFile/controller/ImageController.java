@@ -1,5 +1,6 @@
 package com.hellduo.domain.imageFile.controller;
 
+import com.hellduo.domain.imageFile.dto.response.UserCertsReadRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageCreateRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageDeleteRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageReadRes;
@@ -37,19 +38,26 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.uploadUserCertificationImages(userDetails.getUser().getId(), multipartFiles));
     }
 
-    // 프로필 이미지 업로드
+    // 프로필 이미지 조회
     @GetMapping("/profile")
     public ResponseEntity<UserImageReadRes> readUserProfileImage(
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readUserProfileImage(userDetails.getUser().getId()));
     }
+
+    // 자격증 이미지 조회
+    @GetMapping("/certifications/{trainerId}")
+    public ResponseEntity<List<UserCertsReadRes>> readUserCertImages(@PathVariable Long trainerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readUserCertImages(trainerId));
+    }
+
     // 자격증 이미지 삭제
-    @DeleteMapping("/certifications/{id}")
+    @DeleteMapping("/certifications/{certId}")
     public ResponseEntity<UserImageDeleteRes> deleteUserCertificationImage(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long id) {
+            @PathVariable Long certId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteUserCertificationImage(userDetails.getUser().getId(), id)); // 삭제 성공 시 204 반환
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteUserCertificationImage(userDetails.getUser().getId(), certId)); // 삭제 성공 시 204 반환
     }
 
 
