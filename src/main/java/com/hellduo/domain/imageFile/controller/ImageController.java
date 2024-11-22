@@ -1,6 +1,7 @@
 package com.hellduo.domain.imageFile.controller;
 
 import com.hellduo.domain.imageFile.dto.response.UserImageCreateRes;
+import com.hellduo.domain.imageFile.dto.response.UserImageDeleteRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageReadRes;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.global.security.UserDetailsImpl;
@@ -15,13 +16,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/userImage")
 public class ImageController {
 
     private final ImageFileService imageFileService;
 
     // 프로필 이미지 업로드
-    @PostMapping("/userImage/profile")
+    @PostMapping("/profile")
     public ResponseEntity<UserImageCreateRes> uploadUserProfileImage(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
@@ -29,7 +30,7 @@ public class ImageController {
     }
 
     // 자격증 이미지 업로드
-    @PostMapping("/userImage/certifications")
+    @PostMapping("/certifications")
     public ResponseEntity<UserImageCreateRes> uploadUserCertificationImages(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
@@ -37,10 +38,18 @@ public class ImageController {
     }
 
     // 프로필 이미지 업로드
-    @GetMapping("/userImage/profile")
+    @GetMapping("/profile")
     public ResponseEntity<UserImageReadRes> readUserProfileImage(
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readUserProfileImage(userDetails.getUser().getId()));
+    }
+    // 자격증 이미지 삭제
+    @DeleteMapping("/certifications/{id}")
+    public ResponseEntity<UserImageDeleteRes> deleteUserCertificationImage(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long id) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteUserCertificationImage(userDetails.getUser().getId(), id)); // 삭제 성공 시 204 반환
     }
 
 

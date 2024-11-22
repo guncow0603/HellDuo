@@ -108,8 +108,7 @@ public class S3Uploader {
      */
     public void deleteS3(String filePath) {
         try {
-            String key = filePath.substring(filePath.indexOf(bucket) + bucket.length() + 1); // 버킷명 이후의 키 추출
-            amazonS3Client.deleteObject(bucket, key);
+            amazonS3Client.deleteObject(bucket, filePath);
         } catch (RuntimeException exception) {
             log.error("[S3Uploader] S3 삭제 오류: " + exception.getMessage());
         }

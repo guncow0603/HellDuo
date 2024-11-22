@@ -1,6 +1,7 @@
 package com.hellduo.domain.imageFile.service;
 
 import com.hellduo.domain.imageFile.dto.response.UserImageCreateRes;
+import com.hellduo.domain.imageFile.dto.response.UserImageDeleteRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageReadRes;
 import com.hellduo.domain.imageFile.entitiy.ImageType;
 import com.hellduo.domain.imageFile.entitiy.UserImage;
@@ -79,6 +80,26 @@ public class ImageFileService {
         fileUrls.addAll(uploadedFileUrls);
 
         return fileUrls;
+    }
+
+    // 단일 자격증 이미지 삭제
+    public UserImageDeleteRes deleteUserCertificationImage(Long userId, Long imageId) {
+        // 사용자 확인
+        User user = userRepository.findUserByIdWithThrow(userId);
+
+        // 이미지 조회
+        UserImage userImage = userImageRepository.findByUserAndId(user, imageId)
+                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_IMAGE));
+
+        // S3에서 이미지 삭제
+        String imageUrl = userImage.getUserImageUrl();
+        String s3Key = imageUrl.replace(s3Url, "");
+        s3Uploader.deleteS3(s3Key);
+
+        // DB에서 이미지 삭제
+        userImageRepository.delete(userImage);
+
+        return new UserImageDeleteRes("삭제 완료");
     }
 
     // UserImage 객체 리스트 생성

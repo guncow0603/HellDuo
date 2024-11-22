@@ -12,4 +12,7 @@ import java.util.Optional;
 public interface UserImageRepository extends JpaRepository<UserImage,Long> {
     // UserId로 단건 이미지를 찾는 메서드
     Optional<UserImage> findProfileByUserIdAndType(Long userId, ImageType type);
+
+    // 이미지 URL로 이미지를 찾는 메서드
+    Optional<UserImage> findByUserAndId(User user, Long id);
 }
