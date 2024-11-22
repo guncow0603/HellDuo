@@ -81,7 +81,7 @@ public class UserService {
                 .height(height)
                 .build();
         UserImage userImage = UserImage.builder()
-                .userImageUrl("https://hellduo.s3.ap-northeast-2.amazonaws.com/users/profiles/1/37323012-9fa4-4d5d-b439-d82e6eb202c7.png")
+                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
                 .type(ImageType.PROFILE_IMG)
                 .user(user)
                 .build();
