@@ -1,5 +1,8 @@
 package com.hellduo.domain.user.service;
 
+import com.hellduo.domain.imageFile.entitiy.ImageType;
+import com.hellduo.domain.imageFile.entitiy.UserImage;
+import com.hellduo.domain.imageFile.repository.UserImageRepository;
 import com.hellduo.domain.user.dto.request.*;
 import com.hellduo.domain.user.dto.response.*;
 import com.hellduo.domain.user.entity.Specialization;
@@ -29,7 +32,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-
+    private final UserImageRepository userImageRepository;
     @Value("${admin-token}")
     private String ADMIN_TOKEN;
 
@@ -77,9 +80,15 @@ public class UserService {
                 .weight(weight)
                 .height(height)
                 .build();
+        UserImage userImage = UserImage.builder()
+                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+                .type(ImageType.PROFILE_IMG)
+                .user(user)
+                .build();
+
 
         userRepository.save(user);
-
+        userImageRepository.save(userImage);
         return new UserSignupRes("회원 가입 완료");
     }
 
