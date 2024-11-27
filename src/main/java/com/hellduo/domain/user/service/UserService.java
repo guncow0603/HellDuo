@@ -169,6 +169,7 @@ public class UserService {
     public UserOwnProfileGetRes getOwnProfile(Long userId) {
         User user = userRepository.findUserByIdWithThrow(userId);
 
+        String name = user.getName();            //이름
         String email = user.getEmail();          // 이메일
         Gender gender = user.getGender();        // 성별
         Integer age = user.getAge();             // 나이
@@ -177,6 +178,7 @@ public class UserService {
         Double weight = user.getWeight();        // 체중
         Double height = user.getHeight();        // 키
         return new UserOwnProfileGetRes(user.getId(),
+                name,
                 email,
                 gender.getDescription(),
                 age,
