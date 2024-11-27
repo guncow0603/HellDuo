@@ -1,7 +1,8 @@
 package com.hellduo.domain.pt.entity;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
+@Getter
 @RequiredArgsConstructor
 public enum PTStatus {
     SCHEDULED("예약됨"),

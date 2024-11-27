@@ -30,6 +30,8 @@ public class PTService {
         }
 
         PT pt = PT.builder().
+                title(req.title()).
+                specialization(req.specialization()).
                 trainer(trainer).
                 scheduledDate(req.scheduledDate()).
                 price(req.price()).
