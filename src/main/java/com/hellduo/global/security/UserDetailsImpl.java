@@ -1,7 +1,7 @@
 package com.hellduo.global.security;
 
 import com.hellduo.domain.user.entity.User;
-import com.hellduo.domain.user.entity.UserRoleType;
+import com.hellduo.domain.user.entity.enums.UserRoleType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

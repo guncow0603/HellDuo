@@ -1,6 +1,6 @@
 package com.hellduo.domain.user.dto.response;
 
-import com.hellduo.domain.user.entity.Specialization;
+import com.hellduo.domain.user.entity.enums.Specialization;
 
 public record TrainerOwnProfileGetRes(
         Long id,
