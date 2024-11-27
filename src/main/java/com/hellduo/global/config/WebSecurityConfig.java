@@ -1,22 +1,18 @@
 package com.hellduo.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hellduo.domain.user.dto.response.UserLogoutRes;
 import com.hellduo.global.jwt.JwtUtil;
 import com.hellduo.global.redis.RefreshTokenRepository;
 import com.hellduo.global.security.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -67,8 +63,9 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers("/api/v1/users/signup", "/api/v1/users/trainerSignup", "/api/v1/users/login")
                         .permitAll() // signup, trainerSignup, login은 인증 없이 접근 가능
-                        .requestMatchers("/api/v1/users/logout","/api/v1/users/withdrawal", "/api/v1/users", "/api/v1/users/trainer", "/api/v1/users/update")
-                        .authenticated() // 로그아웃은 인증된 사용자만 접근 가능
+                        .requestMatchers("/api/v1/users/logout","/api/v1/users/withdrawal", "/api/v1/users", "/api/v1/users/trainer",
+                                "/api/v1/users/update","/api/v1/userImage/**","/api/v1/board/**","/api/v1/comment","/api/v1/pt/**")
+                        .authenticated() //인증된 사용자만 접근 가능
                         .anyRequest().denyAll()  // 나머지 요청은 모두 거부
         );
 

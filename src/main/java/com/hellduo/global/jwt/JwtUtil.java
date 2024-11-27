@@ -30,7 +30,6 @@ public class JwtUtil {
     public final long REFRESH_TOKEN_TIME = 60 * 1000L * 60 * 24 * 3;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-    //public final long ACCESS_TOKEN_TIME = 60 * 60 * 1000L;
     @Value("${jwt.secret.key}")
     private String secretKey;
     private Key key;
