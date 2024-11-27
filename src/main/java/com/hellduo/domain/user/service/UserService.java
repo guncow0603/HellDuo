@@ -5,9 +5,10 @@ import com.hellduo.domain.imageFile.entitiy.UserImage;
 import com.hellduo.domain.imageFile.repository.UserImageRepository;
 import com.hellduo.domain.user.dto.request.*;
 import com.hellduo.domain.user.dto.response.*;
-import com.hellduo.domain.user.entity.Specialization;
+import com.hellduo.domain.user.entity.enums.Gender;
+import com.hellduo.domain.user.entity.enums.Specialization;
 import com.hellduo.domain.user.entity.User;
-import com.hellduo.domain.user.entity.UserRoleType;
+import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
@@ -41,7 +42,7 @@ public class UserService {
         String password = passwordEncoder.encode(req.password());
         String passwordConfirm = req.passwordConfirm();
         String adminToken = req.adminToken();
-        String gender = req.gender();
+        Gender gender = req.gender();
         Integer age = req.age();
         String phoneNumber = req.phoneNumber();
         String nickname = req.nickname();
@@ -98,7 +99,7 @@ public class UserService {
         String passwordConfirm = req.passwordConfirm();
         String name = req.name();
         String phoneNumber = req.phoneNumber();
-        String gender = req.gender();
+        Gender gender = req.gender();
         Specialization specialization = req.specialization();
         Integer experience = req.experience();
         String certifications = req.certifications();
@@ -167,7 +168,7 @@ public class UserService {
         User user = userRepository.findUserByIdWithThrow(userId);
 
         String email = user.getEmail();          // 이메일
-        String gender = user.getGender();        // 성별
+        Gender gender = user.getGender();        // 성별
         Integer age = user.getAge();             // 나이
         String phoneNumber = user.getPhoneNumber(); // 전화번호
         String nickname = user.getNickname();    // 닉네임
@@ -175,7 +176,7 @@ public class UserService {
         Double height = user.getHeight();        // 키
         return new UserOwnProfileGetRes(user.getId(),
                 email,
-                gender,
+                gender.getDescription(),
                 age,
                 phoneNumber,
                 nickname,
@@ -189,7 +190,7 @@ public class UserService {
         String email = trainer.getEmail();          // 이메일
         String name = trainer.getName();        // 성별          // 나이
         String phoneNumber = trainer.getPhoneNumber(); // 전화번호
-        String gender = trainer.getGender();    // 닉네임
+        Gender gender = trainer.getGender();    // 닉네임
         Specialization specialization = trainer.getSpecialization();        // 체중
         Integer experience = trainer.getExperience();        // 키
         String certifications = trainer.getCertifications();
@@ -198,7 +199,7 @@ public class UserService {
                 email,
                 name,
                 phoneNumber,
-                gender,
+                gender.getDescription(),
                 specialization,
                 experience,
                 certifications,

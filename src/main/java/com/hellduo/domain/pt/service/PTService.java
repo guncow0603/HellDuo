@@ -1,6 +1,5 @@
 package com.hellduo.domain.pt.service;
 
-import com.hellduo.domain.board.dto.response.BoardsReadRes;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
 import com.hellduo.domain.pt.dto.response.*;
@@ -11,7 +10,7 @@ import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
 import com.hellduo.domain.pt.repository.PTRepository;
 import com.hellduo.domain.user.entity.User;
-import com.hellduo.domain.user.entity.UserRoleType;
+import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

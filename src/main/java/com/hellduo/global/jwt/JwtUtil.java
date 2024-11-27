@@ -1,6 +1,6 @@
 package com.hellduo.global.jwt;
 
-import com.hellduo.domain.user.entity.UserRoleType;
+import com.hellduo.domain.user.entity.enums.UserRoleType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
