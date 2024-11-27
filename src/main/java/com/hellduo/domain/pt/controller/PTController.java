@@ -1,5 +1,7 @@
 package com.hellduo.domain.pt.controller;
 
+import com.hellduo.domain.pt.dto.request.PTUpdateReq;
+import com.hellduo.domain.pt.dto.response.PTUpdateRes;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.response.PTCreateRes;
 import com.hellduo.domain.pt.dto.response.PTReadRes;
@@ -34,5 +36,12 @@ public class PTController {
     @GetMapping
     public  ResponseEntity<List<PTsReadRes>> ptsRead (){
         return ResponseEntity.status(HttpStatus.OK).body(ptService.ptsRead());
+    }
+
+    @PutMapping("/{ptId}")
+    public  ResponseEntity<PTUpdateRes> ptUpdate (@PathVariable Long ptId,
+                                                  @RequestBody PTUpdateReq req,
+                                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptUpdate(ptId,req,userDetails.getUser().getId()));
     }
 }

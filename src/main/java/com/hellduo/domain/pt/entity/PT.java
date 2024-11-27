@@ -27,7 +27,7 @@ public class PT {
     private LocalDateTime scheduledDate; // PT 세션 예약 날짜 및 시간
 
     @Column(nullable = false)
-    private int price; // PT 세션 비용
+    private Integer price; // PT 세션 비용
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id", nullable = false)
@@ -44,7 +44,7 @@ public class PT {
 
     @Enumerated(EnumType.STRING)
     @Column( length = 20)
-    private PTSpecialization specialization; // PT 상태 (예약/완료/취소 등)
+    private PTSpecialization specialization;
 
     @Builder
     public PT(String title, LocalDateTime scheduledDate, int price, String description, PTStatus status, User trainer, PTSpecialization specialization){
@@ -56,4 +56,10 @@ public class PT {
         this.title = title;
         this.specialization = specialization;
     }
+
+    public void updateTitle(String title){ this.title=title; }
+    public void updateDescription(String description){ this.description=description; }
+    public void updateScheduledDate(LocalDateTime scheduledDate){ this.scheduledDate=scheduledDate; }
+    public void updatePrice(Integer price){ this.price=price; }
+    public void updateSpecialization(PTSpecialization specialization){ this.specialization=specialization; }
 }

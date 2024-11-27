@@ -10,7 +10,7 @@ public record PTsReadRes (
         String title,
         PTSpecialization specialization,
         LocalDateTime scheduledDate,
-        int price,
+        Integer price,
         PTStatus ptStatus
 
 ){

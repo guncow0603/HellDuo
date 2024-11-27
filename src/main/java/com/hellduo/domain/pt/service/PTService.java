@@ -2,10 +2,13 @@ package com.hellduo.domain.pt.service;
 
 import com.hellduo.domain.board.dto.response.BoardsReadRes;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
+import com.hellduo.domain.pt.dto.request.PTUpdateReq;
 import com.hellduo.domain.pt.dto.response.PTCreateRes;
 import com.hellduo.domain.pt.dto.response.PTReadRes;
+import com.hellduo.domain.pt.dto.response.PTUpdateRes;
 import com.hellduo.domain.pt.dto.response.PTsReadRes;
 import com.hellduo.domain.pt.entity.PT;
+import com.hellduo.domain.pt.entity.PTSpecialization;
 import com.hellduo.domain.pt.entity.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,5 +77,48 @@ public class PTService {
                     pt.getStatus()));
         }
         return ptsReadResList;
+    }
+
+    public PTUpdateRes ptUpdate(Long ptId, PTUpdateReq req, Long trainerId) {
+        User trainer = userRepository.findUserByIdWithThrow(trainerId);
+
+        if(!trainer.getRole().equals(UserRoleType.TRAINER)){
+            throw new PTException(PTErrorCode.NOT_TRAiNER);
+        }
+
+        PT pt = ptRepository.findPTByIdWithThrow(ptId);
+
+        String title=req.title();
+        PTSpecialization specialization=req.specialization();
+        LocalDateTime scheduledDate=req.scheduledDate();
+        Integer price=req.price();
+        String description=req.description();
+
+        if (title != null && !title.isEmpty()) {
+            pt.updateTitle(title);
+        }
+
+        // 카테고리(전문 분야) 업데이트
+        if (specialization != null) {
+            pt.updateSpecialization(specialization);
+        }
+
+        // 예약 날짜 업데이트
+        if (scheduledDate != null) {
+            pt.updateScheduledDate(scheduledDate);
+        }
+
+        // 가격 업데이트
+        if (price != null) {
+            pt.updatePrice(price);
+        }
+
+        // 설명 업데이트
+        if (description != null && !description.isEmpty()) {
+            pt.updateDescription(description);
+        }
+
+        return new PTUpdateRes("수정 완료");
+
     }
 }

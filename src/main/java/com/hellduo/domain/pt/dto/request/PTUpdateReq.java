@@ -4,10 +4,11 @@ import com.hellduo.domain.pt.entity.PTSpecialization;
 
 import java.time.LocalDateTime;
 
-public record PTCreateReq(
+public record PTUpdateReq(
         String title,
         PTSpecialization specialization,
         LocalDateTime scheduledDate,
         Integer price,
         String description
-) { }
+) {
+}
