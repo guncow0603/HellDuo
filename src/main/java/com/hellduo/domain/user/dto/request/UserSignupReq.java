@@ -18,6 +18,9 @@ public record UserSignupReq(
         @NotBlank(message = "비밀번호 확인은 필수 입력값입니다.")
         String passwordConfirm,  // 비밀번호 확인
 
+        @NotBlank(message = "이름은 필수 입력값입니다.")
+        String name,  // 이름
+
         @NotNull(message = "성별은 필수 입력값입니다.")
         Gender gender,  // 성별
 

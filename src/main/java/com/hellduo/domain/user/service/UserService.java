@@ -41,6 +41,7 @@ public class UserService {
         String email = req.email();
         String password = passwordEncoder.encode(req.password());
         String passwordConfirm = req.passwordConfirm();
+        String name = req.name();;
         String adminToken = req.adminToken();
         Gender gender = req.gender();
         Integer age = req.age();
@@ -71,6 +72,7 @@ public class UserService {
         }
 
         User user = User.builder()
+                .name(name)
                 .email(email)
                 .password(password)
                 .role(role)
