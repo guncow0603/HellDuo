@@ -2,9 +2,9 @@ package com.hellduo.domain.user.dto.response;
 
 import java.time.LocalDateTime;
 
-public record ChargePointRes(
+public record ChargePointLogRes(
         Long id,
         LocalDateTime time,
         Long amount,
-        String chargeEmail
+        String orderId
 ) { }

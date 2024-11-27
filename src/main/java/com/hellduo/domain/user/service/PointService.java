@@ -1,8 +1,9 @@
 package com.hellduo.domain.user.service;
 
 import com.hellduo.domain.common.BaseEntity;
-import com.hellduo.domain.user.dto.response.ChargePointRes;
+import com.hellduo.domain.user.dto.response.ChargePointLogRes;
 import com.hellduo.domain.user.entity.Point;
+import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.PointType;
 import com.hellduo.domain.user.exception.PointErrorCode;
 import com.hellduo.domain.user.exception.PointException;
@@ -19,7 +20,19 @@ import java.util.List;
 @Transactional
 public class PointService extends BaseEntity {
     private final PointRepository pointRepository;
-    public List<ChargePointRes> chargePointRead(Long userId) {
+    public void chargePoint(User user, Long point, String orderId) {
+        Point chargePoint = Point.builder()
+                .changePoint(point)
+                .user(user)
+                .type(PointType.CHARGE)
+                .orderId(orderId)
+                .build();
+
+        user.addPoint(point);
+        pointRepository.save(chargePoint);
+    }
+
+    public List<ChargePointLogRes> chargePointRead(Long userId) {
         // 인증된 사용자의 userId와 해당 포인트 로그를 조회하는 userId가 일치하는지 확인
         List<Point> points = pointRepository.findByUserIdAndType(userId, PointType.CHARGE);
 
@@ -29,16 +42,16 @@ public class PointService extends BaseEntity {
         }
 
         // ChargePointRes로 변환
-        List<ChargePointRes> chargePointResList = new ArrayList<>();
+        List<ChargePointLogRes> chargePointLogResList = new ArrayList<>();
         for (Point point : points) {
-            chargePointResList.add(new ChargePointRes(
+            chargePointLogResList.add(new ChargePointLogRes(
                     point.getId(),
                     point.getCreatedAt(),
                     point.getChangePoint(),
-                    point.getUser().getEmail()
+                    point.getOrderId()
             ));
         }
 
-        return chargePointResList;
+        return chargePointLogResList;
     }
 }

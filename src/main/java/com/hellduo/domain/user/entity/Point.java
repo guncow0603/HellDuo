@@ -32,10 +32,14 @@ public class Point extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PointType type;
 
+    @Column(name = "order_id")
+    @Comment("충전 시 결제 아이디")
+    private String orderId;
     @Builder
-    public Point(User user, Long changePoint, PointType type) {
+    public Point(User user, Long changePoint, PointType type,  String orderId) {
         this.user = user;
         this.changePoint = changePoint;
         this.type = type;
+        this.orderId = orderId;
     }
 }

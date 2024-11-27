@@ -37,4 +37,11 @@ data:
     host: localhost
     port: 6379
 
+payment:
+  toss:
+    client-key: ${TOSS_CLIENT_KEY}
+    secret-key: ${TOSS_SECRET_KEY}
+    success-url: ${SUCCESS_URL}
+    fail-url: ${FAIL_URL}
+
 

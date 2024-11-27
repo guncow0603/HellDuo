@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 
@@ -85,6 +86,11 @@ public class User extends BaseEntity {
     @Column(name = "deleted")
     private boolean deleted = false;
 
+    @Comment("회원 보유 포인트")
+    @Column(name = "point", nullable = false)
+    @ColumnDefault("0")
+    private Long point = 0L;
+
 
     @Builder
     public User(String email, String password, UserRoleType role, String nickname, Gender gender,
@@ -133,4 +139,8 @@ public class User extends BaseEntity {
         this.bio = bio;
     }
     public void withdrawal() { this.deleted = true; }
+
+    public void addPoint(Long point) {
+        this.point += point;
+    }
 }
