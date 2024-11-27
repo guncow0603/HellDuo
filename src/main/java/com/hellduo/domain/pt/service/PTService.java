@@ -2,6 +2,7 @@ package com.hellduo.domain.pt.service;
 
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.response.PTCreateRes;
+import com.hellduo.domain.pt.dto.response.PTReadRes;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
@@ -33,11 +34,22 @@ public class PTService {
                 scheduledDate(req.scheduledDate()).
                 price(req.price()).
                 description(req.description()).
-                status(PTStatus.WAITING).
+                status(PTStatus.UNRESERVED).
                 build();
 
         ptRepository.save(pt);
 
         return new PTCreateRes("PT가 생성 되었습니다.");
+    }
+
+    public PTReadRes ptRead(Long ptId) {
+        PT pt = ptRepository.findPTByIdWithThrow(ptId);
+        return new PTReadRes(pt.getId(),
+                pt.getScheduledDate(),
+                pt.getPrice(),
+                pt.getDescription(),
+                pt.getTrainer().getName(),
+                pt.getUser() != null ? pt.getUser().getName() : "미예약",
+                pt.getStatus().name());
     }
 }

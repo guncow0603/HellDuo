@@ -7,7 +7,7 @@ public enum PTStatus {
     SCHEDULED("예약됨"),
     COMPLETED("완료됨"),
     CANCELED("취소됨"),
-    WAITING("대기 중");
+    UNRESERVED("미예약");
 
     private final String description;
 }
