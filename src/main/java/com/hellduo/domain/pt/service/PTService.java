@@ -1,8 +1,10 @@
 package com.hellduo.domain.pt.service;
 
+import com.hellduo.domain.board.dto.response.BoardsReadRes;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.response.PTCreateRes;
 import com.hellduo.domain.pt.dto.response.PTReadRes;
+import com.hellduo.domain.pt.dto.response.PTsReadRes;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
@@ -14,6 +16,9 @@ import com.hellduo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +58,20 @@ public class PTService {
                 pt.getTrainer().getName(),
                 pt.getUser() != null ? pt.getUser().getName() : "미예약",
                 pt.getStatus().name());
+    }
+
+    public List<PTsReadRes> ptsRead() {
+        List<PT> pts = ptRepository.findAll();
+
+        List<PTsReadRes> ptsReadResList = new ArrayList<>();
+        for(PT pt: pts){
+            ptsReadResList.add(new PTsReadRes(pt.getId(),
+                    pt.getTitle(),
+                    pt.getSpecialization(),
+                    pt.getScheduledDate(),
+                    pt.getPrice(),
+                    pt.getStatus()));
+        }
+        return ptsReadResList;
     }
 }
