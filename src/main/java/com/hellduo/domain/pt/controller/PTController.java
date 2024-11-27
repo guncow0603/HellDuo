@@ -1,11 +1,8 @@
 package com.hellduo.domain.pt.controller;
 
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
-import com.hellduo.domain.pt.dto.response.PTUpdateRes;
+import com.hellduo.domain.pt.dto.response.*;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
-import com.hellduo.domain.pt.dto.response.PTCreateRes;
-import com.hellduo.domain.pt.dto.response.PTReadRes;
-import com.hellduo.domain.pt.dto.response.PTsReadRes;
 import com.hellduo.domain.pt.service.PTService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +40,11 @@ public class PTController {
                                                   @RequestBody PTUpdateReq req,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.OK).body(ptService.ptUpdate(ptId,req,userDetails.getUser().getId()));
+    }
+
+    @DeleteMapping("/{ptId}")
+    public  ResponseEntity<PTDeleteRes> ptDelete (@PathVariable Long ptId,
+                                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptDelete(ptId,userDetails.getUser().getId()));
     }
 }

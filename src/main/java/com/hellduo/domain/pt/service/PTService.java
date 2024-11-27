@@ -3,10 +3,7 @@ package com.hellduo.domain.pt.service;
 import com.hellduo.domain.board.dto.response.BoardsReadRes;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
-import com.hellduo.domain.pt.dto.response.PTCreateRes;
-import com.hellduo.domain.pt.dto.response.PTReadRes;
-import com.hellduo.domain.pt.dto.response.PTUpdateRes;
-import com.hellduo.domain.pt.dto.response.PTsReadRes;
+import com.hellduo.domain.pt.dto.response.*;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.PTSpecialization;
 import com.hellduo.domain.pt.entity.PTStatus;
@@ -120,5 +117,19 @@ public class PTService {
 
         return new PTUpdateRes("수정 완료");
 
+    }
+
+    public PTDeleteRes ptDelete(Long ptId, Long trainerId) {
+        User trainer = userRepository.findUserByIdWithThrow(trainerId);
+
+        if(!trainer.getRole().equals(UserRoleType.TRAINER)){
+            throw new PTException(PTErrorCode.NOT_TRAiNER);
+        }
+
+        PT pt = ptRepository.findPTByIdWithThrow(ptId);
+
+        ptRepository.delete(pt);
+
+        return  new PTDeleteRes("삭제 완료");
     }
 }
