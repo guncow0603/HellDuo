@@ -1,4 +1,4 @@
-package com.hellduo.domain.user.entity;
+package com.hellduo.domain.user.entity.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,5 +13,5 @@ public enum Specialization {
     REHABILITATION("재활운동"),
     CROSSFIT("크로스핏");
 
-    private final String authority;
+    private final String name;
 }
