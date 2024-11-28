@@ -35,8 +35,7 @@ function onSignup() {
         data: JSON.stringify(data),
     })
         .done(function (res) {
-            // 백엔드에서 전송한 메시지를 알림으로 표시
-            alert(res.message);
+            alert(res.msg);
             window.location.href = '/api/v1/page/login'; // 로그인 페이지로 리디렉션
         })
         .fail(function (res) {

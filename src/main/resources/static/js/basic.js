@@ -5,9 +5,11 @@ $(document).ready(function () {
         console.log('auth:', auth);
         $('#logout-button').show();
         $('#login-button').hide();
+        $('#my-page').show();
     } else {
         $('#logout-button').hide();
         $('#login-button').show();
+        $('#my-page').hide();
     }
 
 
@@ -18,8 +20,8 @@ $(document).ready(function () {
             url: '/api/v1/users/logout',
         })
         .done(function (res) {
-            alert(res.messages);
-            window.location.href = host + '/api/v1/page/index';
+            alert(res.msg)
+            window.location.href = '/api/v1/page/index';
         })
         .fail(function (res) {
             const jsonObject = JSON.parse(res.responseText);

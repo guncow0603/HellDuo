@@ -37,7 +37,7 @@ function onSignup() {
         }),
     })
         .done(function (res) {
-            alert(res.message);
+            alert(res.msg);
             window.location.href = '/api/v1/page/login';
         })
         .fail(function (res) {

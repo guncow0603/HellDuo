@@ -21,7 +21,7 @@ function onLogin() {
         data: JSON.stringify({email: email, password: password}),
     })
         .done(function (res) {
-            alert(res.messages);
+            alert(res.msg);
             window.location.href = host + '/api/v1/page/index';
         })
         .fail(function (res) {

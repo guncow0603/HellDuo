@@ -61,7 +61,7 @@ public class WebSecurityConfig {
         // URL별 권한 설정
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers("/api/v1/users/signup", "/api/v1/users/trainerSignup", "/api/v1/users/login","/signup")
+                        .requestMatchers("/api/v1/users/signup", "/api/v1/users/trainerSignup", "/api/v1/users/login","/api/v1/page/**","/js/**")
                         .permitAll() // signup, trainerSignup, login은 인증 없이 접근 가능
                         .requestMatchers("/api/v1/users/logout","/api/v1/users/withdrawal", "/api/v1/users", "/api/v1/users/trainer",
                                 "/api/v1/users/update","/api/v1/userImage/**","/api/v1/board/**","/api/v1/comment","/api/v1/pt/**")
