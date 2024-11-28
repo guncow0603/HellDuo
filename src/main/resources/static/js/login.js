@@ -20,14 +20,14 @@ function onLogin() {
         contentType: "application/json",
         data: JSON.stringify({email: email, password: password}),
     })
-        .done(function (res, status, xhr) {
-            alert("로그인 성공");
-            window.location.href = host + '/api/v1';
+        .done(function (res) {
+            alert(res.messages);
+            window.location.href = host + '/api/v1/page/index';
         })
         .fail(function (res) {
             const jsonObject = JSON.parse(res.responseText);
             const messages = jsonObject.messages;
             alert(messages);
-            window.location.href = host + '/api/v1/users/login';
+            window.location.href = host + '/api/v1/page/login';
         });
 }

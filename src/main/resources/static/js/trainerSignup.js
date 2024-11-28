@@ -37,11 +37,11 @@ function onSignup() {
         .done(function (res) {
             // 백엔드에서 전송한 메시지를 알림으로 표시
             alert(res.message);
-            window.location.href = '/api/v1/users/login'; // 로그인 페이지로 리디렉션
+            window.location.href = '/api/v1/page/login'; // 로그인 페이지로 리디렉션
         })
         .fail(function (res) {
             const jsonObject = JSON.parse(res.responseText);
-            const messages = jsonObject.messages.join('\n');
+            const messages = jsonObject.messages;
             alert(messages);
         });
 }
