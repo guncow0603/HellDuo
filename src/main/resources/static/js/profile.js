@@ -6,6 +6,7 @@ $(document).ready(function() {
         success: function(res) {
             // API 응답을 받아 각 필드에 값을 업데이트
             $("#profile-email").text(res.email);
+            $("#profile-name").text(res.name);
             $("#profile-gender").text(res.gender);
             $("#profile-age").text(res.age);
             $("#profile-phone").text(res.phoneNumber);

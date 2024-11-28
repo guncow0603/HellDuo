@@ -6,9 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/api/v1/page")
-public class ProfileController {
+public class ProfilePageController {
     @GetMapping("/profile")
-    public String signupPage() {
+    public String profilePage() {
         return "profile";
+    }
+
+    @GetMapping("/profile-edit")
+    public String profileEditPage() {
+        return "profile-edit";
     }
 }
