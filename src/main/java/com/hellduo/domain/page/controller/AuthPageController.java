@@ -9,4 +9,9 @@ public class AuthPageController {
     public String signupPage() {
         return "signup";
     }
+
+    @GetMapping("/trainerSignup")
+    public String trainerSignupPage() {
+        return "trainerSignup";
+    }
 }
