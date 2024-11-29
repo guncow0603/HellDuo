@@ -135,7 +135,15 @@ public class UserService {
                 .bio(bio)
                 .build();
 
+        UserImage userImage = UserImage.builder()
+                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+                .type(ImageType.PROFILE_IMG)
+                .user(trainer)
+                .build();
+
         userRepository.save(trainer);
+        userImageRepository.save(userImage);
+
         return new TrainerSignupRes("회원 가입 완료");
     }
 

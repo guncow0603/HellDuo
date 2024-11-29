@@ -60,7 +60,7 @@
 <div class="container">
   <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
     <div class="col-md-3 mb-2 mb-md-0">
-      <a class="d-inline-flex link-body-emphasis text-decoration-none" href="/api/v1">
+      <a class="d-inline-flex link-body-emphasis text-decoration-none" href="/api/v1/page/index">
         <svg aria-label="Bootstrap" class="bi" height="32" role="img" width="40">
           <span class="fs-4">HellDuo</span>
         </svg>
@@ -87,7 +87,7 @@
 </div>
 
 <div class="container mt-4 d-flex flex-column">
-  <h2 class="mb-4">유저 프로필</h2>
+  <h2 class="mb-4">프로필</h2>
 
   <!-- 프로필 이미지 수정 -->
   <div class="profile-item row profile-header">
@@ -106,6 +106,11 @@
   <div class="profile-item row">
     <div class="col-sm-3 fw-bold">이름</div>
     <div class="col-sm-9" id="profile-name">로딩 중...</div>
+  </div>
+
+  <div class="profile-item row" id="profile-p">
+    <div class="col-sm-3 fw-bold">자기소개</div>
+    <div class="col-sm-9" id="profile-bio">로딩 중...</div>
   </div>
 
   <div class="profile-item row">
@@ -128,19 +133,34 @@
     <div class="col-sm-9" id="profile-phone">로딩 중...</div>
   </div>
 
-  <div class="profile-item row">
+  <div class="profile-item row" id="profile-n">
     <div class="col-sm-3 fw-bold">닉네임</div>
     <div class="col-sm-9" id="profile-nickname">로딩 중...</div>
   </div>
 
-  <div class="profile-item row">
+  <div class="profile-item row" id="profile-w">
     <div class="col-sm-3 fw-bold">체중</div>
     <div class="col-sm-9" id="profile-weight">로딩 중...</div>
   </div>
 
-  <div class="profile-item row">
+  <div class="profile-item row" id="profile-h">
     <div class="col-sm-3 fw-bold">키</div>
     <div class="col-sm-9" id="profile-height">로딩 중...</div>
+  </div>
+
+  <div class="profile-item row" id="profile-s">
+    <div class="col-sm-3 fw-bold">전문 분야</div>
+    <div class="col-sm-9" id="profile-specialization">로딩 중...</div>
+  </div>
+
+  <div class="profile-item row" id="profile-e">
+    <div class="col-sm-3 fw-bold">경력</div>
+    <div class="col-sm-9" id="profile-experience">로딩 중...</div>
+  </div>
+
+  <div class="profile-item row" id="profile-c">
+    <div class="col-sm-3 fw-bold">자격증</div>
+    <div class="col-sm-9" id="profile-certifications">로딩 중...</div>
   </div>
 
   <div class="profile-item mt-4">

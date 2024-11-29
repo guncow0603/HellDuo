@@ -6,6 +6,27 @@ $(document).ready(function () {
         $('#logout-button').show();
         $('#login-button').hide();
         $('#my-page').show();
+
+        const role = getUserRole();
+
+        if(role === 'TRAINER') {
+            $('#profile-w').hide();
+            $('#profile-h').hide();
+            $('#profile-n').hide();
+            $('#profile-p').show();
+            $('#profile-s').show();
+            $('#profile-e').show();
+            $('#profile-c').show();
+        }else if(role === 'USER'){
+            $('#profile-w').show();
+            $('#profile-h').show();
+            $('#profile-n').show();
+            $('#profile-p').hide();
+            $('#profile-s').hide();
+            $('#profile-e').hide();
+            $('#profile-c').hide();
+        }
+
     } else {
         $('#logout-button').hide();
         $('#login-button').show();
@@ -42,3 +63,19 @@ function getToken() {
     return auth;
 }
 
+function getUserRole() {
+    let role;
+    $.ajax({
+        url: '/api/v1/users/role',
+        method: 'GET',
+        dataType: 'json',
+        async: false, // 동기적으로 설정
+        success: function (data) {
+            role = data;
+        },
+        error: function (error) {
+            alert('알 수 없는 오류 발생');
+        }
+    });
+    return role;
+}
