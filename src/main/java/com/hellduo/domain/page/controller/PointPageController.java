@@ -11,4 +11,14 @@ public class PointPageController {
     public String profilePage() {
         return "point-charge";
     }
+
+    @GetMapping("/success")
+    public String successPage() {
+        return "success";
+    }
+
+    @GetMapping("/fail")
+    public String failPage() {
+        return "fail";
+    }
 }

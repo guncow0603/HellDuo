@@ -175,6 +175,19 @@ $(document).ready(function() {
         });
     }
 
+    $(document).ready(function () {
+        // 포인트 조회 API 호출
+        $.ajax({
+            url: '/api/v1/point',
+            method: 'GET',
+            success: function (res) {
+                // 성공적으로 데이터를 가져오면 화면에 표시
+                var formattedPoint = res.point.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                $('#profile-point-value').text(formattedPoint + ' P');
+            }
+        });
+    });
+
 });
 
 // 프로필 이미지 업로드 처리
