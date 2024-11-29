@@ -102,6 +102,7 @@ public class UserService {
         String name = req.name();
         String phoneNumber = req.phoneNumber();
         Gender gender = req.gender();
+        Integer age = req.age();
         Specialization specialization = req.specialization();
         Integer experience = req.experience();
         String certifications = req.certifications();
@@ -112,9 +113,6 @@ public class UserService {
         }
         if (userRepository.findByPhoneNumber(phoneNumber).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_PHONE_NUMBER);
-        }
-        if (userRepository.findByName(name).isPresent()) {
-            throw new UserException(UserErrorCode.ALREADY_EXIST_NAME);
         }
 
         UserRoleType role = UserRoleType.TRAINER;
@@ -129,6 +127,7 @@ public class UserService {
                 .role(role)
                 .name(name)
                 .gender(gender)
+                .age(age)
                 .specialization(specialization)
                 .phoneNumber(phoneNumber)
                 .experience(experience)
@@ -199,11 +198,13 @@ public class UserService {
         Integer experience = trainer.getExperience();        // 키
         String certifications = trainer.getCertifications();
         String bio = trainer.getBio();
+        Integer age = trainer.getAge(); // 나이
         return new TrainerOwnProfileGetRes(trainer.getId(),
                 email,
                 name,
                 phoneNumber,
                 gender.getDescription(),
+                age,
                 specialization,
                 experience,
                 certifications,

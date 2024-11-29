@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+    <script src="/js/basic.js"></script>
+</head>
+
+<body>
+
+
+<div class="container">
+    <header
+            class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <a href="/api/v1/page/index" class="d-inline-flex link-body-emphasis text-decoration-none">
+                <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <span class="fs-4">HellDuo</span>
+                </svg>
+            </a>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <ul class="nav justify-content-center">
+                <li class="nav-item"><a class="nav-link" href="/api/v1/page/profile" id="my-page">마이페이지</a></li>
+            </ul>
+        </div>
+
+        <div class="text-md-end">
+            <div class="d-flex align-items-center">
+                <a href="/api/v1/page/login" type="button" class="btn btn-outline-primary"
+                   id="login-button">
+                    Login
+                </a>
+                <a type="button" class="btn btn-outline-primary"
+                   id="logout-button">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+</div>
+</body>
+
+</html>
