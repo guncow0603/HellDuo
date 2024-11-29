@@ -89,12 +89,16 @@
 <div class="container mt-4 d-flex flex-column">
   <h2 class="mb-4">유저 프로필</h2>
 
+  <!-- 프로필 이미지 수정 -->
   <div class="profile-item row profile-header">
     <div class="col-sm-3 fw-bold">프로필 이미지</div>
     <div class="col-sm-9 d-flex align-items-center">
       <div class="profile-image-container">
-        <!-- 프로필 이미지 미리보기 -->
-        <img src="https://via.placeholder.com/210*230" alt="Profile Image" class="profile-image" id="profile-image">
+        <img src="https://via.placeholder.com/210x230" alt="Profile Image" class="profile-image" id="profile-image">
+      </div>
+      <div>
+        <input type="file" id="profile-image-upload" accept="image/*" class="form-control mt-2">
+        <button id="upload-button" class="btn btn-secondary mt-2">업로드</button>
       </div>
     </div>
   </div>

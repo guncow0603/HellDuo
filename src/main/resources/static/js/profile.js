@@ -35,3 +35,36 @@ $(document).ready(function() {
             alert(messages);
         });
 });
+
+// 프로필 이미지 업로드 처리
+document.addEventListener("DOMContentLoaded", function () {
+    const uploadButton = document.getElementById("upload-button");
+    uploadButton.addEventListener("click", function () {
+        const fileInput = document.getElementById("profile-image-upload");
+        const file = fileInput.files[0];
+
+        if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+
+            $.ajax({
+                url: '/api/v1/userImage/profile',
+                method: 'POST',
+                data: formData,
+                processData: false, // FormData로 데이터를 보내기 위해 false로 설정
+                contentType: false  // Content-Type을 자동으로 설정하도록 false
+            })
+                .done(function (res) {
+                    alert(res.msg);
+                    window.location.href = '/api/v1/page/profile'; // 성공 시 리디렉션
+                })
+                .fail(function (res) {
+                    const jsonObject = JSON.parse(res.responseText);
+                    const messages = jsonObject.messages;
+                    alert(messages);
+                });
+        } else {
+            alert("업로드할 파일을 선택해 주세요.");
+        }
+    });
+});
