@@ -64,6 +64,7 @@ $(document).ready(function() {
                 $("#profile-certifications").text(res.certifications);
                 $("#profile-bio").text(res.bio);
 
+                const certification = $('#certification');
                 // 트레이너의 자격증 이미지 조회 API 호출 (trainerId가 설정된 후에 호출)
                 $.ajax({
                     url: `/api/v1/userImage/certifications/${trainerId}`,  // trainerId를 URL에 포함
@@ -71,24 +72,32 @@ $(document).ready(function() {
                     success: function(res) {
                         const certificationList = $('#certification-list');
                         certificationList.empty(); // 기존 목록 비우기
-
-                        if (res && Array.isArray(res) && res.length > 0) {
                             res.forEach(cert => {
-                                const li = $('<li></li>'); // 새로운 li 요소 생성
+                                const li = $('<li></li>').addClass('certification-item'); // 새로운 li 요소 생성
+                                const imageWrapper = $('<div></div>').addClass('image-wrapper');  // 이미지와 삭제 버튼을 감싸는 div
+
                                 const img = $('<img>');   // 새로운 img 요소 생성
                                 img.attr('src', cert.imageUrl);  // 이미지 URL 설정
                                 img.attr('alt', 'Certification Image');  // alt 속성 설정
-                                li.append(img);  // li에 img 추가
+
+                                const deleteButton = $('<button></button>')
+                                    .addClass('btn btn-danger btn-sm delete-button')
+                                    .text('삭제')
+                                    .on('click', function() {
+                                        deleteCertificationImage(cert.id);  // 클릭된 자격증의 ID를 삭제 함수에 전달
+                                    });
+
+                                imageWrapper.append(deleteButton);  // 이미지 위에 삭제 버튼 추가
+                                imageWrapper.append(img);  // imageWrapper에 이미지 추가
+                                li.append(imageWrapper);  // li에 imageWrapper 추가
                                 certificationList.append(li);  // ul에 li 추가
                             });
-                        } else {
-                            certificationList.append('<li>업로드된 자격증 이미지가 없습니다.</li>');
-                        }
                     },
-                    fail: function(res) {
-                        const jsonObject = JSON.parse(res.responseText);
-                        const messages = jsonObject.messages;
-                        alert(messages);
+                    error: function (xhr) {
+                        // 서버 오류가 404일 때
+                        if (xhr.status === 404) {
+                            certification.append('업로드된 자격증 이미지가 없습니다.');
+                        }
                     }
                 });
             },
@@ -136,8 +145,8 @@ $(document).ready(function() {
                 data: formData,
                 processData: false,  // 파일을 자동으로 처리하지 않도록 설정
                 contentType: false,  // 컨텐츠 타입을 자동으로 설정하지 않음
-                success: function(response) {
-                    alert("자격증 이미지가 업로드되었습니다.");
+                success: function(res) {
+                    alert(res.msg);
                     window.location.href = '/api/v1/page/profile'; // 성공 시 리디렉션
                     // 업로드 후 필요한 추가 작업을 이곳에서 처리할 수 있습니다.
                 },
@@ -149,6 +158,22 @@ $(document).ready(function() {
             alert("업로드할 파일을 선택해 주세요.");
         }
     });
+
+    // 자격증 이미지 삭제 함수
+    function deleteCertificationImage(certId) {
+        $.ajax({
+            url: `/api/v1/userImage/certifications/${certId}`,  // 삭제 API 호출
+            method: 'DELETE',
+            success: function(res) {
+                alert(res.msg);
+                // 삭제 후 리스트 새로고침
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert("자격증 이미지 삭제 실패: " + xhr.responseText);
+            }
+        });
+    }
 
 });
 

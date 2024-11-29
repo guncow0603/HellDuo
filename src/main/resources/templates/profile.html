@@ -67,11 +67,12 @@
     /* 각 자격증 이미지를 담을 li 스타일 */
     .certification-list li {
       width: 230px;           /* 각 항목의 너비 지정 */
-      height: 300px;          /* li의 높이를 300px로 변경 */
+      height: 300px;          /* li의 높이를 300px로 설정 */
       display: flex;          /* flexbox로 이미지를 배치 */
       justify-content: center; /* 이미지 중앙 정렬 */
       align-items: center;    /* 세로 정렬 */
       padding: 5px;           /* 추가 여백 설정 */
+      position: relative;     /* 삭제 버튼을 이미지 위에 고정하기 위해 필요 */
     }
 
     /* 이미지 스타일 */
@@ -81,6 +82,29 @@
       object-fit: cover;      /* 이미지 비율 유지하면서 꽉 채우기 */
       border-radius: 8px;     /* 이미지 둥글게 */
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 이미지에 그림자 추가 */
+    }
+
+    /* 이미지와 삭제 버튼을 감싸는 div 스타일 */
+    .image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 삭제 버튼 스타일 */
+    .delete-button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      z-index: 10;
+      background-color: rgba(255, 0, 0, 0.7); /* 버튼 배경색 */
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .delete-button:hover {
+      background-color: rgba(255, 0, 0, 1); /* hover 시 배경색 변경 */
     }
   </style>
 </head>
@@ -190,10 +214,12 @@
   <div class="profile-item row" id="profile-c">
     <div class="col-sm-3 fw-bold">자격증</div>
     <div class="col-sm-9" id="profile-certifications">로딩 중...</div>
-
+    <br><br>
     <div class="col-sm-12 mt-6">
-      <h5>업로드된 자격증 이미지</h5>
+      <h5>자격증 이미지</h5>
+      <div id="certification"></div>
       <ul id="certification-list" class="certification-list">
+        <!-- 자격증 이미지 목록 -->
       </ul>
     </div>
 
@@ -204,7 +230,6 @@
         <button type="submit" id="upload-cert-button" class="btn btn-primary mt-2">자격증 이미지 업로드</button>
       </form>
     </div>
-
   </div>
 
   <div class="profile-item mt-4">

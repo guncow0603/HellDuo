@@ -58,7 +58,7 @@ public class ImageController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long certId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteUserCertificationImage(userDetails.getUser().getId(), certId)); // 삭제 성공 시 204 반환
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteUserCertificationImage(userDetails.getUser().getId(), certId));
     }
 
 

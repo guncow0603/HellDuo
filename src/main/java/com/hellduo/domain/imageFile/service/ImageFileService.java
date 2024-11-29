@@ -72,14 +72,14 @@ public class ImageFileService {
 
         List<UserImage> userImageList = createUserImageList(fileUrlList, user);
         userImageRepository.saveAll(userImageList);
-        return new UserImageCreateRes("이미지 등록 완료");
+        return new UserImageCreateRes("자격증 이미지가 업로드되었습니다.");
     }
 
     // 프로필 이미지 조회
     public UserImageReadRes readUserProfileImage(Long userId) {
         UserImage userImage = userImageRepository.findProfileByUserIdAndType(userId, ImageType.PROFILE_IMG)
                 .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
-        return new UserImageReadRes(userImage.getUserImageUrl());
+        return new UserImageReadRes(userImage.getId(),userImage.getUserImageUrl());
     }
 
     // 자격증 이미지 조회
@@ -96,7 +96,7 @@ public class ImageFileService {
 
         // UserImage 객체들을 UserCertsReadRes로 변환하여 리스트에 추가
         for (UserImage userImage : userImages) {
-            response.add(new UserCertsReadRes(userImage.getUserImageUrl()));
+            response.add(new UserCertsReadRes(userImage.getId(),userImage.getUserImageUrl()));
         }
 
         // 변환된 리스트 반환
