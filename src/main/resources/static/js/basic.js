@@ -42,3 +42,19 @@ function getToken() {
     return auth;
 }
 
+function getUserRole() {
+    let role;
+    $.ajax({
+        url: '/api/v1/users/role',
+        method: 'GET',
+        dataType: 'json',
+        async: false, // 동기적으로 설정
+        success: function (data) {
+            role = data;
+        },
+        error: function (error) {
+            alert('알 수 없는 오류 발생');
+        }
+    });
+    return role;
+}

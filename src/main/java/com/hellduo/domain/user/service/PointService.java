@@ -2,6 +2,7 @@ package com.hellduo.domain.user.service;
 
 import com.hellduo.domain.common.BaseEntity;
 import com.hellduo.domain.user.dto.response.ChargePointLogRes;
+import com.hellduo.domain.user.dto.response.PointRes;
 import com.hellduo.domain.user.entity.Point;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.PointType;
@@ -53,5 +54,9 @@ public class PointService extends BaseEntity {
         }
 
         return chargePointLogResList;
+    }
+
+    public PointRes userPointRead(User user) {
+        return new PointRes(user.getPoint());
     }
 }

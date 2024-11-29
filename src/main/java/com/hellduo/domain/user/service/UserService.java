@@ -135,7 +135,15 @@ public class UserService {
                 .bio(bio)
                 .build();
 
+        UserImage userImage = UserImage.builder()
+                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+                .type(ImageType.PROFILE_IMG)
+                .user(trainer)
+                .build();
+
         userRepository.save(trainer);
+        userImageRepository.save(userImage);
+
         return new TrainerSignupRes("회원 가입 완료");
     }
 
@@ -194,7 +202,7 @@ public class UserService {
         String name = trainer.getName();        // 성별          // 나이
         String phoneNumber = trainer.getPhoneNumber(); // 전화번호
         Gender gender = trainer.getGender();    // 닉네임
-        Specialization specialization = trainer.getSpecialization();        // 체중
+        String specialization = trainer.getSpecialization().getName();        // 체중
         Integer experience = trainer.getExperience();        // 키
         String certifications = trainer.getCertifications();
         String bio = trainer.getBio();
