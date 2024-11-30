@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/v1/page")
 public class PointPageController {
     @GetMapping("/point-charge")
-    public String profilePage() {
+    public String pointChargePage() {
         return "point-charge";
     }
 
@@ -21,4 +21,10 @@ public class PointPageController {
     public String failPage() {
         return "fail";
     }
+
+    @GetMapping("/point-charge-list")
+    public String pointChargeListPage() {
+        return "point-charge-list";
+    }
+
 }

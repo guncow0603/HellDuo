@@ -12,9 +12,9 @@ public class AuthPageController {
         return "signup";
     }
 
-    @GetMapping("/trainerSignup")
+    @GetMapping("/trainer-signup")
     public String trainerSignupPage() {
-        return "trainerSignup";
+        return "trainer-signup";
     }
 
     @GetMapping("/login")

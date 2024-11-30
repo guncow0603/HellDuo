@@ -40,7 +40,37 @@
 </head>
 
 <body>
-<header id="header"></header>
+<div class="container">
+    <header
+            class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <a href="/api/v1/page/index" class="d-inline-flex link-body-emphasis text-decoration-none">
+                <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <span class="fs-4">HellDuo</span>
+                </svg>
+            </a>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <ul class="nav justify-content-center">
+                <li class="nav-item"><a class="nav-link" href="/api/v1/page/profile" id="my-page">마이페이지</a></li>
+            </ul>
+        </div>
+
+        <div class="text-md-end">
+            <div class="d-flex align-items-center">
+                <a href="/api/v1/page/login" type="button" class="btn btn-outline-primary"
+                   id="login-button">
+                    Login
+                </a>
+                <a type="button" class="btn btn-outline-primary"
+                   id="logout-button">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+</div>
 </body>
 
 </html>
