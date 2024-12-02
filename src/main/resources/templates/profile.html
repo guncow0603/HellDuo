@@ -13,14 +13,14 @@
   <script src="/js/profile.js"></script>
   <style>
     body {
-      background-color: #f8f9fa;
+      background-color: #f8f9fa !important; /* 중요도를 높여서 다른 스타일이 덮어쓰지 않도록 함 */
     }
-
     .container {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
+      margin-left: 250px !important;
+      padding: 20px !important;
+      background-color: #fff !important;
+      border-radius: 8px !important;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
     }
 
     h2 {
@@ -117,38 +117,38 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
       text-align: center; /* 텍스트 중앙 정렬 */
     }
+
+    /* 왼쪽 메뉴 스타일 */
+    .left-menu {
+      position: fixed;
+      top: 20px;  /* 상단에서 20px 떨어지게 */
+      left: 20px; /* 왼쪽에서 20px 떨어지게 */
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 200px;
+    }
+
+    .left-menu a {
+      display: block;
+      padding: 10px 20px;
+      margin-bottom: 10px;
+      background-color: #007bff;
+      color: #fff;
+      text-align: center;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    .left-menu a:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
-    <div class="col-md-3 mb-2 mb-md-0">
-      <a class="d-inline-flex link-body-emphasis text-decoration-none" href="/api/v1/page/index">
-        <svg aria-label="Bootstrap" class="bi" height="32" role="img" width="40">
-          <span class="fs-4">HellDuo</span>
-        </svg>
-      </a>
-    </div>
-
-    <div class="col-md-6 text-center">
-      <ul class="nav justify-content-center">
-        <li class="nav-item"><a class="nav-link" href="/api/v1/page/profile" id="my-page">마이페이지</a></li>
-      </ul>
-    </div>
-
-    <div class="text-md-end">
-      <div class="d-flex align-items-center">
-        <a href="/api/v1/page/login" type="button" class="btn btn-outline-primary" id="login-button">
-          Login
-        </a>
-        <a type="button" class="btn btn-outline-primary" id="logout-button">
-          Logout
-        </a>
-      </div>
-    </div>
-  </header>
-</div>
+<header id="header"></header>
 
 <div class="container mt-4 d-flex flex-column">
   <h2 class="mb-4">프로필</h2>
@@ -247,10 +247,10 @@
     </div>
   </div>
 
-  <div class="profile-item mt-4">
-    <a href="/api/v1/page/index" class="btn btn-primary">메인 페이지로 돌아가기</a>
-    <a href="/api/v1/page/profile-edit" class="btn btn-secondary">프로필 수정하기</a>
-    <a href="/api/v1/page/point-charge" class="btn btn-secondary">포인트 충전하기</a>
+  <div class="left-menu">
+    <a href="/api/v1/page/profile-edit">프로필 수정하기</a>
+    <a href="/api/v1/page/point-charge">포인트 충전하기</a>
+    <a href="/api/v1/page/point-charge-list">포인트 충전 내역</a>
   </div>
 </div>
 

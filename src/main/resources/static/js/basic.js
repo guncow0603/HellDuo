@@ -58,3 +58,16 @@ function getUserRole() {
     });
     return role;
 }
+
+$(document).ready(function () {
+    if (!$("#header").hasClass("loaded")) {
+        $("#header").load("/header.html", function (response, status, xhr) {
+            if (status === "error") {
+                console.error("헤더 로드 실패:", xhr.status, xhr.statusText);
+            } else {
+                console.log("헤더 로드 성공!");
+                $("#header").addClass("loaded"); // 중복 로드 방지
+            }
+        });
+    }
+});
