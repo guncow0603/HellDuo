@@ -6,23 +6,10 @@ $(document).ready(function () {
         $('#logout-button').show();
         $('#login-button').hide();
         $('#my-page').show();
-        $('#pt-create').show();
     } else {
         $('#logout-button').hide();
         $('#login-button').show();
         $('#my-page').hide();
-        $('#pt-create').hide();
-    }
-
-    const role = getUserRole();
-
-    // 로그인 인증 및 역할에 따른 화면 표시
-    if (auth !== undefined && auth !== '') {
-        if(role === 'TRAINER') {
-            $('#pt-create').show();
-        } else if(role === 'USER') {
-            $('#pt-create').hide();
-        }
     }
 
 

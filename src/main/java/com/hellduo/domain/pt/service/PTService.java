@@ -70,7 +70,7 @@ public class PTService {
                     pt.getSpecialization(),
                     pt.getScheduledDate(),
                     pt.getPrice(),
-                    pt.getStatus()));
+                    pt.getStatus().getDescription()));
         }
         return ptsReadResList;
     }

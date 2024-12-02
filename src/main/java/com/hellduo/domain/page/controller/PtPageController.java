@@ -11,4 +11,9 @@ public class PtPageController {
     public String ptCreatePage() {
         return "pt-create";
     }
+
+    @GetMapping("/ptList")
+    public String ptListPage() {
+        return "pt-list";
+    }
 }
