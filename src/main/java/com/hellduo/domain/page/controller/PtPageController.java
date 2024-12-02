@@ -24,4 +24,10 @@ public class PtPageController {
         model.addAttribute("ptId", ptId);
         return "pt-read"; // pt-read.html 페이지로 이동
     }
+
+    @GetMapping("/ptUpdate/{ptId}")
+    public String ptUpdatePage(@PathVariable Long ptId, Model model) {
+        model.addAttribute("ptId", ptId);
+        return "pt-update";
+    }
 }

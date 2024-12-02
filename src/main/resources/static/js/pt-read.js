@@ -2,24 +2,28 @@ $(document).ready(function() {
     // URL에서 ptId를 가져옵니다.
     const ptId = window.location.pathname.split("/").pop(); // URL에서 ptId 추출
 
-    // 서버에서 PT 정보를 가져오는 API 호출
+    $('#update-btn').on('click', function() {
+        window.location.href = `/api/v1/page/ptUpdate/${ptId}`;
+    });
+
     $.ajax({
-        url: `/api/v1/pt/${ptId}`,  // 백엔드 API URL
+        url: `/api/v1/pt/${ptId}`, // PT ID를 URL에 포함
         method: 'GET',
-        success: function(response) {
-            // 서버에서 반환된 데이터를 화면에 표시
-            $('#pt-trainer').text(`트레이너: ${response.trainerName}`);
-            $('#pt-user').text(`예약자: ${response.userName}`);
-            $('#pt-scheduledDate').text(`예약 시간: ${new Date(response.scheduledDate).toLocaleString()}`);
-            $('#pt-price').text(`PT 비용: ${response.price}원`);
-            $('#pt-description').text(`세션 설명: ${response.description}`);
-            $('#pt-status').text(`상태: ${response.status}`);
+        success: function(res) {
+            // 서버에서 받아온 데이터를 HTML 요소에 동적으로 삽입
+            $('#pt-title').text(`PT 제목: ${res.title}`);
+            $('#pt-description').text(`설명: ${res.description}`);
+            $('#pt-specialization').text(`전문 분야: ${res.specialization}`);
+            $('#pt-trainer').text(`트레이너: ${res.trainerName}`);
+            $('#pt-user').text(`예약자: ${res.userName}`);
+            $('#pt-scheduledDate').text(`예약 시간: ${new Date(res.scheduledDate).toLocaleString()}`);
+            $('#pt-price').text(`PT 비용: ${res.price} 원`);
+            $('#pt-status').text(`상태: ${res.status}`);
         },
-        error: function(error) {
-            // 오류 처리
+        error: function() {
             alert('PT 정보를 불러오는 데 실패했습니다.');
         }
-    });
+    })
 
     // 삭제 버튼 클릭 시 PT 삭제 요청
     $('#delete-btn').on('click', function() {

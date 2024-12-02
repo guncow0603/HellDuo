@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record PTsReadRes (
         Long ptId,
         String title,
-        PTSpecialization specialization,
+        String specialization,
         LocalDateTime scheduledDate,
         Integer price,
         String ptStatus
