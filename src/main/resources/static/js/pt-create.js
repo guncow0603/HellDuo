@@ -18,7 +18,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (res) {
-                $('#message').text(res.msg);
+                alert(res.msg);
+                window.location.href = '/api/v1/page/ptList';
             },
             error: function (xhr) {
                 $('#message').text(`PT 생성 실패`);
