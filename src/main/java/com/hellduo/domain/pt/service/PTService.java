@@ -57,7 +57,7 @@ public class PTService {
                 pt.getDescription(),
                 pt.getTrainer().getName(),
                 pt.getUser() != null ? pt.getUser().getName() : "미예약",
-                pt.getStatus().name());
+                pt.getStatus().getDescription());
     }
 
     public List<PTsReadRes> ptsRead() {

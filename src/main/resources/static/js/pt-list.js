@@ -33,14 +33,14 @@ $(document).ready(function() {
                 if (response && response.length > 0) {
                     response.forEach(pt => {
                         const ptElement = `
-                            <div class="pt-item">
-                                <h5>${pt.title}</h5>
-                                <p>전문 분야: ${pt.specialization}</p>
-                                <p>가격: ${pt.price} 원</p>
-                                <p>일정: ${new Date(pt.scheduledDate).toLocaleString()}</p>
-                                <p>상태: <span class="pt-status">${pt.ptStatus}</span></p>
-                            </div>
-                        `;
+                                    <div class="pt-item" style="cursor: pointer;" onclick="window.location.href='/api/v1/page/ptRead/${pt.ptId}'">
+                                        <h5>${pt.title}</h5>
+                                        <p>전문 분야: ${pt.specialization}</p>
+                                        <p>가격: ${pt.price} 원</p>
+                                        <p>일정: ${new Date(pt.scheduledDate).toLocaleString()}</p>
+                                        <p>상태: <span class="pt-status">${pt.ptStatus}</span></p>
+                                    </div>
+                                `;
                         ptListContainer.append(ptElement);  // PT 목록 추가
                     });
                 } else {

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PT 상세 정보</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="/js/basic.js"></script>
+</head>
+<body>
+<header id="header"></header>
+<div class="container mt-4">
+    <h2>PT 상세 정보</h2>
+    <div id="pt-details" class="card">
+        <div class="card-body">
+            <h5 class="card-title" id="pt-trainer">트레이너: </h5>
+            <p class="card-text" id="pt-user">예약자: </p>
+            <p class="card-text" id="pt-scheduledDate">예약 시간: </p>
+            <p class="card-text" id="pt-price">PT 비용: </p>
+            <p class="card-text" id="pt-description">세션 설명: </p>
+            <p class="card-text" id="pt-status">상태: </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // URL에서 ptId를 가져옵니다.
+        const ptId = window.location.pathname.split("/").pop(); // URL에서 ptId 추출
+
+        // 서버에서 PT 정보를 가져오는 API 호출
+        $.ajax({
+            url: `/api/v1/pt/${ptId}`,  // 백엔드 API URL
+            method: 'GET',
+            success: function(response) {
+                // 서버에서 반환된 데이터를 화면에 표시
+                $('#pt-trainer').text(`트레이너: ${response.trainerName}`);
+                $('#pt-user').text(`예약자: ${response.userName}`);
+                $('#pt-scheduledDate').text(`예약 시간: ${new Date(response.scheduledDate).toLocaleString()}`);
+                $('#pt-price').text(`PT 비용: ${response.price}원`);
+                $('#pt-description').text(`세션 설명: ${response.description}`);
+                $('#pt-status').text(`상태: ${response.status}`);
+            },
+            error: function(error) {
+                // 오류 처리
+                alert('PT 정보를 불러오는 데 실패했습니다.');
+            }
+        });
+    });
+</script>
+</body>
+</html>
