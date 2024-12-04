@@ -1,11 +1,14 @@
 package com.hellduo.domain.user.entity;
 
 import com.hellduo.domain.common.BaseEntity;
+import com.hellduo.domain.user.entity.enums.Gender;
+import com.hellduo.domain.user.entity.enums.Specialization;
+import com.hellduo.domain.user.entity.enums.UserRoleType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 
@@ -29,8 +32,9 @@ public class User extends BaseEntity {
     private String password;  // 비밀번호
 
     @Comment("성별")
-    @Column(name = "gender", length = 10)
-    private String gender;  // 성별
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Comment("연령")
     @Column(name = "age")
@@ -80,11 +84,16 @@ public class User extends BaseEntity {
 
     @Comment("탈퇴 여부")
     @Column(name = "deleted")
-    private boolean deleted = false; ;
+    private boolean deleted = false;
+
+    @Comment("회원 보유 포인트")
+    @Column(name = "point", nullable = false)
+    @ColumnDefault("0")
+    private Long point = 0L;
 
 
     @Builder
-    public User(String email, String password, UserRoleType role, String nickname, String gender,
+    public User(String email, String password, UserRoleType role, String nickname, Gender gender,
                 Integer age, Double weight, Double height, String phoneNumber,
                 String name, Specialization specialization, Integer experience,
                 String certifications, String bio) {
@@ -130,4 +139,8 @@ public class User extends BaseEntity {
         this.bio = bio;
     }
     public void withdrawal() { this.deleted = true; }
+
+    public void addPoint(Long point) {
+        this.point += point;
+    }
 }

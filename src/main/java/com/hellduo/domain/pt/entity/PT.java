@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @RequiredArgsConstructor
+@Table(name = "TB_PT")
 public class PT {
 
     @Id

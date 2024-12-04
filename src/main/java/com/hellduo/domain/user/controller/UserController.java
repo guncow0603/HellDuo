@@ -2,6 +2,7 @@ package com.hellduo.domain.user.controller;
 
 import com.hellduo.domain.user.dto.request.*;
 import com.hellduo.domain.user.dto.response.*;
+import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.service.UserService;
 import com.hellduo.global.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
@@ -79,6 +80,11 @@ public class UserController {
                                                         HttpServletResponse response) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.withdrawal(req, userDetails.getUser().getId(),response));
+    }
+
+    @GetMapping("/role")
+    public UserRoleType getUserRole(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userDetails.getUser().getRole();
     }
 
 }

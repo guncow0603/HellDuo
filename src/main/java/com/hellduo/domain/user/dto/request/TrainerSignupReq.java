@@ -1,6 +1,7 @@
 package com.hellduo.domain.user.dto.request;
 
-import com.hellduo.domain.user.entity.Specialization;
+import com.hellduo.domain.user.entity.enums.Gender;
+import com.hellduo.domain.user.entity.enums.Specialization;
 import jakarta.validation.constraints.*;
 
 public record TrainerSignupReq (
@@ -20,11 +21,14 @@ public record TrainerSignupReq (
         @NotBlank(message = "이름은 필수 입력값입니다.")
         String name,  // 이름
 
+        @NotNull(message = "성별은 필수 입력값입니다.")
+        Gender gender,  // 성별
+
+        @NotNull(message = "연령은 필수 입력값입니다.")
+        Integer age,  // 나이
+
         @NotBlank(message = "전화번호는 필수 입력값입니다.")
         String phoneNumber,  // 전화번호
-
-        @NotBlank(message = "성별은 필수 입력값입니다.")
-        String gender,  // 성별
 
         @NotNull(message = "전문 분야는 필수 입력값입니다.")
         Specialization specialization,  // 전문 분야

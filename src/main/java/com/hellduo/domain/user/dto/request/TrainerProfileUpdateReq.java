@@ -1,7 +1,6 @@
 package com.hellduo.domain.user.dto.request;
 
-import com.hellduo.domain.user.entity.Specialization;
-import jakarta.validation.constraints.*;
+import com.hellduo.domain.user.entity.enums.Specialization;
 
 public record TrainerProfileUpdateReq(
         String phoneNumber,  // 전화번호
