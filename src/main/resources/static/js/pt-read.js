@@ -1,7 +1,7 @@
 $(document).ready(function() {
     // URL에서 ptId를 가져옵니다.
     const ptId = window.location.pathname.split("/").pop(); // URL에서 ptId 추출
-
+    var trainerId;
     $('#update-btn').on('click', function() {
         window.location.href = `/api/v1/page/ptUpdate/${ptId}`;
     });
@@ -19,6 +19,7 @@ $(document).ready(function() {
             $('#pt-scheduledDate').text(`예약 시간: ${new Date(res.scheduledDate).toLocaleString()}`);
             $('#pt-price').text(`PT 비용: ${res.price} 원`);
             $('#pt-status').text(`상태: ${res.status}`);
+            trainerId=res.trainerId;
         },
         error: function() {
             alert('PT 정보를 불러오는 데 실패했습니다.');
@@ -41,4 +42,35 @@ $(document).ready(function() {
             });
         }
     });
+    var chatTrybutton = document.getElementById('chat-user');
+    chatTrybutton.innerText = "채팅걸기";
+    chatTrybutton.addEventListener('click', function () {
+        chatTry(trainerId);
+    });
 });
+
+
+
+
+function chatTry(userId) {
+
+    const data = {
+        receiverId: userId
+    }
+    $.ajax({
+        type: "POST",
+        url: `/api/v1/chats/rooms`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+    })
+        .done(function (res) {
+            console.log(res.id);
+            window.location.href ='/api/v1/chats/rooms/' + res.id +'/front';
+        })
+        .fail(function (res) {
+            const jsonObject = JSON.parse(res.responseText);
+            const messages = jsonObject.messages;
+            alert(messages);
+        });
+
+}
