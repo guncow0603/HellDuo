@@ -143,4 +143,5 @@ public class User extends BaseEntity {
     public void addPoint(Long point) {
         this.point += point;
     }
+    public void minusPoint(Long point){ this.point-= point; }
 }

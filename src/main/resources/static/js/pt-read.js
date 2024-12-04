@@ -1,4 +1,24 @@
 $(document).ready(function() {
+    const auth = getToken();
+
+// 로그인 인증 및 역할에 따른 화면 표시
+    if (auth !== undefined && auth !== '') {
+        const role = getUserRole();
+        if (role === 'TRAINER') {
+            $('#delete-btn').show();
+            $('#update-btn').show();
+            $('#reserve-btn').hide();
+        } else {
+            $('#delete-btn').hide();
+            $('#update-btn').hide();
+            $('#reserve-btn').show();
+        }
+    } else {
+        $('#delete-btn').hide();
+        $('#update-btn').hide();
+        $('#reserve-btn').hide();
+        $('#chat-user').hide();
+    }
     // URL에서 ptId를 가져옵니다.
     const ptId = window.location.pathname.split("/").pop(); // URL에서 ptId 추출
     var trainerId;
@@ -47,6 +67,25 @@ $(document).ready(function() {
     chatTrybutton.addEventListener('click', function () {
         chatTry(trainerId);
     });
+
+    $('#reserve-btn').on('click', function() {
+        // jQuery AJAX 요청
+        $.ajax({
+            url: `/api/v1/pt/${ptId}`,  // 요청할 URL
+            type: 'PATCH',               // HTTP 메서드
+            contentType: 'application/json'  // 요청 본문 타입
+        })
+            .done(function (res) {
+                alert(res.msg);
+                window.location.href = `/api/v1/page/ptRead/${ptId}`;
+            })
+            .fail(function (res) {
+                const jsonObject = JSON.parse(res.responseText);
+                const messages = jsonObject.messages;
+                alert(messages);
+            });
+    });
+
 });
 
 

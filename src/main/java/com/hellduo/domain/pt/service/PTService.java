@@ -11,6 +11,10 @@ import com.hellduo.domain.pt.exception.PTException;
 import com.hellduo.domain.pt.repository.PTRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
+import com.hellduo.domain.user.exception.PointErrorCode;
+import com.hellduo.domain.user.exception.PointException;
+import com.hellduo.domain.user.exception.UserErrorCode;
+import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -92,7 +96,7 @@ public class PTService {
         String title = req.title();
         PTSpecialization specialization = req.specialization();
         LocalDateTime scheduledDate = req.scheduledDate();
-        Integer price = req.price();
+        Long price = req.price();
         String description = req.description();
 
         // PT의 제목을 업데이트
@@ -139,5 +143,23 @@ public class PTService {
         ptRepository.delete(pt);
 
         return  new PTDeleteRes("삭제 완료");
+    }
+
+    public PTReservRes ptReserv(Long ptId, Long userId) {
+        User user = userRepository.findUserByIdWithThrow(userId);
+        if(!user.getRole().equals(UserRoleType.USER)){
+            throw new UserException(UserErrorCode.NOT_ROLE_USER);
+        }
+        PT pt = ptRepository.findPTByIdWithThrow(ptId);
+        if(user.getPoint()<pt.getPrice()){
+            throw new PointException(PointErrorCode.NOT_POINT);
+        }
+        if(pt.getStatus()!=PTStatus.UNRESERVED){
+            throw new PTException(PTErrorCode.NOT_STATUS);
+        }
+        user.minusPoint(pt.getPrice());
+        pt.updateUser(user);
+        pt.updateStatus(PTStatus.SCHEDULED);
+        return new PTReservRes("예약 완료 되었습니다.");
     }
 }
