@@ -1,17 +1,18 @@
 // 페이지 로드 시 실행
 $(document).ready(function() {
 
-
-    const role = getUserRole();
     const auth = getToken();
 
     // 로그인 인증 및 역할에 따른 화면 표시
     if (auth !== undefined && auth !== '') {
+        const role = getUserRole();
         if (role === 'TRAINER') {
-            $('#pt-create').show();
-        } else if (role === 'USER') {
-            $('#pt-create').hide();
+            $('#pt-create-button').show();
+        } else {
+            $('#pt-create-button').hide();
         }
+    }else {
+        $('#pt-create-button').hide();
     }
 
     loadPTs();
