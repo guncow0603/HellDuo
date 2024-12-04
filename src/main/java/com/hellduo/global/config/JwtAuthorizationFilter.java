@@ -66,11 +66,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     setContext(accessToken);
 
                 } else {
-                    Cookie cookie = new Cookie(JwtUtil.REFRESH_TOKEN_HEADER, null);
-                    cookie.setMaxAge(0);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-
                     UserLoginRes res = new UserLoginRes(
                             "유효하지 않은 토큰입니다.");
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -90,10 +85,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String email = info.getSubject();
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         // -> put this in userDetails
-        UserDetailsImpl tempUserDetails = userDetailsService.getUserDetails(email);
-        UserDetailsImpl userDetails = userDetailsService.loadUserById(tempUserDetails.getUser()
-                .getId());
-
+        UserDetailsImpl userDetails = userDetailsService.getUserDetails(email);
         // ->  put this in authentication principal
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,
                 null, userDetails.getAuthorities());
