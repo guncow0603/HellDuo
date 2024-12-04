@@ -8,6 +8,6 @@ public record PTCreateReq(
         String title,
         PTSpecialization specialization,
         LocalDateTime scheduledDate,
-        Integer price,
+        Long price,
         String description
 ) { }
