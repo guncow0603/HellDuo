@@ -52,6 +52,7 @@ public class PTService {
     public PTReadRes ptRead(Long ptId) {
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
         return new PTReadRes(pt.getId(),
+                pt.getTrainer().getId(),
                 pt.getTitle(),
                 pt.getScheduledDate(),
                 pt.getPrice(),

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record PTReadRes(
         Long ptId,                 // PT 세션 ID
+        Long trainerId,
         String title,
         LocalDateTime scheduledDate, // 예약 날짜 및 시간
         Integer price,               // PT 비용

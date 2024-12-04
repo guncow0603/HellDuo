@@ -133,6 +133,7 @@ public class UserService {
                 .experience(experience)
                 .certifications(certifications)
                 .bio(bio)
+                .nickname(name)
                 .build();
 
         UserImage userImage = UserImage.builder()

@@ -62,7 +62,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers("/api/v1/users/signup", "/api/v1/users/trainerSignup", "/api/v1/users/login","/api/v1/page/**","/js/**","/images/**"
-                        ,"/header.html")
+                        ,"/header.html","/**")
                         .permitAll() // signup, trainerSignup, login은 인증 없이 접근 가능
                         .requestMatchers("/api/v1/users/logout","/api/v1/users/withdrawal", "/api/v1/users", "/api/v1/users/trainer","/api/v1/payments/**",
                                 "/api/v1/users/update","/api/v1/userImage/**","/api/v1/board/**","/api/v1/comment","/api/v1/pt/**","/api/v1/users/role"
