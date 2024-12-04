@@ -7,7 +7,7 @@ public record PTReadRes(
         Long trainerId,
         String title,
         LocalDateTime scheduledDate, // 예약 날짜 및 시간
-        Integer price,               // PT 비용
+        Long price,               // PT 비용
         String description,      // 세션 설명
         String trainerName,      // 트레이너 이름
         String specialization,
