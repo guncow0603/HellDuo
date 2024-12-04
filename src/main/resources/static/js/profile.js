@@ -222,3 +222,42 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function confirmWithdrawal() {
+    if (confirm("정말로 탈퇴하시겠습니까?")) {
+        // 모달을 띄웁니다.
+        document.getElementById('passwordModal').style.display = 'block';
+    }
+}
+
+// 비밀번호 입력 후 확인 버튼 클릭
+function submitPassword() {
+    const password = document.getElementById('passwordInput').value;
+    if (password) {
+        $.ajax({
+            url: '/api/v1/users/withdrawal',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                password: password
+            }),
+            success: function(res) {
+                alert(res.msg); // 성공 메시지 표시
+                window.location.href = '/api/v1/page/index'; // 성공 시 리디렉션
+            },
+            error: function(res) {
+                const jsonObject = JSON.parse(res.responseText);
+                const messages = jsonObject.messages;
+                alert(messages); // 에러 메시지 표시
+            }
+        });
+        closeModal(); // 모달 닫기
+    } else {
+        alert("비밀번호를 입력해주세요.");
+    }
+}
+
+// 모달 닫기
+function closeModal() {
+    document.getElementById('passwordModal').style.display = 'none';
+}
