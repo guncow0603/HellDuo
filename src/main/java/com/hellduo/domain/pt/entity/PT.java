@@ -74,4 +74,6 @@ public class PT {
     public void updateSpecialization(PTSpecialization specialization){ this.specialization=specialization; }
     public void updateUser(User user){ this.user=user; }
     public void updateStatus(PTStatus ptStatus){ this.status=ptStatus; }
+    public void updateLatitude(Double latitude){ this.latitude=latitude; }
+    public void updateLongitude(Double longitude){ this.longitude=longitude; }
 }
