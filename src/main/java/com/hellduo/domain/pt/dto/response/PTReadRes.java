@@ -12,6 +12,8 @@ public record PTReadRes(
         String trainerName,      // 트레이너 이름
         String specialization,
         String userName,         // 예약자 이름
-        String status            // PT 상태
+        String status,            // PT 상태
+        Double latitude, // 위도
+        Double longitude // 경도
 ) {
 }

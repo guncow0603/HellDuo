@@ -57,7 +57,8 @@ public class PTService {
 
     public PTReadRes ptRead(Long ptId) {
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
-        return new PTReadRes(pt.getId(),
+        return new PTReadRes(
+                pt.getId(),
                 pt.getTrainer().getId(),
                 pt.getTitle(),
                 pt.getScheduledDate(),
@@ -66,7 +67,9 @@ public class PTService {
                 pt.getTrainer().getName(),
                 pt.getSpecialization().getName(),
                 pt.getUser() != null ? pt.getUser().getName() : "미예약",
-                pt.getStatus().getDescription());
+                pt.getStatus().getDescription(),
+                pt.getLatitude(),
+                pt.getLongitude());
     }
 
     public List<PTsReadRes> ptsRead() {
