@@ -103,6 +103,8 @@ public class PTService {
         LocalDateTime scheduledDate = req.scheduledDate();
         Long price = req.price();
         String description = req.description();
+        Double latitude = req.latitude();
+        Double longitude = req.longitude();
 
         // PT의 제목을 업데이트
         if (title != null && !title.isEmpty()) {
@@ -127,6 +129,14 @@ public class PTService {
         // 설명 업데이트
         if (description != null && !description.isEmpty()) {
             pt.updateDescription(description);
+        }
+
+        if (latitude != null) {
+            pt.updateLatitude(latitude);
+        }
+
+        if (longitude != null) {
+            pt.updateLongitude(longitude);
         }
 
         // 업데이트된 PT 정보 저장

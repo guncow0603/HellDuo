@@ -2,7 +2,6 @@ $(document).ready(function () {
     const auth = getToken();
 
     if (auth !== undefined && auth !== '') { //토큰이 존재 즉 로그인중
-        console.log('auth:', auth);
         $('#logout-button').show();
         $('#login-button').hide();
         $('#my-page').show();
@@ -65,7 +64,6 @@ $(document).ready(function () {
             if (status === "error") {
                 console.error("헤더 로드 실패:", xhr.status, xhr.statusText);
             } else {
-                console.log("헤더 로드 성공!");
                 $("#header").addClass("loaded"); // 중복 로드 방지
             }
         });
