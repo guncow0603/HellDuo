@@ -46,6 +46,8 @@ public class PTService {
                 price(req.price()).
                 description(req.description()).
                 status(PTStatus.UNRESERVED).
+                latitude(req.latitude()).
+                longitude(req.longitude()).
                 build();
 
         ptRepository.save(pt);
