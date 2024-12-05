@@ -9,5 +9,7 @@ public record PTCreateReq(
         PTSpecialization specialization,
         LocalDateTime scheduledDate,
         Long price,
-        String description
+        String description,
+        Double latitude, // 위도
+        Double longitude // 경도
 ) { }

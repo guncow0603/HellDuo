@@ -30,6 +30,12 @@ public class PT {
     @Column(nullable = false)
     private Long price; // PT 세션 비용
 
+    @Column(nullable = false)
+    private Double latitude; // 위도
+
+    @Column(nullable = false)
+    private Double longitude; // 경도
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id", nullable = false)
     private User trainer; // 트레이너 정보 (다대일 관계)
@@ -48,7 +54,8 @@ public class PT {
     private PTSpecialization specialization;
 
     @Builder
-    public PT(String title, LocalDateTime scheduledDate, Long price, String description, PTStatus status, User trainer, PTSpecialization specialization){
+    public PT(String title, LocalDateTime scheduledDate, Long price, String description,
+              PTStatus status, User trainer, PTSpecialization specialization,Double latitude,Double longitude){
         this.scheduledDate = scheduledDate;
         this.price = price;
         this.description = description;
@@ -56,6 +63,8 @@ public class PT {
         this.trainer = trainer;
         this.title = title;
         this.specialization = specialization;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public void updateTitle(String title){ this.title=title; }
