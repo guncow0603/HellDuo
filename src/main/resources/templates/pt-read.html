@@ -23,6 +23,21 @@
             margin-top: 20px;
         }
 
+        /* 이미지 갤러리 스타일 수정 */
+        #image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* 이미지 간격 */
+        }
+
+        /* 이미지 크기를 카카오맵과 동일하게 500x400px로 설정 */
+        #image-gallery img {
+            width: 500px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
         #distance {
             font-size: 1.2rem;
             margin-top: 10px;
@@ -93,6 +108,10 @@
             <!-- 카카오 맵 표시 -->
             <div id="map" style="width: 500px; height: 400px;"></div>
             <p id="distance"></p> <!-- 거리 표시 -->
+
+            <!-- 이미지 갤러리 추가 -->
+            <h5>PT 이미지</h5>
+            <div id="image-gallery" style="display: flex; flex-wrap: wrap;"></div> <!-- 이미지가 표시될 영역 -->
 
             <!-- 버튼들 -->
             <button id="update-btn">수정</button>

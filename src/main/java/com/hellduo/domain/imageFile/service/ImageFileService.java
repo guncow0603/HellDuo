@@ -1,9 +1,6 @@
 package com.hellduo.domain.imageFile.service;
 
-import com.hellduo.domain.imageFile.dto.response.UserCertsReadRes;
-import com.hellduo.domain.imageFile.dto.response.UserImageCreateRes;
-import com.hellduo.domain.imageFile.dto.response.UserImageDeleteRes;
-import com.hellduo.domain.imageFile.dto.response.UserImageReadRes;
+import com.hellduo.domain.imageFile.dto.response.*;
 import com.hellduo.domain.imageFile.entitiy.PTImage;
 import com.hellduo.domain.imageFile.entitiy.enums.ImageType;
 import com.hellduo.domain.imageFile.entitiy.UserImage;
@@ -198,5 +195,25 @@ public class ImageFileService {
         List<PTImage> ptImageList = createImageList(fileUrlList, user);
         ptImageRepository.saveAll(ptImageList);
         return new UserImageCreateRes("이미지가 업로드되었습니다.");
+    }
+
+    public List<PTImageReadRes> readPTImages(Long trainerId) {
+        // 자격증 이미지들을 조회
+        List<PTImage> ptImages = ptImageRepository.findAllByUserId(trainerId);
+
+        if (ptImages.isEmpty()) {
+            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
+        }
+
+        // 결과를 담을 리스트
+        List<PTImageReadRes> response = new ArrayList<>();
+
+        // PTImage 객체들을 UserCertsReadRes로 변환하여 리스트에 추가
+        for (PTImage ptImage : ptImages) {
+            response.add(new PTImageReadRes(ptImage.getId(),ptImage.getUserImageUrl()));
+        }
+
+        // 변환된 리스트 반환
+        return response;
     }
 }
