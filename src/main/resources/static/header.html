@@ -55,6 +55,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/api/v1/page/profile" id="my-page">마이페이지</a>
                 </li>
+                <li class="nav-item">
+                    <button type="button" class="btn btn-outline-primary position-relative"
+                            id="header-chat-list"
+                            onclick="chatRooms()">
+                        채팅방
+                    </button>
+                </li>
             </ul>
         </nav>
 
@@ -66,5 +73,16 @@
     </header>
 </div>
 </body>
+<script>
+    function chatRooms() {
+        const auth = getToken();
+        if (auth === undefined || auth === '') {
+            alert('로그인 후 이용 가능합니다.');
+        } else {
+            // 현재 URL을 기준으로 채팅방 URL로 이동
+            window.location.href = '/api/v1/chats/rooms/list';
+        }
+    }
+</script>
 
 </html>
