@@ -81,6 +81,32 @@ $(document).ready(function() {
             });
             // 사용자 위치 및 거리 계산 함수 호출
             getUserLocationAndCalculateDistance(latitude, longitude);
+
+            // PT 이미지 조회 API 호출
+            if (trainerId !== undefined) {
+                $.ajax({
+                    url: `/api/v1/userImage/pt/${trainerId}`,  // 트레이너 ID에 맞춰서 API 호출
+                    method: 'GET',
+                    success: function (response) {
+                        const ptImages = response;  // PT 이미지 리스트 (response)
+
+                        // 이미지를 HTML에 삽입
+                        if (ptImages.length > 0) {
+                            let imageGallery = $('#image-gallery'); // 이미지 갤러리 영역
+                            ptImages.forEach(function (image) {
+                                // 이미지 HTML 생성
+                                const imageElement = `<img src="${image.imageUrl}" alt="PT 이미지" class="pt-image"/>`;
+                                imageGallery.append(imageElement);  // 이미지 추가
+                            });
+                        } else {
+                            alert("PT 이미지가 없습니다.");
+                        }
+                    },
+                    error: function () {
+                        alert("이미지 조회에 실패했습니다.");
+                    }
+                });
+            }
         },
         error: function() {
             alert('PT 정보를 불러오는 데 실패했습니다.');

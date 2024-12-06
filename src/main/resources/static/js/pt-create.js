@@ -31,13 +31,45 @@ $(document).ready(function () {
             data: JSON.stringify(formData),
             success: function (res) {
                 alert(res.msg);
-                window.location.href = '/api/v1/page/ptList';
+                // PT 생성 후 이미지 업로드 요청
+                uploadPTImages(res.ptId); // PT 생성 후 ID를 이용해 이미지 업로드
             },
             error: function (xhr) {
                 $('#message').text('PT 생성 실패').addClass('error');
-            },
+            }
         });
     });
+
+    // PT 이미지 업로드 처리
+    function uploadPTImages(ptId) {
+        const formData = new FormData();
+        const files = $('#pt-files')[0].files;
+
+        // 선택된 파일이 있으면 FormData에 파일을 추가
+        if (files.length > 0) {
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+
+            // AJAX를 통해 서버로 파일 업로드
+            $.ajax({
+                url: '/api/v1/userImage/pt', // 서버의 업로드 API
+                method: 'POST',
+                data: formData,
+                processData: false,  // 파일을 자동으로 처리하지 않도록 설정
+                contentType: false,  // 컨텐츠 타입을 자동으로 설정하지 않음
+                success: function(res) {
+                    alert(res.msg);
+                    window.location.href = '/api/v1/page/ptList'; // 성공 시 리디렉션
+                },
+                error: function(xhr, status, error) {
+                    alert("이미지 업로드 실패: " + xhr.responseText);
+                }
+            });
+        } else {
+            alert("업로드할 파일을 선택해 주세요.");
+        }
+    }
 
     // 카카오 맵 초기화
     const mapContainer = document.getElementById('map');

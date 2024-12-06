@@ -30,6 +30,17 @@ $(document).ready(function () {
         });
     });
 
+    let eventSource = new EventSource(
+        window.location.protocol + '//' + window.location.host + '/api/v1/notifications/subscribe');
+    console.log('확인');
+
+    eventSource.addEventListener("createChatRoom", function (event) {
+        console.log(event);
+        let message = event.data;
+        alert(message);
+        alertBadge();
+    });
+
 });
 function getToken() {
     let auth = Cookies.get('AccessToken');
@@ -69,3 +80,16 @@ $(document).ready(function () {
         });
     }
 });
+
+function alertBadge() {
+
+    var headerChatlist = document.getElementById('header-chat-list');
+    const newSpan = document.createElement('span');
+    newSpan.className = 'position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle';
+    console.log(newSpan);
+    const innerSpan = document.createElement('span');
+    innerSpan.className = 'visually-hidden';
+    innerSpan.textContent = 'New alerts';
+    headerChatlist.appendChild(newSpan);
+    console.log(headerChatlist);
+}

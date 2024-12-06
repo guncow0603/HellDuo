@@ -1,9 +1,6 @@
 package com.hellduo.domain.imageFile.controller;
 
-import com.hellduo.domain.imageFile.dto.response.UserCertsReadRes;
-import com.hellduo.domain.imageFile.dto.response.UserImageCreateRes;
-import com.hellduo.domain.imageFile.dto.response.UserImageDeleteRes;
-import com.hellduo.domain.imageFile.dto.response.UserImageReadRes;
+import com.hellduo.domain.imageFile.dto.response.*;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +34,20 @@ public class ImageController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.uploadUserCertificationImages(userDetails.getUser().getId(), multipartFiles));
+    }
+
+    // PT 이미지 업로드
+    @PostMapping("/pt")
+    public ResponseEntity<UserImageCreateRes> ptUploadImages(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.ptUploadImages(userDetails.getUser(), multipartFiles));
+    }
+
+    // PT 이미지 조회
+    @GetMapping("/pt/{trainerId}")
+    public ResponseEntity<List<PTImageReadRes>> readPTImages(@PathVariable Long trainerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readPTImages(trainerId));
     }
 
     // 프로필 이미지 조회
