@@ -4,10 +4,12 @@ import com.hellduo.domain.imageFile.dto.response.UserCertsReadRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageCreateRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageDeleteRes;
 import com.hellduo.domain.imageFile.dto.response.UserImageReadRes;
-import com.hellduo.domain.imageFile.entitiy.ImageType;
+import com.hellduo.domain.imageFile.entitiy.PTImage;
+import com.hellduo.domain.imageFile.entitiy.enums.ImageType;
 import com.hellduo.domain.imageFile.entitiy.UserImage;
 import com.hellduo.domain.imageFile.exception.ImageErrorCode;
 import com.hellduo.domain.imageFile.exception.ImageException;
+import com.hellduo.domain.imageFile.repository.PTImageRepository;
 import com.hellduo.domain.imageFile.repository.UserImageRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.repository.UserRepository;
@@ -31,6 +33,7 @@ public class ImageFileService {
     private final S3Uploader s3Uploader;
     private final UserRepository userRepository;
     private final UserImageRepository userImageRepository;
+    private final PTImageRepository ptImageRepository;
 
     @Value("${s3.url}")
     private String s3Url;
@@ -167,5 +170,33 @@ public class ImageFileService {
         fileUrls.addAll(uploadedFileUrls);
 
         return fileUrls;
+    }
+
+    private List<PTImage> createImageList(List<String> fileUrls, User user) {
+        List<PTImage> ptImageList = new ArrayList<>();
+
+        // 첫 번째 이미지를 썸네일로 설정, 나머지는 일반 이미지로 설정
+        for (int i = 0; i < fileUrls.size(); i++) {
+            String fileUrl = fileUrls.get(i);
+
+            // 첫 번째 이미지는 썸네일로, 그 외의 이미지는 일반 사진으로 설정
+            ImageType imageType = (i == 0) ? ImageType.THUMBNAIL : ImageType.REGULAR;
+
+            PTImage ptImage = PTImage.builder()
+                    .user(user)
+                    .userImageUrl(s3Url + fileUrl)
+                    .type(imageType)  // 이미지 타입 설정
+                    .build();
+
+            ptImageList.add(ptImage);
+        }
+        return ptImageList;
+    }
+    public UserImageCreateRes ptUploadImages(User user, List<MultipartFile> multipartFiles) {
+        List<String> fileUrlList = uploadFilesToS3(multipartFiles, user.getId(), "images/");
+
+        List<PTImage> ptImageList = createImageList(fileUrlList, user);
+        ptImageRepository.saveAll(ptImageList);
+        return new UserImageCreateRes("이미지가 업로드되었습니다.");
     }
 }

@@ -11,8 +11,8 @@ import org.hibernate.annotations.Comment;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_user_image")
-public class UserImage {
+@Table(name = "tb_pt_image")
+public class PTImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,10 +31,9 @@ public class UserImage {
     @JoinColumn(name = "user_id")
     private User user;
     @Builder
-    private UserImage(String userImageUrl, User user, ImageType type) {
+    private PTImage(String userImageUrl, User user, ImageType type) {
         this.userImageUrl = userImageUrl;
         this.user = user;
         this.type = type;
     }
-
 }

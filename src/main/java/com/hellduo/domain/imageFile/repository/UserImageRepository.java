@@ -1,6 +1,6 @@
 package com.hellduo.domain.imageFile.repository;
 
-import com.hellduo.domain.imageFile.entitiy.ImageType;
+import com.hellduo.domain.imageFile.entitiy.enums.ImageType;
 import com.hellduo.domain.imageFile.entitiy.UserImage;
 import com.hellduo.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

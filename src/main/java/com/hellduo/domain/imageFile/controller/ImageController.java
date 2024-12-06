@@ -39,6 +39,14 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.uploadUserCertificationImages(userDetails.getUser().getId(), multipartFiles));
     }
 
+    // 이미지 업로드
+    @PostMapping("/pt")
+    public ResponseEntity<UserImageCreateRes> ptUploadImages(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.ptUploadImages(userDetails.getUser(), multipartFiles));
+    }
+
     // 프로필 이미지 조회
     @GetMapping("/profile")
     public ResponseEntity<UserImageReadRes> readUserProfileImage(
