@@ -6,6 +6,7 @@ import com.hellduo.domain.comment.dto.request.CommentCreatReq;
 import com.hellduo.domain.comment.dto.request.CommentReadReq;
 import com.hellduo.domain.comment.dto.request.CommentUpdateReq;
 import com.hellduo.domain.comment.dto.response.CommentCreateRes;
+import com.hellduo.domain.comment.dto.response.CommentDeleteRes;
 import com.hellduo.domain.comment.dto.response.CommentReadRes;
 import com.hellduo.domain.comment.dto.response.CommentUpdateRes;
 import com.hellduo.domain.comment.entity.Comment;
@@ -75,5 +76,16 @@ public class CommentService {
         comment.updateContent(req.Content());
 
         return new CommentUpdateRes("수정 완료.");
+    }
+
+    public CommentDeleteRes commentDelete(User user, Long commentId) {
+        Comment comment = commentRepository.findCommentByIdWithThrow(commentId);
+
+        if(user.getId() != comment.getUser().getId()) {
+            throw new UserException(UserErrorCode.NOT_FOUND_USER);
+        }
+        commentRepository.deleteById(commentId);
+
+        return new CommentDeleteRes("삭제 완료.");
     }
 }
