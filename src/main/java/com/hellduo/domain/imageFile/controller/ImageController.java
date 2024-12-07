@@ -72,6 +72,13 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteUserCertificationImage(userDetails.getUser().getId(), certId));
     }
 
+    // 배너 이미지 업로드
+    @PostMapping("/banner")
+    public ResponseEntity<BannerImageCreateRes> bannerUploadImages(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart(value = "banners", required = false) List<MultipartFile> multipartFiles) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.bannerUploadImages(userDetails.getUser(), multipartFiles));
+    }
 
 
 }
