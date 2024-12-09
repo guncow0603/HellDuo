@@ -10,6 +10,8 @@ import com.hellduo.domain.imageFile.exception.ImageException;
 import com.hellduo.domain.imageFile.repository.BannerRepository;
 import com.hellduo.domain.imageFile.repository.PTImageRepository;
 import com.hellduo.domain.imageFile.repository.UserImageRepository;
+import com.hellduo.domain.pt.entity.PT;
+import com.hellduo.domain.pt.repository.PTRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.exception.UserErrorCode;
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ public class ImageFileService {
     private final UserImageRepository userImageRepository;
     private final PTImageRepository ptImageRepository;
     private final BannerRepository bannerRepository;
+    private final PTRepository ptRepository;
 
     @Value("${s3.url}")
     private String s3Url;
@@ -175,7 +179,7 @@ public class ImageFileService {
         return fileUrls;
     }
 
-    private List<PTImage> createImageList(List<String> fileUrls, User user) {
+    private List<PTImage> createImageList(PT pt,List<String> fileUrls, User user) {
         List<PTImage> ptImageList = new ArrayList<>();
 
         // 첫 번째 이미지를 썸네일로 설정, 나머지는 일반 이미지로 설정
@@ -187,6 +191,7 @@ public class ImageFileService {
 
             PTImage ptImage = PTImage.builder()
                     .user(user)
+                    .pt(pt)
                     .userImageUrl(s3Url + fileUrl)
                     .type(imageType)  // 이미지 타입 설정
                     .build();
@@ -195,17 +200,17 @@ public class ImageFileService {
         }
         return ptImageList;
     }
-    public UserImageCreateRes ptUploadImages(User user, List<MultipartFile> multipartFiles) {
-        List<String> fileUrlList = uploadFilesToS3(multipartFiles, user.getId(), "images/");
-
-        List<PTImage> ptImageList = createImageList(fileUrlList, user);
+    public UserImageCreateRes ptUploadImages(Long ptId,User user, List<MultipartFile> multipartFiles) {
+        List<String> fileUrlList = uploadFilesToS3(multipartFiles, ptId, "ptImages/");
+        PT pt = ptRepository.findPTByIdWithThrow(ptId);
+        List<PTImage> ptImageList = createImageList(pt,fileUrlList, user);
         ptImageRepository.saveAll(ptImageList);
         return new UserImageCreateRes("이미지가 업로드되었습니다.");
     }
 
-    public List<PTImageReadRes> readPTImages(Long trainerId) {
-        // 자격증 이미지들을 조회
-        List<PTImage> ptImages = ptImageRepository.findAllByUserId(trainerId);
+    public List<PTImageReadRes> readPTImages(Long ptId) {
+
+        List<PTImage> ptImages = ptImageRepository.findAllByPtId(ptId);
 
         if (ptImages.isEmpty()) {
             throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
@@ -281,5 +286,11 @@ public class ImageFileService {
         bannerRepository.delete(bannerImage);
 
         return new BannerImageDeleteRes("삭제 완료");
+    }
+
+    public PTImageReadRes readThumbnailPTImage(Long ptId) {
+        PTImage ptImage=ptImageRepository.findFirstByPtIdAndType(ptId, ImageType.THUMBNAIL)
+                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
+        return new PTImageReadRes(ptImage.getId(),ptImage.getUserImageUrl());
     }
 }

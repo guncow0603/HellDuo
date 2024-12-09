@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -49,11 +50,12 @@ public class PTService {
                 status(PTStatus.UNRESERVED).
                 latitude(req.latitude()).
                 longitude(req.longitude()).
+                address(req.address()).
                 build();
 
         ptRepository.save(pt);
 
-        return new PTCreateRes("PT가 생성 되었습니다.");
+        return new PTCreateRes(pt.getId(),"PT가 생성 되었습니다.");
     }
 
     public PTReadRes ptRead(Long ptId) {
@@ -73,19 +75,35 @@ public class PTService {
                 pt.getLongitude());
     }
 
-    public List<PTsReadRes> ptsRead() {
-        List<PT> pts = ptRepository.findByStatus(PTStatus.UNRESERVED); // UNRESERVED 상태만 가져오기
+    public List<getPTsRes> ptsRead(Double userLatitude, Double userLongitude) {
+        // UNRESERVED 상태만 가져오기
+        List<PT> pts = ptRepository.findByStatus(PTStatus.UNRESERVED);
 
-        List<PTsReadRes> ptsReadResList = new ArrayList<>();
-        for(PT pt: pts){
-            ptsReadResList.add(new PTsReadRes(pt.getId(),
+        // PT 리스트를 거리 기준으로 정렬
+        pts.sort(Comparator.comparingDouble(pt -> calculateDistance(userLatitude, userLongitude, pt.getLatitude(), pt.getLongitude())));
+
+        // 응답 객체로 변환
+        List<getPTsRes> getPTsResList = new ArrayList<>();
+        for (PT pt : pts) {
+            getPTsResList.add(new getPTsRes(
+                    pt.getId(),
                     pt.getTitle(),
-                    pt.getSpecialization().getName(),
-                    pt.getScheduledDate(),
-                    pt.getPrice(),
-                    pt.getStatus().getDescription()));
+                    pt.getAddress()
+            ));
         }
-        return ptsReadResList;
+        return getPTsResList;
+    }
+
+    // 두 지점 간의 거리를 계산하는 Haversine Formula
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371; // 지구 반지름 (단위: km)
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // 거리 (단위: km)
     }
 
     public PTUpdateRes ptUpdate(Long ptId, PTUpdateReq req, Long trainerId) {
