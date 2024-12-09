@@ -19,6 +19,7 @@ $(document).ready(function () {
             scheduledDate: $('#scheduledDate').val(),
             price: parseInt($('#price').val(), 10),
             description: $('#description').val(),
+            address: $('#address').val(), // 주소도 폼 데이터에 추가
             latitude: latitude,
             longitude: longitude
         };
@@ -53,7 +54,7 @@ $(document).ready(function () {
 
             // AJAX를 통해 서버로 파일 업로드
             $.ajax({
-                url: '/api/v1/userImage/pt', // 서버의 업로드 API
+                url: `/api/v1/userImage/pt/${ptId}`, // PT ID를 포함한 URL로 요청
                 method: 'POST',
                 data: formData,
                 processData: false,  // 파일을 자동으로 처리하지 않도록 설정
@@ -126,6 +127,7 @@ $(document).ready(function () {
         // 위치 입력란에 값 설정
         $('#latitude').val(place.y);
         $('#longitude').val(place.x);
+        $('#address').val(place.address_name); // 주소 입력란에 주소 설정
         $('#searchResults').empty();
     }
 });

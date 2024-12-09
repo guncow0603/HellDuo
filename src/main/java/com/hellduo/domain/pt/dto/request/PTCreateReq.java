@@ -11,5 +11,6 @@ public record PTCreateReq(
         Long price,
         String description,
         Double latitude, // 위도
-        Double longitude // 경도
+        Double longitude, // 경도
+        String address
 ) { }

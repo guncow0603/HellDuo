@@ -32,8 +32,10 @@ public class PTController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PTsReadRes>> ptsRead (){
-        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptsRead());
+    public ResponseEntity<List<getPTsRes>> ptsRead(
+            @RequestParam("latitude") Double latitude,
+            @RequestParam("longitude") Double longitude) {
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptsRead(latitude, longitude));
     }
 
     @PutMapping("/{ptId}")

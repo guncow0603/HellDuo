@@ -38,17 +38,24 @@ public class ImageController {
     }
 
     // PT 이미지 업로드
-    @PostMapping("/pt")
+    @PostMapping("/pt/{ptId}")
     public ResponseEntity<UserImageCreateRes> ptUploadImages(
+            @PathVariable Long ptId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.ptUploadImages(userDetails.getUser(), multipartFiles));
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.ptUploadImages(ptId,userDetails.getUser(), multipartFiles));
     }
 
     // PT 이미지 조회
-    @GetMapping("/pt/{trainerId}")
-    public ResponseEntity<List<PTImageReadRes>> readPTImages(@PathVariable Long trainerId) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readPTImages(trainerId));
+    @GetMapping("/pt/{ptId}")
+    public ResponseEntity<List<PTImageReadRes>> readPTImages(@PathVariable Long ptId) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readPTImages(ptId));
+    }
+
+    // PT 썸네일 이미지 조회
+    @GetMapping("/pt/thumbnail/{ptId}")
+    public ResponseEntity<PTImageReadRes> readThumbnailPTImage(@PathVariable Long ptId) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readThumbnailPTImage(ptId));
     }
 
     // 프로필 이미지 조회

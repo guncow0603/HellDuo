@@ -38,7 +38,6 @@ $(document).ready(function() {
             $('#pt-scheduledDate').text(`예약 시간: ${new Date(res.scheduledDate).toLocaleString()}`);
             $('#pt-price').text(`PT 비용: ${res.price} 원`);
             $('#pt-status').text(`상태: ${res.status}`);
-            trainerId = res.trainerId;
 
             // 위도와 경도 정보 받아서 카카오 맵 표시
             const latitude = res.latitude;  // 위도
@@ -83,9 +82,9 @@ $(document).ready(function() {
             getUserLocationAndCalculateDistance(latitude, longitude);
 
             // PT 이미지 조회 API 호출
-            if (trainerId !== undefined) {
+            if (ptId !== undefined) {
                 $.ajax({
-                    url: `/api/v1/userImage/pt/${trainerId}`,  // 트레이너 ID에 맞춰서 API 호출
+                    url: `/api/v1/userImage/pt/${ptId}`,  // 트레이너 ID에 맞춰서 API 호출
                     method: 'GET',
                     success: function (response) {
                         const ptImages = response;  // PT 이미지 리스트 (response)

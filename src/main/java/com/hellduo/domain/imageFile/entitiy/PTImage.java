@@ -1,6 +1,7 @@
 package com.hellduo.domain.imageFile.entitiy;
 
 import com.hellduo.domain.imageFile.entitiy.enums.ImageType;
+import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -25,14 +26,21 @@ public class PTImage {
     @Enumerated(value = EnumType.STRING)
     private ImageType type;
 
+    @Comment("피티 id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pt_id")
+    private PT pt;
+
     @Comment("유저 id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
     @Builder
-    private PTImage(String userImageUrl, User user, ImageType type) {
+    private PTImage(String userImageUrl, PT pt,User user, ImageType type) {
         this.userImageUrl = userImageUrl;
-        this.user = user;
+        this.pt = pt;
+        this.user=user;
         this.type = type;
     }
 }
