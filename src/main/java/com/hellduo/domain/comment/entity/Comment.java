@@ -33,4 +33,7 @@ public class Comment {
         this.board = board;
         this.user = user;
     }
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
