@@ -9,6 +9,7 @@ import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
+import com.hellduo.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ import java.util.List;
 @Transactional
 public class AdminService {
     private final NoticeRepository noticeRepository;
+    private final UserRepository userRepository;
+
     public NoticeRes createNotice(NoticeReq req, User user)
     {
         if(user.getRole() != UserRoleType.ADMIN)
@@ -53,7 +56,7 @@ public class AdminService {
         Notice notice = noticeRepository.findNoticeByIdWithThrow(noticeId);
         return new GetNoticeRes(notice.getTitle(),
                                 notice.getContent(),
-                                notice.getUser().getId() ,
+                                notice.getUser().getId(),
                                 notice.getId());
     }
 
@@ -77,11 +80,67 @@ public class AdminService {
 
     public DeleteNoticeRes deleteNotice(User user, Long id)
     {
-//        if (user.getRole() != UserRoleType.ADMIN)
-//        {
-//            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
-//        }
+        if (user.getRole() != UserRoleType.ADMIN)
+        {
+            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+        }
         noticeRepository.deleteById(id);
         return new DeleteNoticeRes("공지사항이 삭제되었습니다.");
+    }
+
+    public List<GetUserListRes> getUserList(User user)
+    {
+
+        if (user.getRole() != UserRoleType.ADMIN)
+        {
+            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+        }
+        List<User> userList = userRepository.findAll();
+        List<GetUserListRes> userResList = new ArrayList<>();
+
+        for (User user1 : userList)
+        {
+            if (user1.getRole() == UserRoleType.USER)
+            {
+                userResList.add(new GetUserListRes(user1.getId(),
+                        user1.getName(),
+                        user1.getEmail(),
+                        user1.getGender().getDescription(),
+                        user1.getAge(),
+                        user1.getPhoneNumber(),
+                        user1.getNickname(),
+                        user1.getWeight(),
+                        user1.getHeight()));
+            }
+
+        }
+        return userResList;
+    }
+
+    public List<GetTrainerListRes> getTrainerList(User user) {
+        if (user.getRole() != UserRoleType.ADMIN)
+        {
+            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+        }
+        List<User> userList = userRepository.findAll();
+        List<GetTrainerListRes> trainerResList = new ArrayList<>();
+        for (User user1 : userList)
+        {
+            if (user1.getRole() == UserRoleType.TRAINER)
+            {
+                trainerResList.add(new GetTrainerListRes(user1.getId(),
+                        user1.getEmail(),
+                        user1.getName(),
+                        user1.getPhoneNumber(),
+                        user1.getGender().getDescription(),
+                        user1.getAge(),
+                        user1.getSpecialization().getName(),
+                        user1.getExperience(),
+                        user1.getCertifications(),
+                        user1.getBio()));
+            }
+
+        }
+        return trainerResList;
     }
 }
