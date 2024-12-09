@@ -37,7 +37,7 @@ public class BoardService {
 
     public BoardReadRes getBoardById(Long boardId) {
         Board board = boardRepository.findBoardByIdWithThrow(boardId);
-        return new BoardReadRes(board.getTitle(), board.getContent());
+        return new BoardReadRes(board.getId(), board.getLikeCount(), board.getTitle(), board.getContent());
     }
 
     public List<BoardsReadRes> getBoards() {
@@ -46,7 +46,7 @@ public class BoardService {
         // Board 객체에서 제목을 추출하여 BoardsReadRes 객체 생성
         List<BoardsReadRes> boardsReadResList = new ArrayList<>();
         for (Board board : boards) {
-            boardsReadResList.add(new BoardsReadRes(board.getTitle())); // 제목만 BoardsReadRes에 추가
+            boardsReadResList.add(new BoardsReadRes(board.getId(), board.getTitle(), board.getLikeCount())); // 제목만 BoardsReadRes에 추가
         }
 
         return boardsReadResList; // BoardsReadRes 리스트 반환
