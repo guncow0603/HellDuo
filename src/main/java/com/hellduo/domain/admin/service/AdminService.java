@@ -116,4 +116,31 @@ public class AdminService {
         }
         return userResList;
     }
+
+    public List<GetTrainerListRes> getTrainerList(User user) {
+        if (user.getRole() != UserRoleType.ADMIN)
+        {
+            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+        }
+        List<User> userList = userRepository.findAll();
+        List<GetTrainerListRes> trainerResList = new ArrayList<>();
+        for (User user1 : userList)
+        {
+            if (user1.getRole() == UserRoleType.TRAINER)
+            {
+                trainerResList.add(new GetTrainerListRes(user1.getId(),
+                        user1.getEmail(),
+                        user1.getName(),
+                        user1.getPhoneNumber(),
+                        user1.getGender().getDescription(),
+                        user1.getAge(),
+                        user1.getSpecialization().getName(),
+                        user1.getExperience(),
+                        user1.getCertifications(),
+                        user1.getBio()));
+            }
+
+        }
+        return trainerResList;
+    }
 }
