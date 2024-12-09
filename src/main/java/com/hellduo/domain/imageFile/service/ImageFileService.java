@@ -238,12 +238,7 @@ public class ImageFileService {
         List<BannerImage> bannerImageList = new ArrayList<>();
 
         // 첫 번째 이미지를 썸네일로 설정, 나머지는 일반 이미지로 설정
-        for (int i = 0; i < fileUrls.size(); i++) {
-            String fileUrl = fileUrls.get(i);
-
-            // 첫 번째 이미지는 썸네일로, 그 외의 이미지는 일반 사진으로 설정
-            ImageType imageType = (i == 0) ? ImageType.THUMBNAIL : ImageType.REGULAR;
-
+        for (String fileUrl : fileUrls) {
             BannerImage bannerImage = BannerImage.builder()
                     .user(user)
                     .userImageUrl(s3Url + fileUrl)
@@ -252,5 +247,21 @@ public class ImageFileService {
             bannerImageList.add(bannerImage);
         }
         return bannerImageList;
+    }
+
+    public List<BannerReadRes> readBannerImages() {
+        List<BannerImage> bannerImageList = bannerRepository.findAll();
+
+        if (bannerImageList.isEmpty()) {
+            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
+        }
+        List<BannerReadRes> response = new ArrayList<>();
+
+        for (BannerImage bannerImage : bannerImageList) {
+            response.add(new BannerReadRes(bannerImage.getId(),bannerImage.getUserImageUrl()));
+        }
+
+        // 변환된 리스트 반환
+        return response;
     }
 }

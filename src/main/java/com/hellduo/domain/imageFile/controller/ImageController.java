@@ -80,5 +80,11 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.bannerUploadImages(userDetails.getUser(), multipartFiles));
     }
 
+    // 배너 이미지 조회
+    @GetMapping("/banner")
+    public ResponseEntity<List<BannerReadRes>> readBannerImages(
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readBannerImages());
+    }
 
 }
