@@ -74,7 +74,7 @@ public class PTService {
     }
 
     public List<PTsReadRes> ptsRead() {
-        List<PT> pts = ptRepository.findAll();
+        List<PT> pts = ptRepository.findByStatus(PTStatus.UNRESERVED); // UNRESERVED 상태만 가져오기
 
         List<PTsReadRes> ptsReadResList = new ArrayList<>();
         for(PT pt: pts){
@@ -183,8 +183,8 @@ public class PTService {
         // 정렬 조건 설정
         Sort sort = Sort.by(isAsc ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
 
-        // Repository 호출
-        List<PT> entities = ptRepository.searchByKeywordAndCategory(keyword, category, sort);
+        // Repository 호출 (UNRESERVED 상태만 필터링)
+        List<PT> entities = ptRepository.searchByKeywordAndCategoryAndStatus(PTStatus.UNRESERVED, keyword, category, sort);
 
         // 포문으로 변환
         List<PTsReadRes> result = new ArrayList<>();
