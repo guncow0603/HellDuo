@@ -179,7 +179,7 @@ public class PTService {
         return new PTReservRes("예약 완료 되었습니다.");
     }
 
-    public List<PTsReadRes> searchPTs(String keyword, String category, String sortBy, boolean isAsc) {
+    public List<PTsReadRes> searchPTs(String keyword, PTSpecialization category, String sortBy, boolean isAsc) {
         // 정렬 조건 설정
         Sort sort = Sort.by(isAsc ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
 

@@ -80,14 +80,87 @@
 <header id="header"></header>
 
 <div class="container mt-4">
+    <!-- 검색 필드 -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input type="text" id="search-keyword" class="form-control" placeholder="키워드 입력">
+        </div>
+        <div class="col-md-4">
+            <select id="search-category" class="form-select">
+                <option value="">카테고리 선택</option>
+                <option value="FITNESS">피트니스</option>
+                <option value="YOGA">요가</option>
+                <option value="PILATES">필라테스</option>
+                <option value="NUTRITION">영양학</option>
+                <option value="REHABILITATION">재활운동</option>
+                <option value="CROSSFIT">크로스핏</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button id="search-btn" class="btn btn-primary w-100">검색</button>
+        </div>
+    </div>
+
     <!-- PT 목록 -->
     <h2>피티 목록</h2>
-    <div id="pt-list" class="pt-list"></div> <!-- 여기 안에 PT 리스트가 들어가야 함 -->
+    <div id="pt-list" class="pt-list"></div>
 
+    <!-- PT 생성 버튼 -->
     <div class="left-menu" id="pt-create-button">
         <a href="/api/v1/page/ptCreate">피티 생성</a>
     </div>
 </div>
-</body>
+<script>
+    // PT 리스트를 서버에서 가져오는 함수
+    function loadPTs(keyword = "", category = "", sortBy = "createdAt", isAsc = false) {
+        $.ajax({
+            url: `/api/v1/pt/search`,
+            type: "GET",
+            data: { keyword, category, sortBy, isAsc },
+            success: function (response) {
+                renderPTs(response);
+            },
+            error: function (xhr, status, error) {
+                console.error("PT 데이터를 가져오는 중 오류 발생:", error);
+            },
+        });
+    }
 
+    // PT 데이터를 화면에 렌더링하는 함수
+    function renderPTs(ptList) {
+        const ptListContainer = $("#pt-list");
+        ptListContainer.empty(); // 기존 내용을 비움
+
+        if (ptList.length === 0) {
+            ptListContainer.append("<p>등록된 PT가 없습니다.</p>");
+            return;
+        }
+
+        ptList.forEach(pt => {
+            const ptItem = `
+                <div class="pt-item">
+                    <h5>${pt.title}</h5>
+                    <p>분야: ${pt.specialization}</p>
+                    <p>예정일: ${pt.scheduledDate}</p>
+                    <p>가격: ${pt.price}원</p>
+                    <p class="pt-status">상태: ${pt.ptStatus}</p>
+                </div>
+            `;
+            ptListContainer.append(ptItem);
+        });
+    }
+
+    // 검색 버튼 클릭 이벤트 핸들러
+    $(document).on("click", "#search-btn", function () {
+        const keyword = $("#search-keyword").val();
+        const category = $("#search-category").val();
+        loadPTs(keyword, category); // 검색 조건을 기반으로 PT 데이터를 로드
+    });
+
+    // 페이지 로드 시 초기 데이터 로드
+    $(document).ready(function () {
+        loadPTs(); // 초기에는 검색 조건 없이 전체 데이터 로드
+    });
+</script>
+</body>
 </html>

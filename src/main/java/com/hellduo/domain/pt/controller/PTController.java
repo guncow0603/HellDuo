@@ -3,13 +3,13 @@ package com.hellduo.domain.pt.controller;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
 import com.hellduo.domain.pt.dto.response.*;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
+import com.hellduo.domain.pt.entity.PTSpecialization;
 import com.hellduo.domain.pt.service.PTService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class PTController {
     @GetMapping("/search")
     public ResponseEntity<List<PTsReadRes>> searchPTs(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String category,
+            @RequestParam(required = false) PTSpecialization category,
             @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
             @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc)
     {
