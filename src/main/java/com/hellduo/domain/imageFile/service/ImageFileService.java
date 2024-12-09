@@ -264,4 +264,22 @@ public class ImageFileService {
         // 변환된 리스트 반환
         return response;
     }
+
+    public BannerImageDeleteRes deleteBannerImages(User user, Long bannerId) {
+        if(user.getRole()!= UserRoleType.ADMIN){
+            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+        }
+        BannerImage bannerImage = bannerRepository.findById(bannerId)
+                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_IMAGE));
+
+
+        // S3에서 이미지 삭제
+        String imageUrl = bannerImage.getUserImageUrl();
+        String s3Key = imageUrl.replace(s3Url, "");
+        s3Uploader.deleteS3(s3Key);
+
+        bannerRepository.delete(bannerImage);
+
+        return new BannerImageDeleteRes("삭제 완료");
+    }
 }
