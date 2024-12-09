@@ -5,6 +5,7 @@ import com.hellduo.domain.pt.entity.PTSpecialization;
 import com.hellduo.domain.pt.entity.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,9 +21,13 @@ public interface PTRepository extends JpaRepository<PT, Long> {
     };
 
     @Query("SELECT p FROM PT p WHERE " +
+            "p.status = :status AND " +
             "(:keyword IS NULL OR p.title LIKE %:keyword%) AND " +
             "(:category IS NULL OR p.specialization = :category)")
-    List<PT> searchByKeywordAndCategory(String keyword, PTSpecialization category, Sort sort);
+    List<PT> searchByKeywordAndCategoryAndStatus(@Param("status") PTStatus status,
+                                                 @Param("keyword") String keyword,
+                                                 @Param("category") PTSpecialization category,
+                                                 Sort sort);
 
     List<PT> findByStatus(PTStatus status);
 }
