@@ -22,4 +22,12 @@ public class BoardLikeController {
             ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(boardLikeService.boardLike(boardId, userDetails.getUser()));
     }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<LikeResponse>boardLikeDelete(
+        @PathVariable Long boardId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardLikeService.boardLikeDelete(boardId, userDetails.getUser()));
+    }
 }

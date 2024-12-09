@@ -42,5 +42,7 @@ public class Board {
         this.content = content;
     }
 
-    public void updateLikeCount(Long likeCount) {this.likeCount += likeCount; }
+    public void addLikeCount(Long likeCount) {this.likeCount += likeCount; }
+
+    public void minusLikeCount(Long likeCount) {this.likeCount -= likeCount; }
 }

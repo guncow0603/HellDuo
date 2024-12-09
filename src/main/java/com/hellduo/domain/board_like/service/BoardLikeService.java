@@ -21,7 +21,7 @@ public class BoardLikeService {
 
     public LikeResponse boardLike(Long boardId, User user) {
         Board board =  boardRepository.findBoardByIdWithThrow(boardId);
-        board.updateLikeCount(1L);
+        board.addLikeCount(1L);
         if(boardLikeRepository.existsByBoardIdAndUserId(boardId, user.getId())) {
             throw new BoardLikeException(BoardLikeErrorCode.DUPLICATE_LIKE);
         }
@@ -31,5 +31,12 @@ public class BoardLikeService {
                 build();
         boardLikeRepository.save(boardLike);
         return new LikeResponse("좋아요 완료.");
+    }
+
+    public LikeResponse boardLikeDelete(Long boardId, User user) {
+        Board board = boardRepository.findBoardByIdWithThrow(boardId);
+        board.minusLikeCount(1L);
+        boardLikeRepository.deleteBoardLikesByBoardIdAndUserId(boardId, user.getId());
+        return new LikeResponse("좋아요 취소 완료,");
     }
 }
