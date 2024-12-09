@@ -1,14 +1,19 @@
 package com.hellduo.domain.imageFile.service;
 
 import com.hellduo.domain.imageFile.dto.response.*;
+import com.hellduo.domain.imageFile.entitiy.BannerImage;
 import com.hellduo.domain.imageFile.entitiy.PTImage;
 import com.hellduo.domain.imageFile.entitiy.enums.ImageType;
 import com.hellduo.domain.imageFile.entitiy.UserImage;
 import com.hellduo.domain.imageFile.exception.ImageErrorCode;
 import com.hellduo.domain.imageFile.exception.ImageException;
+import com.hellduo.domain.imageFile.repository.BannerRepository;
 import com.hellduo.domain.imageFile.repository.PTImageRepository;
 import com.hellduo.domain.imageFile.repository.UserImageRepository;
 import com.hellduo.domain.user.entity.User;
+import com.hellduo.domain.user.entity.enums.UserRoleType;
+import com.hellduo.domain.user.exception.UserErrorCode;
+import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
 import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +36,7 @@ public class ImageFileService {
     private final UserRepository userRepository;
     private final UserImageRepository userImageRepository;
     private final PTImageRepository ptImageRepository;
+    private final BannerRepository bannerRepository;
 
     @Value("${s3.url}")
     private String s3Url;
@@ -215,5 +221,36 @@ public class ImageFileService {
 
         // 변환된 리스트 반환
         return response;
+    }
+
+    public BannerImageCreateRes bannerUploadImages(User user, List<MultipartFile> multipartFiles) {
+        if(user.getRole()!= UserRoleType.ADMIN){
+            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+        }
+        List<String> fileUrlList = uploadFilesToS3(multipartFiles, user.getId(), "banners/");
+
+        List<BannerImage> bannerImageList = createBannerImageList(fileUrlList, user);
+        bannerRepository.saveAll(bannerImageList);
+        return new BannerImageCreateRes("이미지가 업로드되었습니다.");
+    }
+
+    private List<BannerImage> createBannerImageList(List<String> fileUrls, User user) {
+        List<BannerImage> bannerImageList = new ArrayList<>();
+
+        // 첫 번째 이미지를 썸네일로 설정, 나머지는 일반 이미지로 설정
+        for (int i = 0; i < fileUrls.size(); i++) {
+            String fileUrl = fileUrls.get(i);
+
+            // 첫 번째 이미지는 썸네일로, 그 외의 이미지는 일반 사진으로 설정
+            ImageType imageType = (i == 0) ? ImageType.THUMBNAIL : ImageType.REGULAR;
+
+            BannerImage bannerImage = BannerImage.builder()
+                    .user(user)
+                    .userImageUrl(s3Url + fileUrl)
+                    .build();
+
+            bannerImageList.add(bannerImage);
+        }
+        return bannerImageList;
     }
 }

@@ -7,12 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_pt_image")
-public class PTImage {
+@Table(name = "tb_banner")
+public class BannerImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,18 +20,13 @@ public class PTImage {
     @Column(name = "user_image_url", nullable = false)
     private String userImageUrl;
 
-    @Column(name = "type")
-    @Enumerated(value = EnumType.STRING)
-    private ImageType type;
-
     @Comment("유저 id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     @Builder
-    private PTImage(String userImageUrl, User user, ImageType type) {
+    private BannerImage(String userImageUrl, User user) {
         this.userImageUrl = userImageUrl;
         this.user = user;
-        this.type = type;
     }
 }

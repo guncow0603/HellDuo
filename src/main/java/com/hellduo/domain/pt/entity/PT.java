@@ -1,5 +1,6 @@
 package com.hellduo.domain.pt.entity;
 
+import com.hellduo.domain.common.BaseEntity;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 @Table(name = "TB_PT")
-public class PT {
+public class PT extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
