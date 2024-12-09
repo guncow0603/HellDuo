@@ -17,6 +17,7 @@ import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -176,5 +177,27 @@ public class PTService {
         pt.updateUser(user);
         pt.updateStatus(PTStatus.SCHEDULED);
         return new PTReservRes("예약 완료 되었습니다.");
+    }
+
+    public List<PTsReadRes> searchPTs(String keyword, String category, String sortBy, boolean isAsc) {
+        // 정렬 조건 설정
+        Sort sort = Sort.by(isAsc ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+
+        // Repository 호출
+        List<PT> entities = ptRepository.searchByKeywordAndCategory(keyword, category, sort);
+
+        // 포문으로 변환
+        List<PTsReadRes> result = new ArrayList<>();
+        for (PT entity : entities) {
+            result.add(new PTsReadRes(
+                    entity.getId(),
+                    entity.getTitle(),
+                    entity.getSpecialization().getName(),
+                    entity.getScheduledDate(),
+                    entity.getPrice(),
+                    entity.getStatus().getDescription()
+            ));
+        }
+        return result;
     }
 }

@@ -54,4 +54,14 @@ public class PTController {
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.OK).body(ptService.ptReserv(ptId,userDetails.getUser().getId()));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<PTsReadRes>> searchPTs(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
+            @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
+            @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.searchPTs(keyword, category,sortBy,isAsc));
+    }
 }
