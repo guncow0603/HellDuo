@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Data
@@ -19,8 +20,11 @@ public class Board {
 
     private String content;
 
+    @ColumnDefault("0")
+    private Long likeCount = 0L;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
@@ -37,4 +41,6 @@ public class Board {
     public void updateContent(String content) {
         this.content = content;
     }
+
+    public void updateLikeCount(Long likeCount) {this.likeCount += likeCount; }
 }
