@@ -151,7 +151,7 @@ $(document).ready(function() {
         })
             .done(function (res) {
                 alert(res.msg);
-                window.location.href = `/api/v1/page/ptRead/${ptId}`;
+                window.location.href = `/api/v1/page/ptList`;
             })
             .fail(function (res) {
                 const jsonObject = JSON.parse(res.responseText);

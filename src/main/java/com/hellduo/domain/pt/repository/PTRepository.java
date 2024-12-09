@@ -2,6 +2,7 @@ package com.hellduo.domain.pt.repository;
 
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.PTSpecialization;
+import com.hellduo.domain.pt.entity.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
 import org.springframework.data.domain.Sort;
@@ -22,4 +23,6 @@ public interface PTRepository extends JpaRepository<PT, Long> {
             "(:keyword IS NULL OR p.title LIKE %:keyword%) AND " +
             "(:category IS NULL OR p.specialization = :category)")
     List<PT> searchByKeywordAndCategory(String keyword, PTSpecialization category, Sort sort);
+
+    List<PT> findByStatus(PTStatus status);
 }
