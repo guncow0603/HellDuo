@@ -22,9 +22,82 @@
     <script src="https://cdn.jsdelivr.net/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
     <script src="/js/basic.js"></script>
 </head>
+<style>
+    /* 배너의 고정된 크기 설정 */
+    .carousel-item img {
+        width: 90%;
+        height: 200px; /* 원하는 고정 높이로 설정 */
+        object-fit: cover; /* 이미지 비율을 유지하며 잘림 없이 맞추기 */
+    }
+
+    /* 배너 컨테이너 크기 설정 */
+    .carousel {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+</style>
 
 <body>
 <header id="header"></header>
+
+<div class="container mt-4">
+    <!-- 배너 슬라이드 -->
+    <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" id="banner-container"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // API 호출하여 배너 이미지를 가져오기
+        fetch('/api/v1/userImage/banner', { // URL 수정 필요
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('배너 이미지 조회 실패');
+                }
+            })
+            .then(data => {
+                const bannerContainer = document.getElementById('banner-container');
+
+                if (data.length === 0) {
+                    bannerContainer.innerHTML = `<p class="text-center text-muted">등록된 배너 이미지가 없습니다.</p>`;
+                    return;
+                }
+
+                // 첫 번째 배너를 active로 설정
+                data.forEach((banner, index) => {
+                    const bannerElement = document.createElement('div');
+                    bannerElement.className = index === 0 ? 'carousel-item active' : 'carousel-item';
+
+                    bannerElement.innerHTML = `
+                        <img src="${banner.imageUrl}" class="d-block w-100" alt="배너 이미지">
+                    `;
+                    bannerContainer.appendChild(bannerElement);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                const bannerContainer = document.getElementById('banner-container');
+                bannerContainer.innerHTML = `<p class="text-danger text-center">이미지를 불러오는 데 실패했습니다: ${error.message}</p>`;
+            });
+    });
+</script>
+
 </body>
 
 </html>

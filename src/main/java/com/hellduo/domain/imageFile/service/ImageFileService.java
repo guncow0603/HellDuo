@@ -238,12 +238,7 @@ public class ImageFileService {
         List<BannerImage> bannerImageList = new ArrayList<>();
 
         // 첫 번째 이미지를 썸네일로 설정, 나머지는 일반 이미지로 설정
-        for (int i = 0; i < fileUrls.size(); i++) {
-            String fileUrl = fileUrls.get(i);
-
-            // 첫 번째 이미지는 썸네일로, 그 외의 이미지는 일반 사진으로 설정
-            ImageType imageType = (i == 0) ? ImageType.THUMBNAIL : ImageType.REGULAR;
-
+        for (String fileUrl : fileUrls) {
             BannerImage bannerImage = BannerImage.builder()
                     .user(user)
                     .userImageUrl(s3Url + fileUrl)
@@ -252,5 +247,39 @@ public class ImageFileService {
             bannerImageList.add(bannerImage);
         }
         return bannerImageList;
+    }
+
+    public List<BannerReadRes> readBannerImages() {
+        List<BannerImage> bannerImageList = bannerRepository.findAll();
+
+        if (bannerImageList.isEmpty()) {
+            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
+        }
+        List<BannerReadRes> response = new ArrayList<>();
+
+        for (BannerImage bannerImage : bannerImageList) {
+            response.add(new BannerReadRes(bannerImage.getId(),bannerImage.getUserImageUrl()));
+        }
+
+        // 변환된 리스트 반환
+        return response;
+    }
+
+    public BannerImageDeleteRes deleteBannerImages(User user, Long bannerId) {
+        if(user.getRole()!= UserRoleType.ADMIN){
+            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+        }
+        BannerImage bannerImage = bannerRepository.findById(bannerId)
+                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_IMAGE));
+
+
+        // S3에서 이미지 삭제
+        String imageUrl = bannerImage.getUserImageUrl();
+        String s3Key = imageUrl.replace(s3Url, "");
+        s3Uploader.deleteS3(s3Key);
+
+        bannerRepository.delete(bannerImage);
+
+        return new BannerImageDeleteRes("삭제 완료");
     }
 }

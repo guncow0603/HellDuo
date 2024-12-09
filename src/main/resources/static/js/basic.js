@@ -1,14 +1,40 @@
 $(document).ready(function () {
     const auth = getToken();
 
-    if (auth !== undefined && auth !== '') { //토큰이 존재 즉 로그인중
-        $('#logout-button').show();
-        $('#login-button').hide();
-        $('#my-page').show();
-    } else {
+    if (auth === undefined || auth === '') { // 로그인하지 않은 상태일 때
+        // 로그인하지 않았을 때 표시할 요소들
         $('#logout-button').hide();
         $('#login-button').show();
         $('#my-page').hide();
+        $('#header-chat-list').hide();
+        $('#banner').hide();
+    } else { // 토큰이 존재 즉 로그인 중일 때
+        const role = getUserRole();
+        // 로그인 후 표시할 요소들
+        $('#logout-button').show();
+        $('#login-button').hide();
+        $('#my-page').show();
+        $('#header-chat-list').show();
+
+        // 권한에 따른 배너 표시 여부
+        if (role === 'ADMIN') {
+            $('#banner').show();
+        } else {
+            $('#banner').hide();
+        }
+
+        // 알림 이벤트 수신
+        let eventSource = new EventSource(
+            `${window.location.protocol}//${window.location.host}/api/v1/notifications/subscribe`
+        );
+        console.log('EventSource 연결 확인');
+
+        eventSource.addEventListener("createChatRoom", function (event) {
+            console.log("새로운 채팅방 생성:", event.data);
+            let message = event.data;
+            // 알림 기능을 처리하는 함수 호출
+            alertBadge();
+        });
     }
 
 
@@ -30,16 +56,7 @@ $(document).ready(function () {
         });
     });
 
-    let eventSource = new EventSource(
-        window.location.protocol + '//' + window.location.host + '/api/v1/notifications/subscribe');
-    console.log('확인');
 
-    eventSource.addEventListener("createChatRoom", function (event) {
-        console.log(event);
-        let message = event.data;
-        alert(message);
-        alertBadge();
-    });
 
 });
 function getToken() {

@@ -1,6 +1,7 @@
 package com.hellduo.domain.imageFile.controller;
 
 import com.hellduo.domain.imageFile.dto.response.*;
+import com.hellduo.domain.imageFile.entitiy.BannerImage;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -80,5 +81,20 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.bannerUploadImages(userDetails.getUser(), multipartFiles));
     }
 
+    // 배너 이미지 조회
+    @GetMapping("/banner")
+    public ResponseEntity<List<BannerReadRes>> readBannerImages(
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readBannerImages());
+    }
+
+    // 배너 이미지 조회
+    @DeleteMapping("/banner/{bannerId}")
+    public ResponseEntity<BannerImageDeleteRes> readBannerImages(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long bannerId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteBannerImages(userDetails.getUser(),bannerId));
+    }
 
 }
