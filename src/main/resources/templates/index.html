@@ -86,8 +86,15 @@
         <div id="pt-list"></div>
     </div>
 </div>
-
 </body>
+<footer class="container mt-4">
+        <p class="float-end mb-1">
+            <a href="#">Back to top</a>
+        </p>
+        <p class="mb-1">© Bootstrap</p>
+        <p class="mb-0">New to Bootstrap? <a href="https://getbootstrap.kr/docs/5.1/examples/">Visit
+            the homepage</a></p>
+</footer>
 <script>
     // 페이지 로드 시 PT 목록을 가져오기
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -103,29 +110,36 @@
     // PT 목록을 화면에 렌더링하는 함수
     function renderPTList(pts) {
         const ptListContainer = document.getElementById('pt-list');
-        ptListContainer.innerHTML = '';  // 기존 목록을 비우기
+        ptListContainer.innerHTML = ''; // 기존 목록을 비우기
 
         pts.forEach(pt => {
             const ptCard = document.createElement('div');
             ptCard.classList.add('pt-card');
+            ptCard.dataset.ptId = pt.ptId; // PT ID를 데이터 속성으로 저장
+
+            // 카드 클릭 이벤트 추가
+            ptCard.addEventListener('click', function () {
+                const ptId = this.dataset.ptId;
+                window.location.href = `/api/v1/page/ptRead/${ptId}`; // PT 상세 페이지로 이동
+            });
 
             // 썸네일 이미지를 불러오기
             fetch(`/api/v1/userImage/pt/thumbnail/${pt.ptId}`)
                 .then(response => response.json())
                 .then(thumbnailData => {
-                    const thumbnailUrl = thumbnailData.imageUrl || "https://via.placeholder.com/250x200";  // 이미지 URL 가져오기
+                    const thumbnailUrl = thumbnailData.imageUrl || "https://via.placeholder.com/250x200"; // 이미지 URL 가져오기
                     ptCard.innerHTML = `
-                        <img src="${thumbnailUrl}" alt="${pt.title}">
-                        <h5>${pt.title}</h5>
-                        <p>주소: ${pt.address}</p>
-                    `;
+                    <img src="${thumbnailUrl}" alt="${pt.title}">
+                    <h5>${pt.title}</h5>
+                    <p>주소: ${pt.address}</p>
+                `;
                 })
                 .catch(error => {
                     ptCard.innerHTML = `
-                        <img src="https://via.placeholder.com/250x200" alt="${pt.title}">
-                        <h5>${pt.title}</h5>
-                        <p>주소: ${pt.address}</p>
-                    `;
+                    <img src="https://via.placeholder.com/250x200" alt="${pt.title}">
+                    <h5>${pt.title}</h5>
+                    <p>주소: ${pt.address}</p>
+                `;
                 });
 
             ptListContainer.appendChild(ptCard);

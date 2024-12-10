@@ -38,6 +38,7 @@ $(document).ready(function() {
             $('#pt-scheduledDate').text(`예약 시간: ${new Date(res.scheduledDate).toLocaleString()}`);
             $('#pt-price').text(`PT 비용: ${res.price} 원`);
             $('#pt-status').text(`상태: ${res.status}`);
+            trainerId=res.trainerId;
 
             // 위도와 경도 정보 받아서 카카오 맵 표시
             const latitude = res.latitude;  // 위도
@@ -158,29 +159,106 @@ $(document).ready(function() {
                 alert(messages);
             });
     });
-});
 
-// 채팅 기능을 위한 함수
-function chatTry(userId) {
-    const data = {
-        receiverId: userId
-    }
-    $.ajax({
-        type: "POST",
-        url: `/api/v1/chats/rooms`,
-        contentType: "application/json",
-        data: JSON.stringify(data),
-    })
-        .done(function (res) {
-            console.log(res.id);
-            window.location.href = '/api/v1/chats/rooms/' + res.id + '/front';
+// 트레이너 프로필 데이터를 가져오기
+    function fetchTrainerProfile(trainerId) {
+        fetch(`/api/v1/users/trainer/${trainerId}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
         })
-        .fail(function (res) {
-            const jsonObject = JSON.parse(res.responseText);
-            const messages = jsonObject.messages;
-            alert(messages);
-        });
-}
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('트레이너 프로필 조회 실패');
+                }
+                return response.json();
+            })
+            .then(data => renderTrainerProfile(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+// 트레이너 프로필을 화면에 렌더링
+    function renderTrainerProfile(profile) {
+        // 트레이너 프로필 이미지 설정
+        document.getElementById('trainer-image').src = profile.image || "https://via.placeholder.com/150";
+        document.getElementById('trainer-name').textContent = `이름: ${profile.name}`;
+        document.getElementById('trainer-specialization').textContent = `전문 분야: ${profile.specialization}`;
+        document.getElementById('trainer-description').textContent = `소개: ${profile.bio}`;
+        document.getElementById('trainer-contact').textContent = `연락처: ${profile.phoneNumber}`;
+        document.getElementById('trainer-age').textContent = `나이: ${profile.age}`;
+        document.getElementById('trainer-gender').textContent = `성별: ${profile.gender}`;
+        document.getElementById('trainer-experience').textContent = `경력: ${profile.experience}년`;
+        document.getElementById('trainer-certifications').textContent = `자격증: ${profile.certifications}`;
+
+        // 자격증 이미지 정보 가져오기
+        fetchTrainerCertImages(profile.id); // 자격증 이미지 정보 가져오기
+    }
+
+// 트레이너 자격증 이미지를 가져오기
+    function fetchTrainerCertImages(trainerId) {
+        fetch(`/api/v1/userImage/certifications/${trainerId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("자격증 이미지를 가져오는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 자격증 이미지를 HTML에 렌더링
+                const certContainer = document.getElementById('trainer-certifications-gallery');
+                certContainer.innerHTML = '';  // 기존 내용을 비우기
+
+                // 자격증 이미지들 렌더링
+                data.forEach(cert => {
+                    const img = document.createElement('img');
+                    img.src = cert.imageUrl;  // 자격증 이미지 URL
+                    img.alt = "자격증 이미지";
+                    img.style.width = '200px';  // 이미지 크기 설정
+                    img.style.height = '280px';  // 이미지 크기 설정
+                    img.style.marginRight = '10px';  // 이미지 간격 설정
+                    certContainer.appendChild(img);
+                });
+            })
+            .catch(error => {
+                console.error("자격증 이미지를 가져오는 데 오류가 발생했습니다:", error);
+            });
+    }
+
+// 트레이너 이미지를 가져오기
+    function fetchTrainerImage(trainerId) {
+        fetch(`/api/v1/userImage/profile/${trainerId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("이미지를 가져오는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                const imageUrl = data.imageUrl; // 이미지 URL이 API 응답에 포함되어 있다고 가정
+                document.getElementById("trainer-image").src = imageUrl;
+            })
+            .catch(error => {
+                console.error("이미지를 가져오는 데 오류가 발생했습니다:", error);
+            });
+    }
+
+// 프로필 표시/숨김을 토글
+    function toggleTrainerProfile() {
+        const trainerProfileElement = document.getElementById('trainer-profile');
+
+        if (trainerProfileElement.style.display === 'none' || trainerProfileElement.style.display === '') {
+            // 프로필 및 이미지 데이터 가져오기
+            fetchTrainerProfile(trainerId); // 트레이너 프로필 정보 가져오기
+            fetchTrainerImage(trainerId); // 트레이너 프로필 이미지 가져오기
+            trainerProfileElement.style.display = 'block';
+        } else {
+            // 프로필 숨기기
+            trainerProfileElement.style.display = 'none';
+        }
+    }
+
+// 트레이너 프로필 표시 버튼 클릭 시 동작
+    document.getElementById('view-trainer-profile-btn').addEventListener('click', toggleTrainerProfile);
+});
 
 // 사용자 위치 및 PT 위치로 거리 계산
 function getUserLocationAndCalculateDistance(ptLatitude, ptLongitude) {
@@ -196,26 +274,26 @@ function getUserLocationAndCalculateDistance(ptLatitude, ptLongitude) {
             // 거리 출력
             document.getElementById('distance').innerText = `현재 위치와 PT 장소의 거리: ${distanceInKm} km`;
 
-        }, function(error) {
-            alert('위치를 가져올 수 없습니다. 위치 권한을 확인해주세요.');
+        }, function() {
+            alert("위치 정보를 가져올 수 없습니다.");
         });
     } else {
-        alert('이 브라우저는 위치 정보를 지원하지 않습니다.');
+        alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
     }
 }
+
+// 두 좌표 간의 거리 계산 함수
 function calculateDistance(lat1, lon1, lat2, lon2) {
-    const toRad = (x) => x * Math.PI / 180; // 도 -> 라디안 변환 함수
+    const R = 6371; // 지구 반지름 (단위: km)
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
 
-    const R = 6371; // 지구 반경 (단위: km)
-    const dLat = toRad(lat2 - lat1); // 위도 차이
-    const dLon = toRad(lon2 - lon1); // 경도 차이
-
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // 두 지점 간의 거리 (단위: km)
 
+    const distance = R * c; // 단위: km
     return distance;
 }

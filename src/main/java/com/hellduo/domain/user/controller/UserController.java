@@ -87,4 +87,10 @@ public class UserController {
         return userDetails.getUser().getRole();
     }
 
+    @GetMapping("/trainer/{trainerId}")
+    public ResponseEntity<TrainerOwnProfileGetRes> getTrainerProfile(
+            @PathVariable Long trainerId){
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getTrainerProfile(trainerId));
+    }
 }
