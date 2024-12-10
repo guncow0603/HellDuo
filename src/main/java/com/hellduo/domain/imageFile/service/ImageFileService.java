@@ -293,4 +293,10 @@ public class ImageFileService {
                 .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
         return new PTImageReadRes(ptImage.getId(),ptImage.getUserImageUrl());
     }
+
+    public UserImageReadRes getUserProfileImage(Long trainerId) {
+        UserImage userImage = userImageRepository.findProfileByUserIdAndType(trainerId, ImageType.PROFILE_IMG)
+                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
+        return new UserImageReadRes(userImage.getId(),userImage.getUserImageUrl());
+    }
 }

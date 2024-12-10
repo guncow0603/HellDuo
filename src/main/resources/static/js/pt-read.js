@@ -176,7 +176,7 @@ $(document).ready(function() {
             .catch(error => console.error('Error:', error));
     }
 
-    // 트레이너 프로필을 화면에 렌더링
+// 트레이너 프로필을 화면에 렌더링
     function renderTrainerProfile(profile) {
         document.getElementById('trainer-image').src = profile.image || "https://via.placeholder.com/150";
         document.getElementById('trainer-name').textContent = `이름: ${profile.name}`;
@@ -189,13 +189,33 @@ $(document).ready(function() {
         document.getElementById('trainer-certifications').textContent = `자격증: ${profile.certifications}`;
     }
 
-    // 프로필 표시/숨김을 토글
+// 트레이너 이미지를 가져오기
+    function fetchTrainerImage(trainerId) {
+        fetch(`/api/v1/userImage/profile/${trainerId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("이미지를 가져오는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 이미지를 img 태그에 설정
+                const imageUrl = data.imageUrl; // 이미지 URL이 API 응답에 포함되어 있다고 가정
+                document.getElementById("trainer-image").src = imageUrl;
+            })
+            .catch(error => {
+                console.error("이미지를 가져오는 데 오류가 발생했습니다:", error);
+            });
+    }
+
+// 프로필 표시/숨김을 토글
     function toggleTrainerProfile() {
         const trainerProfileElement = document.getElementById('trainer-profile');
 
         if (trainerProfileElement.style.display === 'none' || trainerProfileElement.style.display === '') {
-            // 프로필 표시 (데이터 가져오기 및 렌더링)
-            fetchTrainerProfile(trainerId);
+            // 프로필 및 이미지 데이터 가져오기
+            fetchTrainerProfile(trainerId); // 트레이너 프로필 정보 가져오기
+            fetchTrainerImage(trainerId); // 트레이너 프로필 이미지 가져오기
             trainerProfileElement.style.display = 'block';
         } else {
             // 프로필 숨기기
@@ -203,6 +223,7 @@ $(document).ready(function() {
         }
     }
 
+// 트레이너 프로필 표시 버튼 클릭 시 동작
     document.getElementById('view-trainer-profile-btn').addEventListener('click', toggleTrainerProfile);
 });
 
