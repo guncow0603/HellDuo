@@ -160,7 +160,7 @@ $(document).ready(function() {
             });
     });
 
-    // 트레이너 프로필 데이터를 가져오기
+// 트레이너 프로필 데이터를 가져오기
     function fetchTrainerProfile(trainerId) {
         fetch(`/api/v1/users/trainer/${trainerId}`, {
             method: 'GET',
@@ -178,6 +178,7 @@ $(document).ready(function() {
 
 // 트레이너 프로필을 화면에 렌더링
     function renderTrainerProfile(profile) {
+        // 트레이너 프로필 이미지 설정
         document.getElementById('trainer-image').src = profile.image || "https://via.placeholder.com/150";
         document.getElementById('trainer-name').textContent = `이름: ${profile.name}`;
         document.getElementById('trainer-specialization').textContent = `전문 분야: ${profile.specialization}`;
@@ -187,6 +188,39 @@ $(document).ready(function() {
         document.getElementById('trainer-gender').textContent = `성별: ${profile.gender}`;
         document.getElementById('trainer-experience').textContent = `경력: ${profile.experience}년`;
         document.getElementById('trainer-certifications').textContent = `자격증: ${profile.certifications}`;
+
+        // 자격증 이미지 정보 가져오기
+        fetchTrainerCertImages(profile.id); // 자격증 이미지 정보 가져오기
+    }
+
+// 트레이너 자격증 이미지를 가져오기
+    function fetchTrainerCertImages(trainerId) {
+        fetch(`/api/v1/userImage/certifications/${trainerId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("자격증 이미지를 가져오는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 자격증 이미지를 HTML에 렌더링
+                const certContainer = document.getElementById('trainer-certifications-gallery');
+                certContainer.innerHTML = '';  // 기존 내용을 비우기
+
+                // 자격증 이미지들 렌더링
+                data.forEach(cert => {
+                    const img = document.createElement('img');
+                    img.src = cert.imageUrl;  // 자격증 이미지 URL
+                    img.alt = "자격증 이미지";
+                    img.style.width = '200px';  // 이미지 크기 설정
+                    img.style.height = '280px';  // 이미지 크기 설정
+                    img.style.marginRight = '10px';  // 이미지 간격 설정
+                    certContainer.appendChild(img);
+                });
+            })
+            .catch(error => {
+                console.error("자격증 이미지를 가져오는 데 오류가 발생했습니다:", error);
+            });
     }
 
 // 트레이너 이미지를 가져오기
@@ -199,7 +233,6 @@ $(document).ready(function() {
                 return response.json();
             })
             .then(data => {
-                // 이미지를 img 태그에 설정
                 const imageUrl = data.imageUrl; // 이미지 URL이 API 응답에 포함되어 있다고 가정
                 document.getElementById("trainer-image").src = imageUrl;
             })
