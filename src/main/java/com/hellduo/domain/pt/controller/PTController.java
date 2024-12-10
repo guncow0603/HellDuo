@@ -74,4 +74,10 @@ public class PTController {
         return ResponseEntity.status(HttpStatus.OK).body(ptService.getMyPTs(userDetails.getUser()));
     }
 
+    @PatchMapping("/completed/{ptId}")
+    public ResponseEntity<PTCompletedRes> ptCompleted (
+            @PathVariable Long ptId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptCompleted(ptId,userDetails.getUser().getId()));
+    }
 }

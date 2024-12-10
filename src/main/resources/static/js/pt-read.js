@@ -258,6 +258,30 @@ $(document).ready(function() {
 
 // 트레이너 프로필 표시 버튼 클릭 시 동작
     document.getElementById('view-trainer-profile-btn').addEventListener('click', toggleTrainerProfile);
+
+
+    $('#complete-pt-btn').click(function () {
+        fetch(`/api/v1/pt/completed/${ptId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("완료 처리에 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message || "PT가 완료 처리되었습니다.");
+                $('#pt-status').text("상태: 완료");
+            })
+            .catch(error => {
+                console.error(error);
+                alert("에러가 발생했습니다. 다시 시도해주세요.");
+            });
+    });
 });
 
 // 사용자 위치 및 PT 위치로 거리 계산

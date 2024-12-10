@@ -252,4 +252,19 @@ public class PTService {
         }
         return result;
     }
+
+    public PTCompletedRes ptCompleted(Long ptId, Long trainerId) {
+        PT pt=ptRepository.findPTByIdWithThrow(ptId);
+        if(!pt.getTrainer().getId().equals( trainerId )){
+            throw new UserException(UserErrorCode.NOT_FOUND_USER);
+        }
+        // 상태 변경 전 검증
+        if (pt.getStatus() == PTStatus.COMPLETED) {
+            throw new PTException(PTErrorCode.NOT_STATUS);
+        }
+
+        pt.updateStatus(PTStatus.COMPLETED);
+
+        return new PTCompletedRes("완료 처리 하였습니다.");
+    }
 }
