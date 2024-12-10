@@ -25,13 +25,17 @@ function renderPTs(ptList) {
 
     ptList.forEach(pt => {
         const ptElement = `
-                <div class="pt-item" style="cursor: pointer;" onclick="window.location.href='/api/v1/page/ptRead/${pt.ptId}'">
-                    <h5>${pt.title}</h5>
-                    <p>전문 분야: ${pt.specialization}</p>
-                    <p>가격: ${pt.price} 원</p>
-                    <p>일정: ${new Date(pt.scheduledDate).toLocaleString()}</p>
-                    <p>상태: <span class="pt-status">${pt.ptStatus}</span></p>
-                </div>
+                    <div class="pt-item" style="cursor: pointer;" onclick="window.location.href='/api/v1/page/ptRead/${pt.ptId}'">
+                        <div>
+                            <h5>${pt.title}</h5>
+                            <p class="pt-specialization">전문 분야: ${pt.specialization}</p>
+                            <p class="pt-date">예약 날짜: ${new Date(pt.scheduledDate).toLocaleString()}</p>
+                        </div>
+                        <div>
+                            <p class="pt-price">${pt.price.toLocaleString()}원</p>
+                            <p class="pt-status">${pt.ptStatus}</p>
+                        </div>
+                    </div>
             `;
         ptListContainer.append(ptElement); // PT 목록 추가
     });

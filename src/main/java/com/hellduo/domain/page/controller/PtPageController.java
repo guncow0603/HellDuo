@@ -30,4 +30,9 @@ public class PtPageController {
         model.addAttribute("ptId", ptId);
         return "pt-update";
     }
+
+    @GetMapping("/myPt")
+    public String myPtPage() {
+        return "my-pt";
+    }
 }
