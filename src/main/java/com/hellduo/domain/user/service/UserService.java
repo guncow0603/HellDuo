@@ -316,4 +316,28 @@ public class UserService {
         triggerLogout(response);
         return new UserLogoutRes("로그아웃 완료");
     }
+
+    public TrainerOwnProfileGetRes getTrainerProfile(Long trainerId) {
+        User trainer = userRepository.findUserByIdWithThrow(trainerId);
+
+        String email = trainer.getEmail();          // 이메일
+        String name = trainer.getName();        // 성별          // 나이
+        String phoneNumber = trainer.getPhoneNumber(); // 전화번호
+        Gender gender = trainer.getGender();    // 닉네임
+        String specialization = trainer.getSpecialization().getName();        // 체중
+        Integer experience = trainer.getExperience();        // 키
+        String certifications = trainer.getCertifications();
+        String bio = trainer.getBio();
+        Integer age = trainer.getAge(); // 나이
+        return new TrainerOwnProfileGetRes(trainer.getId(),
+                email,
+                name,
+                phoneNumber,
+                gender.getDescription(),
+                age,
+                specialization,
+                experience,
+                certifications,
+                bio);
+    }
 }
