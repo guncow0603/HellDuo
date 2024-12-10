@@ -30,4 +30,6 @@ public interface PTRepository extends JpaRepository<PT, Long> {
                                                  Sort sort);
 
     List<PT> findByStatus(PTStatus status);
+
+    List<PT> findByUserIdAndStatus(Long userId, PTStatus status);
 }

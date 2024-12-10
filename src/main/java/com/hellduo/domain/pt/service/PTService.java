@@ -218,4 +218,25 @@ public class PTService {
         }
         return result;
     }
+
+    public List<PTsReadRes> getMyPTs(User user) {
+        if(user.getRole()!=UserRoleType.USER){
+            throw new UserException(UserErrorCode.NOT_ROLE_USER);
+        }
+
+        List<PT> ptList = ptRepository.findByUserIdAndStatus(user.getId(),PTStatus.SCHEDULED);
+        // 포문으로 변환
+        List<PTsReadRes> result = new ArrayList<>();
+        for (PT entity : ptList) {
+            result.add(new PTsReadRes(
+                    entity.getId(),
+                    entity.getTitle(),
+                    entity.getSpecialization().getName(),
+                    entity.getScheduledDate(),
+                    entity.getPrice(),
+                    entity.getStatus().getDescription()
+            ));
+        }
+        return result;
+    }
 }
