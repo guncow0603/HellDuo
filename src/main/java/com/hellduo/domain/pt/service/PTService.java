@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -220,12 +221,24 @@ public class PTService {
     }
 
     public List<PTsReadRes> getMyPTs(User user) {
-        if(user.getRole()!=UserRoleType.USER){
-            throw new UserException(UserErrorCode.NOT_ROLE_USER);
+        List<PT> ptList;
+
+        // 역할에 따라 다른 쿼리 실행
+        if (user.getRole() == UserRoleType.USER) {
+            ptList = ptRepository.findByUserIdAndStatus(user.getId(), PTStatus.SCHEDULED);
+        } else if (user.getRole() == UserRoleType.TRAINER) {
+            ptList = ptRepository.findByTrainerIdAndStatus(user.getId(), PTStatus.SCHEDULED);
+        } else {
+            // 역할이 유효하지 않을 경우 빈 리스트 반환
+            return Collections.emptyList();
         }
 
-        List<PT> ptList = ptRepository.findByUserIdAndStatus(user.getId(),PTStatus.SCHEDULED);
-        // 포문으로 변환
+        // PT 목록을 응답 객체로 변환
+        return convertToPTsReadRes(ptList);
+    }
+
+    // PT 엔티티 리스트를 응답 객체 리스트로 변환하는 메서드
+    private List<PTsReadRes> convertToPTsReadRes(List<PT> ptList) {
         List<PTsReadRes> result = new ArrayList<>();
         for (PT entity : ptList) {
             result.add(new PTsReadRes(
