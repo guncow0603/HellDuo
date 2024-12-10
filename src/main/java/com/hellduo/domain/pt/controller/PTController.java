@@ -4,6 +4,7 @@ import com.hellduo.domain.pt.dto.request.PTUpdateReq;
 import com.hellduo.domain.pt.dto.response.*;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.entity.PTSpecialization;
+import com.hellduo.domain.pt.entity.PTStatus;
 import com.hellduo.domain.pt.service.PTService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -69,9 +70,10 @@ public class PTController {
 
     @GetMapping("/myPt")
     public ResponseEntity<List<PTsReadRes>> getMyPTs(
-            @AuthenticationPrincipal UserDetailsImpl userDetails)
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "SCHEDULED") PTStatus status)
     {
-        return ResponseEntity.status(HttpStatus.OK).body(ptService.getMyPTs(userDetails.getUser()));
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.getMyPTs(userDetails.getUser(), status));
     }
 
     @PatchMapping("/completed/{ptId}")

@@ -220,14 +220,14 @@ public class PTService {
         return result;
     }
 
-    public List<PTsReadRes> getMyPTs(User user) {
+    public List<PTsReadRes> getMyPTs(User user, PTStatus status) {
         List<PT> ptList;
 
         // 역할에 따라 다른 쿼리 실행
         if (user.getRole() == UserRoleType.USER) {
-            ptList = ptRepository.findByUserIdAndStatus(user.getId(), PTStatus.SCHEDULED);
+            ptList = ptRepository.findByUserIdAndStatus(user.getId(), status);
         } else if (user.getRole() == UserRoleType.TRAINER) {
-            ptList = ptRepository.findByTrainerIdAndStatus(user.getId(), PTStatus.SCHEDULED);
+            ptList = ptRepository.findByTrainerIdAndStatus(user.getId(), status);
         } else {
             // 역할이 유효하지 않을 경우 빈 리스트 반환
             return Collections.emptyList();

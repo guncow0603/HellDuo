@@ -56,6 +56,41 @@
             font-size: 0.9em;
             color: #6c757d;
         }
+        /* 상태 필터 버튼 스타일 */
+        #status-filters {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status-filter {
+            background-color: #007bff;
+            color: white;
+            font-size: 1em;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .status-filter:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .status-filter:focus {
+            outline: none;
+        }
+
+        .status-filter.active {
+            background-color: #28a745;
+        }
+
+        .status-filter.active:hover {
+            background-color: #218838;
+        }
+
     </style>
 </head>
 
@@ -64,7 +99,11 @@
 
 <div class="container mt-4">
     <h2>피티 목록</h2>
-    <div id="pt-list" class="pt-list"></div>
+    <div id="status-filters">
+        <button class="status-filter" data-status="SCHEDULED">예약된 PT</button>
+        <button class="status-filter" data-status="COMPLETED">완료된 PT</button>
+    </div>
+    <div id="pt-list"></div>
 </div>
 </body>
 
