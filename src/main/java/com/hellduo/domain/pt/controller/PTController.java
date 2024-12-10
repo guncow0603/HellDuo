@@ -66,4 +66,12 @@ public class PTController {
     {
         return ResponseEntity.status(HttpStatus.OK).body(ptService.searchPTs(keyword, category,sortBy,isAsc));
     }
+
+    @GetMapping("/myPt")
+    public ResponseEntity<List<PTsReadRes>> getMyPTs(
+            @AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.getMyPTs(userDetails.getUser()));
+    }
+
 }
