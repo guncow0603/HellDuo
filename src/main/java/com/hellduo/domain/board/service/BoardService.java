@@ -105,4 +105,19 @@ public class BoardService {
 
         return result;
     }
+
+    public List<BoardsReadRes> searchBoards(String keyword) {
+        List<Board> boards = boardRepository.searchByKeyword(keyword);
+
+        List<BoardsReadRes> boardsReadResList = new ArrayList<>();
+
+        for (Board board : boards) {
+            boardsReadResList.add(new BoardsReadRes(
+                    board.getId(),
+                    board.getTitle(),
+                    board.getLikeCount()));
+        }
+
+        return boardsReadResList;
+    }
 }

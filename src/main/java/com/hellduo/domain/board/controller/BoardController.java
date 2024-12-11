@@ -60,4 +60,13 @@ public class BoardController{
         );
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<BoardsReadRes>>searchBoards(
+            @RequestParam(required = false) String keyword
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                boardService.searchBoards(keyword)
+        );
+    }
+
 }
