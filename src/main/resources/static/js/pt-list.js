@@ -1,6 +1,6 @@
-function loadPTs() {
+function loadPTs(keyword = '', category = '', sortBy = 'createdAt', isAsc = false) {
     $.ajax({
-        url: "/api/v1/pt/myPt",
+        url: `/api/v1/pt/search?keyword=${keyword}&category=${category}&sortBy=${sortBy}&isAsc=${isAsc}`,
         type: "GET",
         success: function (response) {
             renderPTs(response);
@@ -10,7 +10,6 @@ function loadPTs() {
         },
     });
 }
-
 function renderPTs(pts) {
     const ptListContainer = $('#pt-list');
     ptListContainer.empty();
