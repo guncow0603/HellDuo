@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
@@ -92,5 +94,11 @@ public class UserController {
             @PathVariable Long trainerId){
         return  ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getTrainerProfile(trainerId));
+    }
+
+    @GetMapping("/trainer/bestRating")
+    public ResponseEntity<List<BestRatingTrainerRes>>getBestRatingTrainer() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getBestRatingTrainer());
     }
 }
