@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +72,37 @@ public class BoardService {
         }
         boardRepository.delete(board);
         return new BoardDeleteRes("게시글이 삭제 되었습니다.");
+    }
+
+    public List<BestLikeBoardRes> getBestLikeBoard() {
+        List<Board> boards = boardRepository.findAll();
+        // 좋아요 순으로 정렬
+        for (int i = 0; i < boards.size(); i++) {
+            for (int j = i + 1; j < boards.size(); j++) {
+                if (boards.get(i).getLikeCount() < boards.get(j).getLikeCount()) {
+                    // swap
+                    Board temp = boards.get(i);
+                    boards.set(i, boards.get(j));
+                    boards.set(j, temp);
+                }
+            }
+        }
+        // 상위 10개 선택
+        List<Board> top10Boards = new ArrayList<>();
+        for (int i = 0; i < Math.min(10, boards.size()); i++) {
+            top10Boards.add(boards.get(i));
+        }
+        // DTO 변환
+        List<BestLikeBoardRes> result = new ArrayList<>();
+        for (Board board : top10Boards) {
+            BestLikeBoardRes dto = new BestLikeBoardRes(
+                    board.getId(),
+                    board.getLikeCount(),
+                    board.getTitle(),
+                    board.getContent()); // 엔티티를 DTO로 변환
+            result.add(dto);
+        }
+
+        return result;
     }
 }

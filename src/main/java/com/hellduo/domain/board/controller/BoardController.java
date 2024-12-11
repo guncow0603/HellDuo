@@ -53,4 +53,11 @@ public class BoardController{
                 boardService.deleteBoard(boardId, userDetails.getUser().getId()));
     }
 
+    @GetMapping("/bestLike")
+    public ResponseEntity<List<BestLikeBoardRes>>getBestLikeBoard() {
+        return ResponseEntity.status(HttpStatus.OK).body(
+               boardService.getBestLikeBoard()
+        );
+    }
+
 }
