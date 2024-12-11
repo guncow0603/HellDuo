@@ -117,6 +117,29 @@ $(document).ready(function() {
         }
     });
 
+    // 게시글 삭제 기능
+    $("#delete-board-button").click(function(e) {
+        e.preventDefault();  // 기본 링크 동작 방지
+
+        if (confirm("게시글을 삭제하시겠습니까?")) {
+            $.ajax({
+                url: "/api/v1/board/" + boardId,
+                type: "DELETE",
+                success: function(response) {
+                    alert("게시글이 삭제되었습니다.");
+                    window.location.href = "/api/v1/page/boardList";  // 게시판 목록 페이지로 리디렉션
+                },
+                error: function(error) {
+                    alert("게시글 삭제에 실패했습니다.");
+                }
+            });
+        }
+    });
+
     // 페이지 로드 시 댓글 목록 조회
     loadComments(boardId);
+    // JavaScript로 'boardId' 값을 동적으로 설정
+    document.getElementById("update-board-button").addEventListener("click", function() {
+        window.location.href = "/api/v1/page/boardUpdate/" + boardId;
+    });
 });
