@@ -24,6 +24,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -339,5 +342,46 @@ public class UserService {
                 experience,
                 certifications,
                 bio);
+    }
+
+    public List<BestRatingTrainerRes> getBestRatingTrainer() {
+        // 전체 유저 중에서 트레이너 역할(UserRoleType이 TRAINER)인 사용자만 필터링
+        List<User> allUsers = userRepository.findAll();
+
+        List<User> trainers = new ArrayList<>();
+        for (User user : allUsers) {
+            if (user.getRole() == UserRoleType.TRAINER && !user.isDeleted()) { // 트레이너이면서 탈퇴하지 않은 유저
+                trainers.add(user);
+            }
+        }
+
+        // 평점 순으로 정렬
+        for (int i = 0; i < trainers.size(); i++) {
+            for (int j = i + 1; j < trainers.size(); j++) {
+                if (trainers.get(i).getRating() < trainers.get(j).getRating()) {
+                    // swap
+                    User temp = trainers.get(i);
+                    trainers.set(i, trainers.get(j));
+                    trainers.set(j, temp);
+                }
+            }
+        }
+
+        // 상위 10명만 추출
+        List<User> top10Trainers = new ArrayList<>();
+        for (int i = 0; i < trainers.size() && i < 10; i++) {
+            top10Trainers.add(trainers.get(i));
+        }
+
+        // DTO 변환
+        List<BestRatingTrainerRes> result = new ArrayList<>();
+        for (User trainer : top10Trainers) {
+            result.add(new BestRatingTrainerRes(trainer.getId(),
+                    trainer.getName(),
+                    trainer.getRating(),
+                    trainer.getSpecialization().getName()));
+        }
+
+        return result;
     }
 }
