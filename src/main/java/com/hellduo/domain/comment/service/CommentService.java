@@ -3,7 +3,6 @@ package com.hellduo.domain.comment.service;
 import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.repository.BoardRepository;
 import com.hellduo.domain.comment.dto.request.CommentCreatReq;
-import com.hellduo.domain.comment.dto.request.CommentReadReq;
 import com.hellduo.domain.comment.dto.request.CommentUpdateReq;
 import com.hellduo.domain.comment.dto.response.CommentCreateRes;
 import com.hellduo.domain.comment.dto.response.CommentDeleteRes;
@@ -19,12 +18,14 @@ import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
@@ -51,16 +52,19 @@ public class CommentService {
         return new CommentCreateRes("댓글 작성이 완료 되었습니다.");
     }
 
-    public List<CommentReadRes> commentRead(CommentReadReq req) {
+    public List<CommentReadRes> commentRead(Long boardId) {
 
-        Board board = boardRepository.findBoardByIdWithThrow(req.boardId());
+        Board board = boardRepository.findBoardByIdWithThrow(boardId);
 
         List<Comment> commentList = commentRepository.findAllByBoard(board);
 
         List<CommentReadRes> commentReadResList = new ArrayList<>();
 
         for(Comment comment : commentList){
-            commentReadResList.add(new CommentReadRes(comment.getContent(),comment.getUser().getNickname()));
+            commentReadResList.add(new CommentReadRes(
+                    comment.getContent(),
+                    comment.getUser().getNickname(),
+                    comment.getId()));
         }
 
         return commentReadResList;
@@ -73,7 +77,7 @@ public class CommentService {
             throw new UserException(UserErrorCode.NOT_FOUND_USER);
         }
 
-        comment.updateContent(req.Content());
+        comment.updateContent(req.content());
 
         return new CommentUpdateRes("수정 완료.");
     }

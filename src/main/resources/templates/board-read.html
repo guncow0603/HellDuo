@@ -17,7 +17,7 @@
     <script src="/js/board-read.js"></script>
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f4f6f9;
             font-family: 'Arial', sans-serif;
         }
 
@@ -35,20 +35,21 @@
 
         .board-content {
             background-color: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
         .board-content p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #555;
+            line-height: 1.6;
         }
 
         .board-info {
             font-size: 1rem;
             color: #6c757d;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .board-info span {
@@ -58,7 +59,7 @@
         .back-button {
             margin-top: 20px;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #007bff;
             color: white;
             border-radius: 5px;
@@ -68,6 +69,60 @@
 
         .back-button:hover {
             background-color: #0056b3;
+        }
+
+        .comment-form {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .comment-button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .comment-button:hover {
+            background-color: #218838;
+        }
+
+        .comment-list {
+            margin-top: 40px;
+            padding: 0;
+        }
+
+        .comment-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .comment-item .user {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .comment-item .content {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -82,7 +137,23 @@
     <div id="board-details">
         <!-- 게시글 내용이 여기에 표시됩니다 -->
     </div>
-</div>
 
+    <!-- 댓글 작성 폼 -->
+    <div class="comment-form">
+        <textarea class="comment-input" id="comment-input" placeholder="댓글을 작성해주세요..."></textarea>
+        <button class="comment-button" id="comment-submit">댓글 작성</button>
+    </div>
+
+    <div class="comment-list" id="comment-list">
+        <!-- 댓글이 여기에 표시됩니다 -->
+    </div>
+
+    <!-- 수정 폼을 숨기기 위해 추가 -->
+    <div id="edit-comment-form" style="display: none;">
+        <textarea id="edit-comment-input" class="comment-input" placeholder="수정할 댓글을 입력해주세요..."></textarea>
+        <button class="comment-button" id="edit-comment-submit">수정하기</button>
+        <button class="comment-button" id="cancel-edit-comment">취소</button>
+    </div>
+</div>
 </body>
 </html>

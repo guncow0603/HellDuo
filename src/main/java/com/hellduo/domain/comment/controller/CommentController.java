@@ -1,7 +1,6 @@
 package com.hellduo.domain.comment.controller;
 
 import com.hellduo.domain.comment.dto.request.CommentCreatReq;
-import com.hellduo.domain.comment.dto.request.CommentReadReq;
 import com.hellduo.domain.comment.dto.request.CommentUpdateReq;
 import com.hellduo.domain.comment.dto.response.CommentCreateRes;
 import com.hellduo.domain.comment.dto.response.CommentDeleteRes;
@@ -32,11 +31,11 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.commentCreate(req,userDetails.getUser().getId()));
     }
 
-    @GetMapping
+    @GetMapping("/{boardId}")
     public ResponseEntity<List<CommentReadRes>> commentRead(
-            @RequestBody CommentReadReq req
+            @PathVariable Long boardId
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.commentRead(req));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.commentRead(boardId));
     }
 
     @PutMapping("/{commentId}")
