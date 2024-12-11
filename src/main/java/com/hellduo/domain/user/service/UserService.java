@@ -220,7 +220,9 @@ public class UserService {
                 specialization,
                 experience,
                 certifications,
-                bio);
+                bio,
+                trainer.getRating()
+        );
     }
 
     public UserProfileUpdateRes updateUserProfile(Long userId, UserProfileUpdateReq req) {
@@ -341,7 +343,9 @@ public class UserService {
                 specialization,
                 experience,
                 certifications,
-                bio);
+                bio,
+                trainer.getRating()
+        );
     }
 
     public List<BestRatingTrainerRes> getBestRatingTrainer() {
