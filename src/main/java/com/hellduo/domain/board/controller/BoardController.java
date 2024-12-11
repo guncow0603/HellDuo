@@ -38,19 +38,19 @@ public class BoardController{
         return ResponseEntity.status(HttpStatus.OK).body( boardService.getBoards());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{boardId}")
     public ResponseEntity<BoardUpdateRes>updateBoard(@RequestBody BoardUpdateReq req,
-                                                     @PathVariable Long id,
+                                                     @PathVariable Long boardId,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                boardService.updateBoard(id, userDetails.getUser().getId(),req));
+                boardService.updateBoard(boardId, userDetails.getUser().getId(),req));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<BoardDeleteRes>deleteBoard(@PathVariable Long id,
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<BoardDeleteRes>deleteBoard(@PathVariable Long boardId,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                boardService.deleteBoard(id, userDetails.getUser().getId()));
+                boardService.deleteBoard(boardId, userDetails.getUser().getId()));
     }
 
 }

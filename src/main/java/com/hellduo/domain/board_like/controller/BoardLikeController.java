@@ -12,22 +12,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/boardLike")
-public class BoardLikeController {
+public class  BoardLikeController {
     private final BoardLikeService boardLikeService;
 
     @PostMapping("/{boardId}")
-    public ResponseEntity<LikeResponse>boardLike(
+    public ResponseEntity<LikeResponse>boardLikeToggle(
             @PathVariable Long boardId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
             ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(boardLikeService.boardLike(boardId, userDetails.getUser()));
-    }
-
-    @DeleteMapping("/{boardId}")
-    public ResponseEntity<LikeResponse>boardLikeDelete(
-        @PathVariable Long boardId,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(boardLikeService.boardLikeDelete(boardId, userDetails.getUser()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardLikeService.boardLikeToggle(boardId, userDetails.getUser()));
     }
 }

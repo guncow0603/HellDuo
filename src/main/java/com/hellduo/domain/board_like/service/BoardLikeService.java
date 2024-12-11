@@ -12,31 +12,36 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BoardLikeService {
     private final BoardRepository boardRepository;
     private final BoardLikeRepository boardLikeRepository;
-
-    public LikeResponse boardLike(Long boardId, User user) {
-        Board board =  boardRepository.findBoardByIdWithThrow(boardId);
-        board.addLikeCount(1L);
-        if(boardLikeRepository.existsByBoardIdAndUserId(boardId, user.getId())) {
-            throw new BoardLikeException(BoardLikeErrorCode.DUPLICATE_LIKE);
-        }
-        BoardLike boardLike = BoardLike.builder().
-                board(board).
-                user(user).
-                build();
-        boardLikeRepository.save(boardLike);
-        return new LikeResponse("좋아요 완료.");
-    }
-
-    public LikeResponse boardLikeDelete(Long boardId, User user) {
+    public LikeResponse boardLikeToggle(Long boardId, User user) {
+        // 게시글 찾기 (예외 처리 포함)
         Board board = boardRepository.findBoardByIdWithThrow(boardId);
-        board.minusLikeCount(1L);
-        boardLikeRepository.deleteBoardLikesByBoardIdAndUserId(boardId, user.getId());
-        return new LikeResponse("좋아요 취소 완료,");
+
+        // 좋아요 여부 확인
+        Optional<BoardLike> existingLike = boardLikeRepository.findByBoardIdAndUserId(boardId, user.getId());
+
+        if (existingLike.isPresent()) {
+            // 이미 좋아요를 눌렀을 경우 좋아요 취소
+            board.minusLikeCount(1L);
+            boardLikeRepository.delete(existingLike.get());
+            return new LikeResponse("좋아요 취소 완료.");
+        } else {
+            // 좋아요 추가
+            board.addLikeCount(1L);
+            BoardLike boardLike = BoardLike.builder()
+                    .board(board)
+                    .user(user)
+                    .build();
+            boardLikeRepository.save(boardLike);
+            return new LikeResponse("좋아요 완료.");
+        }
     }
+
 }
