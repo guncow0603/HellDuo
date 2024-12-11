@@ -91,6 +91,9 @@ public class User extends BaseEntity {
     @ColumnDefault("0")
     private Long point = 0L;
 
+    @Column
+    @ColumnDefault("1")
+    private Double rating = 1.0;
 
     @Builder
     public User(String email, String password, UserRoleType role, String nickname, Gender gender,
@@ -144,4 +147,5 @@ public class User extends BaseEntity {
         this.point += point;
     }
     public void minusPoint(Long point){ this.point-= point; }
+    public void updateRating(Double rating) {this.rating = rating;}
 }
