@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -219,13 +220,25 @@ public class PTService {
         return result;
     }
 
-    public List<PTsReadRes> getMyPTs(User user) {
-        if(user.getRole()!=UserRoleType.USER){
-            throw new UserException(UserErrorCode.NOT_ROLE_USER);
+    public List<PTsReadRes> getMyPTs(User user, PTStatus status) {
+        List<PT> ptList;
+
+        // 역할에 따라 다른 쿼리 실행
+        if (user.getRole() == UserRoleType.USER) {
+            ptList = ptRepository.findByUserIdAndStatus(user.getId(), status);
+        } else if (user.getRole() == UserRoleType.TRAINER) {
+            ptList = ptRepository.findByTrainerIdAndStatus(user.getId(), status);
+        } else {
+            // 역할이 유효하지 않을 경우 빈 리스트 반환
+            return Collections.emptyList();
         }
 
-        List<PT> ptList = ptRepository.findByUserIdAndStatus(user.getId(),PTStatus.SCHEDULED);
-        // 포문으로 변환
+        // PT 목록을 응답 객체로 변환
+        return convertToPTsReadRes(ptList);
+    }
+
+    // PT 엔티티 리스트를 응답 객체 리스트로 변환하는 메서드
+    private List<PTsReadRes> convertToPTsReadRes(List<PT> ptList) {
         List<PTsReadRes> result = new ArrayList<>();
         for (PT entity : ptList) {
             result.add(new PTsReadRes(
@@ -238,5 +251,20 @@ public class PTService {
             ));
         }
         return result;
+    }
+
+    public PTCompletedRes ptCompleted(Long ptId, Long trainerId) {
+        PT pt=ptRepository.findPTByIdWithThrow(ptId);
+        if(!pt.getTrainer().getId().equals( trainerId )){
+            throw new UserException(UserErrorCode.NOT_FOUND_USER);
+        }
+        // 상태 변경 전 검증
+        if (pt.getStatus() == PTStatus.COMPLETED) {
+            throw new PTException(PTErrorCode.NOT_STATUS);
+        }
+
+        pt.updateStatus(PTStatus.COMPLETED);
+
+        return new PTCompletedRes("완료 처리 하였습니다.");
     }
 }
