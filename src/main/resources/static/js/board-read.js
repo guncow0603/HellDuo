@@ -12,7 +12,7 @@ async function getBoardById(boardId) {
                     <div class="board-content">
                         <h2 class="board-title">${board.title}</h2>
                         <p><strong>내용:</strong> ${board.content}</p>
-                        <p><strong>좋아요 수:</strong> ${board.boardLikeCount}</p>
+                        <button class="btn btn-primary" id="likeBoardBtn" type="button">Likes: ${board.boardLikeCount}</button>
                     </div>
                 `;
         } else {
@@ -88,6 +88,7 @@ function deleteComment(commentId) {
 
 $(document).ready(function() {
 
+
     // 특정 게시글 조회 함수 호출
     getBoardById(boardId);
 
@@ -143,3 +144,26 @@ $(document).ready(function() {
         window.location.href = "/api/v1/page/boardUpdate/" + boardId;
     });
 });
+$(document).on('click', '#likeBoardBtn', function () {
+    console.log('Like button clicked.');
+
+    likeBoard();
+});
+
+function likeBoard() {
+
+    $.ajax({
+        url: '/api/v1/boardLike/'+boardId,
+        method: 'POST',
+        contentType: 'application/json',
+        success: function (data, status, xhr) {
+            console.log('Board liked successfully. Response Status:', xhr.status);
+            getBoardById(boardId);
+        },
+        error: function (res) {
+            const jsonObject = JSON.parse(res.responseText);
+            const messages = jsonObject.messages;
+            alert(messages);
+        }
+    });
+}

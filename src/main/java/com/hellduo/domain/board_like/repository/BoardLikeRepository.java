@@ -10,7 +10,5 @@ import java.util.Optional;
 @Repository
 public interface BoardLikeRepository extends JpaRepository<BoardLike, Long> {
 
-    boolean existsByBoardIdAndUserId(Long boardId, Long userId);
-
-    void deleteBoardLikesByBoardIdAndUserId(Long boardId, Long userid);
+    Optional<BoardLike> findByBoardIdAndUserId(Long boardId, Long id);
 }
