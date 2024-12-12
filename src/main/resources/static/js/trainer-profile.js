@@ -31,8 +31,9 @@ async function fetchTrainerProfile() {
         document.getElementById("trainer-age").textContent = data.age;
         document.getElementById("trainer-specialization").textContent = data.specialization;
         document.getElementById("trainer-experience").textContent = `${data.experience}년`;
-        document.getElementById("trainer-certifications").textContent = data.certifications.join(", ");
         document.getElementById("trainer-bio").textContent = data.bio;
+        document.getElementById("trainer-certifications").textContent = data.certifications.join(", ");
+
     } catch (error) {
         console.error("프로필 로드 오류:", error);
     }

@@ -29,8 +29,8 @@ public class ReviewService {
 
     private final PTRepository ptRepository;
 
-    public ReviewCreateRes reviewCreate(@Valid ReviewCreateReq req, User user) {
-        PT pt = ptRepository.findPTByIdWithThrow(req.ptId());
+    public ReviewCreateRes reviewCreate(@Valid ReviewCreateReq req, User user, Long ptId) {
+        PT pt = ptRepository.findPTByIdWithThrow(ptId);
 
         if (pt.getStatus() != PTStatus.COMPLETED) {
             throw new PTException(PTErrorCode.PT_NOT_COMPLETED);
