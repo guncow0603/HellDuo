@@ -1,7 +1,7 @@
 // 게시글 목록 조회 (GET 요청)
-async function loadBoards() {
+async function loadBoards(keyword = '') {
     try {
-        const response = await fetch('/api/v1/board');
+        const response = await fetch(`/api/v1/board/search?keyword=${keyword}`);
         const boards = await response.json();
 
         const boardListContainer = document.getElementById('board-list');
@@ -37,5 +37,13 @@ async function loadBoards() {
     }
 }
 
-// 페이지 로드 시 게시글 목록 조회
-window.onload = loadBoards;
+
+// 검색 버튼 클릭 이벤트 핸들러
+$(document).on("click", "#search-btn", function () {
+    const keyword = $("#search-keyword").val();
+    loadBoards(keyword); // 검색 조건을 기반으로 Board 데이터를 로드
+});
+// 페이지 로드 시 초기 데이터 로드
+$(document).ready(function () {
+    loadBoards(); // 초기에는 검색 조건 없이 전체 데이터 로드
+});

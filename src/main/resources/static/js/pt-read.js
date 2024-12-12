@@ -321,3 +321,25 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     const distance = R * c; // 단위: km
     return distance;
 }
+
+// 채팅 기능을 위한 함수
+function chatTry(userId) {
+    const data = {
+        receiverId: userId
+    }
+    $.ajax({
+        type: "POST",
+        url: `/api/v1/chats/rooms`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+    })
+        .done(function (res) {
+            console.log(res.id);
+            window.location.href = '/api/v1/chats/rooms/' + res.id + '/front';
+        })
+        .fail(function (res) {
+            const jsonObject = JSON.parse(res.responseText);
+            const messages = jsonObject.messages;
+            alert(messages);
+        });
+}
