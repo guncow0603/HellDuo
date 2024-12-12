@@ -32,5 +32,11 @@ public class ReviewController {
     public ResponseEntity<List<GetReviewsRes>>getReviews(){
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviews());
     }
+
+    @GetMapping("/{trainerId}")
+    public ResponseEntity<List<GetReviewsRes>>getTrainerReviews(
+            @PathVariable Long trainerId){
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getTrainerReviews(trainerId));
+    }
 }
 

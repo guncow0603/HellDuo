@@ -87,4 +87,18 @@ public class ReviewService {
         }
         return GetReviewsResList;
     }
+
+    public List<GetReviewsRes> getTrainerReviews(Long trainerId) {
+        List<Review> reviews = reviewRepository.findAllByTrainerId(trainerId);
+        List<GetReviewsRes> GetReviewsResList = new ArrayList<>();
+        for(Review review : reviews){
+            GetReviewsResList.add(new GetReviewsRes(
+                    review.getTitle(),
+                    review.getContent(),
+                    review.getPt().getId(),
+                    review.getTrainer().getId(),
+                    review.getRating()));
+        }
+        return GetReviewsResList;
+    }
 }
