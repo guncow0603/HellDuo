@@ -61,6 +61,13 @@ function loadThumbnail(ptId) {
     });
 }
 
+// 검색 버튼 클릭 이벤트 핸들러
+$(document).on("click", "#search-btn", function () {
+    const keyword = $("#search-keyword").val();
+    const category = $("#search-category").val();
+    loadPTs(keyword, category); // 검색 조건을 기반으로 PT 데이터를 로드
+});
+// 페이지 로드 시 초기 데이터 로드
 $(document).ready(function () {
-    loadPTs();
+    loadPTs(); // 초기에는 검색 조건 없이 전체 데이터 로드
 });
