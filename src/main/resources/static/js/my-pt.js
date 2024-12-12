@@ -14,7 +14,6 @@ function loadPTs() {
         },
     });
 }
-
 // PT 항목들을 화면에 렌더링하는 함수
 function renderPTs(pts) {
     const ptListContainer = $('#pt-list');
@@ -40,16 +39,21 @@ function renderPTs(pts) {
         <div class="pt-price-status">
             <p class="pt-price">${pt.price.toLocaleString()}원</p>
             <p class="pt-status">${pt.ptStatus}</p>
-              <!-- 리뷰 쓰기 버튼을 상태가 '완료됨'일 경우에만 표시 -->
             ${pt.ptStatus === '완료됨' ? `
-            <button href="/api/v1/page/reviewCreate/${pt.ptId}">리뷰 쓰기</button>
-        ` : ''}
+            <button class="review-button" onclick="handleReviewButton(event, '${pt.ptId}')">리뷰 쓰기</button>
+            ` : ''}
         </div>
     </div>
 `);
         ptListContainer.append(ptItem);
         loadThumbnail(pt.ptId); // 이미지 로드
     });
+}
+
+// 리뷰 버튼 클릭 이벤트 핸들러
+function handleReviewButton(event, ptId) {
+    event.stopPropagation(); // 클릭 이벤트 전파를 막음
+    window.location.href = `/api/v1/page/reviewCreate/${ptId}`;
 }
 
 // 썸네일 이미지를 불러오는 함수

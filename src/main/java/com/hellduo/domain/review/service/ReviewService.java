@@ -6,6 +6,7 @@ import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
 import com.hellduo.domain.pt.repository.PTRepository;
 import com.hellduo.domain.review.dto.request.ReviewCreateReq;
+import com.hellduo.domain.review.dto.response.GetReviewsRes;
 import com.hellduo.domain.review.dto.response.ReviewCreateRes;
 import com.hellduo.domain.review.entity.Review;
 import com.hellduo.domain.review.repository.ReviewRepository;
@@ -18,6 +19,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,4 +74,31 @@ public class ReviewService {
         }
     }
 
+    public List<GetReviewsRes> getReviews() {
+        List<Review> reviews = reviewRepository.findAll();
+        List<GetReviewsRes> GetReviewsResList = new ArrayList<>();
+        for(Review review : reviews){
+            GetReviewsResList.add(new GetReviewsRes(
+                    review.getTitle(),
+                    review.getContent(),
+                    review.getPt().getId(),
+                    review.getTrainer().getId(),
+                    review.getRating()));
+        }
+        return GetReviewsResList;
+    }
+
+    public List<GetReviewsRes> getTrainerReviews(Long trainerId) {
+        List<Review> reviews = reviewRepository.findAllByTrainerId(trainerId);
+        List<GetReviewsRes> GetReviewsResList = new ArrayList<>();
+        for(Review review : reviews){
+            GetReviewsResList.add(new GetReviewsRes(
+                    review.getTitle(),
+                    review.getContent(),
+                    review.getPt().getId(),
+                    review.getTrainer().getId(),
+                    review.getRating()));
+        }
+        return GetReviewsResList;
+    }
 }

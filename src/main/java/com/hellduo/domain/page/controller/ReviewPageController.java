@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/api/v1/page")
 public class ReviewPageController {
-    @GetMapping("/reviewList")
-    public String reviewListPage() {
+    @GetMapping("/reviewList/{trainerId}")
+    public String reviewListPage(@PathVariable Long trainerId, Model model) {
+        model.addAttribute("trainerId", trainerId);
         return "review-list";
     }
 

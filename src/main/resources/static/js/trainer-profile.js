@@ -32,7 +32,7 @@ async function fetchTrainerProfile() {
         document.getElementById("trainer-specialization").textContent = data.specialization;
         document.getElementById("trainer-experience").textContent = `${data.experience}년`;
         document.getElementById("trainer-bio").textContent = data.bio;
-        document.getElementById("trainer-certifications").textContent = data.certifications.join(", ");
+        document.getElementById("trainer-certifications").textContent = data.certifications;
 
     } catch (error) {
         console.error("프로필 로드 오류:", error);
@@ -62,7 +62,15 @@ $.ajax({
         }
     }
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const reviewButton = document.getElementById('review-list-button');
 
+    // 버튼 클릭 이벤트 추가
+    reviewButton.addEventListener('click', () => {
+        const reviewPageUrl = `/api/v1/page/reviewList/${trainerId}`;
+        window.location.href = reviewPageUrl; // 후기 페이지로 이동
+    });
+});
 document.addEventListener("DOMContentLoaded", () => {
     fetchTrainerImage();
     fetchTrainerProfile();
