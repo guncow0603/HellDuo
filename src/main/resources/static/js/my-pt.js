@@ -40,6 +40,10 @@ function renderPTs(pts) {
         <div class="pt-price-status">
             <p class="pt-price">${pt.price.toLocaleString()}원</p>
             <p class="pt-status">${pt.ptStatus}</p>
+              <!-- 리뷰 쓰기 버튼을 상태가 '완료됨'일 경우에만 표시 -->
+            ${pt.ptStatus === '완료됨' ? `
+            <button href="/api/v1/page/reviewCreate/${pt.ptId}">리뷰 쓰기</button>
+        ` : ''}
         </div>
     </div>
 `);
@@ -47,6 +51,8 @@ function renderPTs(pts) {
         loadThumbnail(pt.ptId); // 이미지 로드
     });
 }
+
+// 썸네일 이미지를 불러오는 함수
 function loadThumbnail(ptId) {
     $.ajax({
         url: `/api/v1/userImage/pt/thumbnail/${ptId}`,
@@ -64,7 +70,6 @@ function loadThumbnail(ptId) {
         }
     });
 }
-
 
 // PT 상태를 변경하는 함수
 function changeStatus(status) {
