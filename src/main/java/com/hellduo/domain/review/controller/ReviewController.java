@@ -1,6 +1,7 @@
 package com.hellduo.domain.review.controller;
 
 import com.hellduo.domain.review.dto.request.ReviewCreateReq;
+import com.hellduo.domain.review.dto.response.GetReviewsRes;
 import com.hellduo.domain.review.dto.response.ReviewCreateRes;
 import com.hellduo.domain.review.service.ReviewService;
 import com.hellduo.global.security.UserDetailsImpl;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +27,10 @@ public class ReviewController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
             ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.reviewCreate(req, userDetails.getUser(),ptId));
+    }
+    @GetMapping
+    public ResponseEntity<List<GetReviewsRes>>getReviews(){
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviews());
     }
 }
 
