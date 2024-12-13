@@ -9,6 +9,8 @@ $(document).ready(function () {
         $('#header-chat-list').hide();
         $('#banner').hide();
 
+
+        $('#review-create-button').hide();
         $('#chat-user').hide();
         $('#pt-button').hide();
         $('#update-btn').hide();
@@ -24,6 +26,7 @@ $(document).ready(function () {
         $('#header-chat-list').show();
 
         if (role === 'ADMIN') {
+            $('#review-create-button').hide();
             $('#chat-user').show();
             $('#reserve-btn').hide();
             $('#update-btn').hide();
@@ -32,6 +35,7 @@ $(document).ready(function () {
             $('#pt-create-button').hide();
             loadAdminHeader();
         } else if(role === 'USER') {
+            $('#review-create-button').show();
             $('#chat-user').show();
             $('#update-btn').hide();
             $('#delete-btn').hide();
@@ -39,6 +43,7 @@ $(document).ready(function () {
             $('#pt-create-button').hide();
             loadUserHeader();
         }else if(role === 'TRAINER'){
+            $('#review-create-button').hide();
             $('#chat-user').show();
             $('#reserve-btn').hide();
             $('#update-btn').show();

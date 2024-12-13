@@ -31,9 +31,5 @@ public class BoardPageController {
         return "/board/board-read";
     }
 
-    @GetMapping("/noReviewPtList")
-    public String noReviewPtListPage() {
-        return "no-review-pt-list";
-    }
 
 }
