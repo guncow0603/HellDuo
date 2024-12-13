@@ -13,6 +13,7 @@ $(document).ready(function() {
             $('#profile-s').show();
             $('#profile-e').show();
             $('#profile-c').show();
+            $('#profile-r').show();
         } else if(role === 'USER') {
             $('#profile-w').show();
             $('#profile-h').show();
@@ -21,6 +22,7 @@ $(document).ready(function() {
             $('#profile-s').hide();
             $('#profile-e').hide();
             $('#profile-c').hide();
+            $('#profile-r').hide();
         }
     }
 
@@ -63,6 +65,7 @@ $(document).ready(function() {
                 $("#profile-experience").text(res.experience);
                 $("#profile-certifications").text(res.certifications);
                 $("#profile-bio").text(res.bio);
+                $("#profile-rating").text(res.rating);
 
                 const certification = $('#certification');
                 // 트레이너의 자격증 이미지 조회 API 호출 (trainerId가 설정된 후에 호출)
