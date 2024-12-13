@@ -23,13 +23,13 @@ public class BoardController{
     @PostMapping
     public ResponseEntity<BoardCreateRes>creteBoard(@Valid @RequestBody BoardCreateReq req,
                                                     @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.OK).body(boardService.createBoard(req,userDetails.getUser().getId()));
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.createBoard(req,userDetails.getUser()));
     }
 
     // 특정 게시글 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<BoardReadRes> getBoardById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardById(id));
+    @GetMapping("/{boardId}")
+    public ResponseEntity<BoardReadRes> getBoardById(@PathVariable Long boardId) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardById(boardId));
     }
 
     // 전체 게시글 조회
@@ -43,14 +43,14 @@ public class BoardController{
                                                      @PathVariable Long boardId,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                boardService.updateBoard(boardId, userDetails.getUser().getId(),req));
+                boardService.updateBoard(boardId, userDetails.getUser(),req));
     }
 
     @DeleteMapping("/{boardId}")
     public ResponseEntity<BoardDeleteRes>deleteBoard(@PathVariable Long boardId,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                boardService.deleteBoard(boardId, userDetails.getUser().getId()));
+                boardService.deleteBoard(boardId, userDetails.getUser()));
     }
 
     @GetMapping("/bestLike")

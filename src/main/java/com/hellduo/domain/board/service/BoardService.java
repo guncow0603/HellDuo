@@ -24,9 +24,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
-    public BoardCreateRes createBoard(BoardCreateReq req, Long id) {
-        User user = userRepository.findUserByIdWithThrow(id);
-
+    public BoardCreateRes createBoard(BoardCreateReq req, User user) {
         Board board = Board.builder()
                 .title(req.title())
                 .content(req.content())
@@ -47,15 +45,16 @@ public class BoardService {
         // Board 객체에서 제목을 추출하여 BoardsReadRes 객체 생성
         List<BoardsReadRes> boardsReadResList = new ArrayList<>();
         for (Board board : boards) {
-            boardsReadResList.add(new BoardsReadRes(board.getId(), board.getTitle(), board.getLikeCount())); // 제목만 BoardsReadRes에 추가
+            boardsReadResList.add(new BoardsReadRes(
+                    board.getId(),
+                    board.getTitle(),
+                    board.getLikeCount()));
         }
-
         return boardsReadResList; // BoardsReadRes 리스트 반환
     }
 
-    public BoardUpdateRes updateBoard(Long boardId, Long userId, BoardUpdateReq req) {
+    public BoardUpdateRes updateBoard(Long boardId, User user, BoardUpdateReq req) {
         Board board = boardRepository.findBoardByIdWithThrow(boardId);
-        User user = userRepository.findUserByIdWithThrow(userId);
         if(!board.getUser().getId() .equals(user.getId()) ) {
             throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
         }
@@ -64,9 +63,8 @@ public class BoardService {
         return new BoardUpdateRes("수정 완료 되었습니다.");
     }
 
-    public BoardDeleteRes deleteBoard(Long boardId, Long userId) {
+    public BoardDeleteRes deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findBoardByIdWithThrow(boardId);
-        User user = userRepository.findUserByIdWithThrow(userId);
         if(!board.getUser().getId() .equals(user.getId()) ) {
             throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
         }
@@ -75,23 +73,8 @@ public class BoardService {
     }
 
     public List<BestLikeBoardRes> getBestLikeBoard() {
-        List<Board> boards = boardRepository.findAll();
-        // 좋아요 순으로 정렬
-        for (int i = 0; i < boards.size(); i++) {
-            for (int j = i + 1; j < boards.size(); j++) {
-                if (boards.get(i).getLikeCount() < boards.get(j).getLikeCount()) {
-                    // swap
-                    Board temp = boards.get(i);
-                    boards.set(i, boards.get(j));
-                    boards.set(j, temp);
-                }
-            }
-        }
-        // 상위 10개 선택
-        List<Board> top10Boards = new ArrayList<>();
-        for (int i = 0; i < Math.min(10, boards.size()); i++) {
-            top10Boards.add(boards.get(i));
-        }
+        // 데이터베이스에서 좋아요 순으로 상위 10개 게시글 가져오기
+        List<Board> top10Boards = boardRepository.findTop10ByOrderByLikeCountDesc();
         // DTO 변환
         List<BestLikeBoardRes> result = new ArrayList<>();
         for (Board board : top10Boards) {
@@ -102,7 +85,6 @@ public class BoardService {
                     board.getContent()); // 엔티티를 DTO로 변환
             result.add(dto);
         }
-
         return result;
     }
 

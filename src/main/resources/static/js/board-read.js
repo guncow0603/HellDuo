@@ -126,14 +126,19 @@ $(document).ready(function() {
             $.ajax({
                 url: "/api/v1/board/" + boardId,
                 type: "DELETE",
-                success: function(response) {
-                    alert("게시글이 삭제되었습니다.");
-                    window.location.href = "/api/v1/page/boardList";  // 게시판 목록 페이지로 리디렉션
-                },
-                error: function(error) {
-                    alert("게시글 삭제에 실패했습니다.");
-                }
-            });
+            }).done(function (res) {
+                alert(res.msg); // 성공 메시지 출력
+                window.location.href = `/api/v1/page/boardList`;
+            })
+                .fail(function (res) {
+                    try {
+                        const jsonObject = JSON.parse(res.responseText);
+                        const messages = jsonObject.messages || "게시글 삭제에 실패했습니다.";
+                        alert(messages); // 서버에서 제공된 오류 메시지 출력
+                    } catch (error) {
+                        alert("오류가 발생했습니다. 다시 시도해주세요."); // 예외 상황 처리
+                    }
+                });
         }
     });
 
