@@ -7,7 +7,7 @@ $(document).ready(function () {
         const latitude = parseFloat($('#latitude').val());
         const longitude = parseFloat($('#longitude').val());
 
-        if (isNaN(latitude) || isNaN(longitude)) {
+        if (!isValidLocation(latitude, longitude)) {
             alert('유효한 위치 정보를 입력해주세요.');
             return;
         }
@@ -19,10 +19,15 @@ $(document).ready(function () {
             scheduledDate: $('#scheduledDate').val(),
             price: parseInt($('#price').val(), 10),
             description: $('#description').val(),
-            address: $('#address').val(), // 주소도 폼 데이터에 추가
+            address: $('#address').val(),
             latitude: latitude,
             longitude: longitude
         };
+
+        if (!isValidFormData(formData)) {
+            alert('모든 필수 항목을 입력해주세요.');
+            return;
+        }
 
         // AJAX 요청
         $.ajax({
@@ -31,51 +36,83 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (res) {
-                alert(res.msg);
-                // PT 생성 후 이미지 업로드 요청
-                uploadPTImages(res.ptId); // PT 생성 후 ID를 이용해 이미지 업로드
+                // PT 생성 성공 시 이미지 업로드 요청
+                uploadPTImages(res.ptId, function (uploadSuccess) {
+                    if (uploadSuccess) {
+                        alert("PT 생성 및 이미지 업로드 성공!");
+                        window.location.href = '/api/v1/page/ptList';
+                    } else {
+                        // 이미지 업로드 실패 시 PT 생성 취소 요청
+                        cancelPTCreation(res.ptId);
+                    }
+                });
             },
             error: function (xhr) {
-                $('#message').text('PT 생성 실패').addClass('error');
+                alert('PT 생성 실패: ' + xhr.responseText);
             }
         });
     });
 
+    // 좌표 유효성 검사
+    function isValidLocation(latitude, longitude) {
+        return !isNaN(latitude) && !isNaN(longitude);
+    }
+
+    // 폼 데이터 유효성 검사
+    function isValidFormData(formData) {
+        return formData.title && formData.specialization && formData.scheduledDate &&
+            formData.price && formData.description && formData.address;
+    }
+
     // PT 이미지 업로드 처리
-    function uploadPTImages(ptId) {
+    function uploadPTImages(ptId, callback) {
         const formData = new FormData();
         const files = $('#pt-files')[0].files;
 
-        // 선택된 파일이 있으면 FormData에 파일을 추가
-        if (files.length > 0) {
-            for (let i = 0; i < files.length; i++) {
-                formData.append('files', files[i]);
-            }
-
-            // AJAX를 통해 서버로 파일 업로드
-            $.ajax({
-                url: `/api/v1/userImage/pt/${ptId}`, // PT ID를 포함한 URL로 요청
-                method: 'POST',
-                data: formData,
-                processData: false,  // 파일을 자동으로 처리하지 않도록 설정
-                contentType: false,  // 컨텐츠 타입을 자동으로 설정하지 않음
-                success: function(res) {
-                    alert(res.msg);
-                    window.location.href = '/api/v1/page/ptList'; // 성공 시 리디렉션
-                },
-                error: function(xhr, status, error) {
-                    alert("이미지 업로드 실패: " + xhr.responseText);
-                }
-            });
-        } else {
+        if (files.length === 0) {
             alert("업로드할 파일을 선택해 주세요.");
+            callback(false);
+            return;
         }
+
+        for (let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+
+        // AJAX를 통해 서버로 파일 업로드
+        $.ajax({
+            url: `/api/v1/userImage/pt/${ptId}`,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function () {
+                callback(true);
+            },
+            error: function (xhr) {
+                alert("이미지 업로드 실패: " + xhr.responseText);
+                callback(false);
+            }
+        });
     }
 
+    // PT 생성 취소 요청
+    function cancelPTCreation(ptId) {
+        $.ajax({
+            url: `/api/v1/pt/${ptId}`,
+            method: 'DELETE',
+            success: function () {
+                alert('이미지 업로드 실패로 인해 PT 생성이 취소되었습니다.');
+            },
+            error: function (xhr) {
+                alert('PT 생성 취소 실패: ' + xhr.responseText);
+            }
+        });
+    }
     // 카카오 맵 초기화
     const mapContainer = document.getElementById('map');
     const mapOption = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 기본 위치
+        center: new kakao.maps.LatLng(33.450701, 126.570667),
         level: 3
     };
     const map = new kakao.maps.Map(mapContainer, mapOption);
@@ -87,20 +124,25 @@ $(document).ready(function () {
 
     // 검색 버튼 클릭
     $('#searchButton').on('click', function () {
-        const query = $('#searchInput').val();
+        const query = $('#searchInput').val().trim();
         if (query.length >= 2) {
-            const places = new kakao.maps.services.Places();
-            places.keywordSearch(query, function (data, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    displaySearchResults(data);
-                } else {
-                    alert('검색 결과가 없습니다.');
-                }
-            });
+            searchPlaces(query);
         } else {
             alert('검색어를 두 글자 이상 입력해주세요.');
         }
     });
+
+    // 장소 검색
+    function searchPlaces(query) {
+        const places = new kakao.maps.services.Places();
+        places.keywordSearch(query, function (data, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                displaySearchResults(data);
+            } else {
+                alert('검색 결과가 없습니다.');
+            }
+        });
+    }
 
     // 검색 결과 표시
     function displaySearchResults(data) {
@@ -127,7 +169,7 @@ $(document).ready(function () {
         // 위치 입력란에 값 설정
         $('#latitude').val(place.y);
         $('#longitude').val(place.x);
-        $('#address').val(place.address_name); // 주소 입력란에 주소 설정
+        $('#address').val(place.address_name);
         $('#searchResults').empty();
     }
 });

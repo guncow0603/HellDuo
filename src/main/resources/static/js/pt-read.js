@@ -1,25 +1,4 @@
 $(document).ready(function() {
-    const auth = getToken();
-
-    // 로그인 인증 및 역할에 따른 화면 표시
-    if (auth !== undefined && auth !== '') {
-        const role = getUserRole();
-        if (role === 'TRAINER') {
-            $('#delete-btn').show();
-            $('#update-btn').show();
-            $('#reserve-btn').hide();
-        } else {
-            $('#delete-btn').hide();
-            $('#update-btn').hide();
-            $('#reserve-btn').show();
-        }
-    } else {
-        $('#delete-btn').hide();
-        $('#update-btn').hide();
-        $('#reserve-btn').hide();
-        $('#chat-user').hide();
-    }
-
     // URL에서 ptId를 가져옵니다.
     const ptId = window.location.pathname.split("/").pop(); // URL에서 ptId 추출
     var trainerId;
@@ -39,6 +18,15 @@ $(document).ready(function() {
             $('#pt-price').text(`PT 비용: ${res.price} 원`);
             $('#pt-status').text(`상태: ${res.status}`);
             trainerId=res.trainerId;
+
+            // 예약 상태가 "예약"이면 예약 버튼 숨기기
+            if (res.status === '예약됨' || res.status === '완료됨') {
+                $('#reserve-btn').hide();
+            }
+
+            if (res.status === '완료됨') {
+                $('#complete-pt-btn').hide();
+            }
 
             // 위도와 경도 정보 받아서 카카오 맵 표시
             const latitude = res.latitude;  // 위도
@@ -275,7 +263,8 @@ $(document).ready(function() {
             })
             .then(data => {
                 alert(data.message || "PT가 완료 처리되었습니다.");
-                $('#pt-status').text("상태: 완료");
+                $('#pt-status').text("상태: 완료됨");
+                window.location.href = '/api/v1/page/ptList';
             })
             .catch(error => {
                 console.error(error);

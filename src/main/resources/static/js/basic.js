@@ -8,18 +8,42 @@ $(document).ready(function () {
         $('#my-page').hide();
         $('#header-chat-list').hide();
         $('#banner').hide();
+
+        $('#chat-user').hide();
+        $('#pt-button').hide();
+        $('#update-btn').hide();
+        $('#delete-btn').hide();
+        $('#complete-pt-btn').hide();
+        $('#pt-create-button').hide();
+        loadUserHeader();
     } else { // 토큰이 존재 즉 로그인 중일 때
         const role = getUserRole();
         $('#logout-button').show();
         $('#login-button').hide();
-        $('#my-page').show();
+
         $('#header-chat-list').show();
 
         if (role === 'ADMIN') {
-            // 관리자일 경우 관리자용 헤더 로드
+            $('#chat-user').show();
+            $('#reserve-btn').hide();
+            $('#update-btn').hide();
+            $('#delete-btn').show();
+            $('#complete-pt-btn').hide();
+            $('#pt-create-button').hide();
             loadAdminHeader();
-        } else {
-            // 일반 사용자일 경우 일반 헤더 로드
+        } else if(role === 'USER') {
+            $('#chat-user').show();
+            $('#update-btn').hide();
+            $('#delete-btn').hide();
+            $('#complete-pt-btn').hide();
+            $('#pt-create-button').hide();
+            loadUserHeader();
+        }else if(role === 'TRAINER'){
+            $('#chat-user').show();
+            $('#reserve-btn').hide();
+            $('#update-btn').show();
+            $('#delete-btn').show();
+            $('#pt-create-button').show();
             loadUserHeader();
         }
 
