@@ -16,9 +16,11 @@ $(document).ready(function () {
         $('#header-chat-list').show();
 
         if (role === 'ADMIN') {
-            $('#banner').show();
+            // 관리자일 경우 관리자용 헤더 로드
+            loadAdminHeader();
         } else {
-            $('#banner').hide();
+            // 일반 사용자일 경우 일반 헤더 로드
+            loadUserHeader();
         }
 
         // 알림 이벤트 수신
@@ -32,6 +34,9 @@ $(document).ready(function () {
             alertBadge();
         });
     }
+
+    // 로그인하지 않은 상태일 때도 일반 사용자 헤더 로드
+    loadUserHeader();
 
     // 로그아웃 버튼 클릭 이벤트
     $('#logout-button').click(function () {
@@ -50,17 +55,6 @@ $(document).ready(function () {
                 window.location.href = '/api/v1/page/index';
             });
     });
-
-    // 헤더 로드
-    if (!$("#header").hasClass("loaded")) {
-        $("#header").load("/header.html", function (response, status, xhr) {
-            if (status === "error") {
-                console.error("헤더 로드 실패:", xhr.status, xhr.statusText);
-            } else {
-                $("#header").addClass("loaded");
-            }
-        });
-    }
 });
 
 // 토큰 가져오기
@@ -85,6 +79,32 @@ function getUserRole() {
         }
     });
     return role;
+}
+
+// 관리자용 헤더 로드
+function loadAdminHeader() {
+    if (!$("#header").hasClass("loaded")) {
+        $("#header").load("/adminHeader.html", function (response, status, xhr) {
+            if (status === "error") {
+                console.error("헤더 로드 실패:", xhr.status, xhr.statusText);
+            } else {
+                $("#header").addClass("loaded");
+            }
+        });
+    }
+}
+
+// 일반 사용자용 헤더 로드
+function loadUserHeader() {
+    if (!$("#header").hasClass("loaded")) {
+        $("#header").load("/header.html", function (response, status, xhr) {
+            if (status === "error") {
+                console.error("헤더 로드 실패:", xhr.status, xhr.statusText);
+            } else {
+                $("#header").addClass("loaded");
+            }
+        });
+    }
 }
 
 // 알림 뱃지 표시

@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/v1/page")
 public class AdminPageController {
     @GetMapping("/banner")
-    public String signupPage() {
+    public String bannerPage() {
         return "banner";
+    }
+
+    @GetMapping("/noticeCreate")
+    public String noticeCreatePage() {
+        return "notice-create";
     }
 }
