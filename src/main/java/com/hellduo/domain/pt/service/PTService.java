@@ -267,4 +267,24 @@ public class PTService {
 
         return new PTCompletedRes("완료 처리 하였습니다.");
     }
+
+    public List<PTsReadRes> getCompletedPTs(User user) {
+        if(user.getRole()!=UserRoleType.USER){
+            throw new UserException(UserErrorCode.NOT_ROLE_USER);
+        }
+        List<PT> pts = ptRepository.findByUserIdAndStatusAndReviewIsNull(user.getId(),PTStatus.COMPLETED);
+
+        List<PTsReadRes> PTsReadResList = new ArrayList<>();
+        for (PT pt : pts) {
+            PTsReadResList.add(new PTsReadRes(
+                    pt.getId(),
+                    pt.getTitle(),
+                    pt.getSpecialization().getName(),
+                    pt.getScheduledDate(),
+                    pt.getPrice(),
+                    pt.getStatus().getDescription()
+            ));
+        }
+        return PTsReadResList;
+    }
 }

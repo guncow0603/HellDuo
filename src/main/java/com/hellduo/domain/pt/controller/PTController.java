@@ -82,4 +82,11 @@ public class PTController {
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.OK).body(ptService.ptCompleted(ptId,userDetails.getUser().getId()));
     }
+
+    @GetMapping("/completedPTs")
+    public ResponseEntity<List<PTsReadRes>> getCompletedPTs(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.getCompletedPTs(userDetails.getUser()));
+    }
 }
