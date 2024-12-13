@@ -38,7 +38,7 @@
             margin-top: 20px;
             font-size: 1.1rem;
         }
-        .btn-delete {
+        .btn-delete, .btn-update {
             margin-top: 20px;
         }
     </style>
@@ -52,6 +52,7 @@
         <!-- 공지사항 내용이 동적으로 여기에 추가됩니다. -->
     </div>
     <button id="delete-button" class="btn btn-danger btn-delete" style="display:none;">공지사항 삭제</button>
+    <button id="update-button" class="btn btn-primary btn-update" style="display:none;">공지사항 수정</button>
 </div>
 
 <script>
@@ -73,6 +74,7 @@
                             <div class="notice-content">내용 : ${notice.content}</div>
                         `);
                         $('#delete-button').show();  // 삭제 버튼 표시
+                        $('#update-button').show();  // 수정 버튼 표시
                     } else {
                         $('#notice-detail').html('<p>해당 공지사항을 찾을 수 없습니다.</p>');
                     }
@@ -98,11 +100,21 @@
             });
         }
 
+        // 공지사항 수정 페이지로 이동
+        function goToUpdatePage() {
+            window.location.href = `/api/v1/page/noticeUpdate/${noticeId}`;  // 공지사항 수정 페이지로 이동
+        }
+
         // 삭제 버튼 클릭 이벤트
         $('#delete-button').click(function () {
             if (confirm("정말 이 공지사항을 삭제하시겠습니까?")) {
                 deleteNotice();
             }
+        });
+
+        // 수정 버튼 클릭 이벤트
+        $('#update-button').click(function () {
+            goToUpdatePage();
         });
 
         // 페이지 로드 시 공지사항 상세 내용을 불러오기

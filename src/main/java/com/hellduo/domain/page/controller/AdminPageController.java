@@ -13,6 +13,7 @@ public class AdminPageController {
     public String bannerPage() {
         return "banner";
     }
+
     @GetMapping("/noticeList")
     public String noticeListPage() {
         return "notice-list";
@@ -24,9 +25,14 @@ public class AdminPageController {
         return "notice-read";
     }
 
-
     @GetMapping("/noticeCreate")
     public String noticeCreatePage() {
         return "notice-create";
+    }
+
+    @GetMapping("/noticeUpdate/{noticeId}")
+    public String noticeUpdatePage(@PathVariable Long noticeId, Model model) {
+        model.addAttribute("noticeId", noticeId);
+        return "notice-update";
     }
 }
