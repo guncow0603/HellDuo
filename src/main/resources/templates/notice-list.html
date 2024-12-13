@@ -16,15 +16,40 @@
     <script src="/js/basic.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background-color: #f8f9fa !important;
         }
-        .notice-item {
-            cursor: pointer;
-            padding: 15px;
+        .container {
+            margin-left: 250px !important;
+            padding: 20px !important;
+            background-color: #fff !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .left-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #fff;
+            padding: 20px;
             border-radius: 8px;
-            background-color: #f8f9fa;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 200px;
+        }
+
+        .left-menu a {
+            display: block;
+            padding: 10px 20px;
             margin-bottom: 10px;
-            transition: background-color 0.3s ease;
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .left-menu a:hover {
+            background-color: #0056b3;
         }
         .notice-item:hover {
             background-color: #e9ecef;
@@ -52,6 +77,10 @@
     <ul id="notice-list" class="list-group">
         <!-- 공지사항 목록이 동적으로 여기에 추가됩니다. -->
     </ul>
+</div>
+
+<div class="left-menu" id="notice-create-button">
+    <a href="/api/v1/page/noticeCreate">공지사항 작성</a>
 </div>
 
 <script>

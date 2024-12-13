@@ -63,7 +63,7 @@
                 success: function (response) {
                     alert('공지사항이 성공적으로 작성되었습니다.');
                     // 성공적인 응답 후, 페이지 리로드 혹은 다른 처리 가능
-                    window.location.reload();  // 페이지 리로드
+                    window.location.href = '/api/v1/page/noticeList';
                 },
                 error: function (res) {
                     const jsonObject = JSON.parse(res.responseText);
