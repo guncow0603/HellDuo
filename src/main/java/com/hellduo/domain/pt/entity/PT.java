@@ -1,6 +1,9 @@
 package com.hellduo.domain.pt.entity;
 
 import com.hellduo.domain.common.BaseEntity;
+import com.hellduo.domain.imageFile.entitiy.PTImage;
+import com.hellduo.domain.pt.entity.enums.PTSpecialization;
+import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.review.entity.Review;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -9,6 +12,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -58,8 +62,14 @@ public class PT extends BaseEntity {
     @Column( length = 20)
     private PTSpecialization specialization;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
     private Review review;
+
+    // PT 이미지와 연결, PT 삭제 시 PTImage도 삭제되도록 Cascade 설정
+    @OneToMany(mappedBy = "pt", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PTImage> ptImages; // PT와 연결된 이미지들
+
 
     @Builder
     public PT(String title, LocalDateTime scheduledDate, Long price, String description,

@@ -1,5 +1,6 @@
 package com.hellduo.domain.board.entity;
 
+import com.hellduo.domain.board_like.entity.BoardLike;
 import com.hellduo.domain.comment.entity.Comment;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -34,6 +35,10 @@ public class Board {
     // Board 삭제 시 관련된 댓글도 함께 삭제되도록 설정
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
+
+    // Board 삭제 시 관련된 좋아요도 함께 삭제되도록 설정
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     @Builder
     private Board(String title, String content, User user) {

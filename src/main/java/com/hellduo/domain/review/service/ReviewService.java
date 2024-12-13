@@ -1,7 +1,7 @@
 package com.hellduo.domain.review.service;
 
 import com.hellduo.domain.pt.entity.PT;
-import com.hellduo.domain.pt.entity.PTStatus;
+import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
 import com.hellduo.domain.pt.repository.PTRepository;

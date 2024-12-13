@@ -1,8 +1,8 @@
 package com.hellduo.domain.pt.repository;
 
 import com.hellduo.domain.pt.entity.PT;
-import com.hellduo.domain.pt.entity.PTSpecialization;
-import com.hellduo.domain.pt.entity.PTStatus;
+import com.hellduo.domain.pt.entity.enums.PTSpecialization;
+import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
 import io.lettuce.core.dynamic.annotation.Param;

@@ -16,6 +16,42 @@
     <script src="/js/pt-read.js"></script>
 
     <style>
+        body {
+            background-color: #f8f9fa !important;
+        }
+        .container {
+            margin-left: 250px !important;
+            padding: 20px !important;
+            background-color: #fff !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .left-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 200px;
+        }
+
+        .left-menu a {
+            display: block;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .left-menu a:hover {
+            background-color: #0056b3;
+        }
         #map {
             width: 100%;
             height: 400px;
@@ -54,13 +90,14 @@
             transition: background-color 0.3s ease;
         }
 
+
         #update-btn {
-            background-color: #007bff;
-            color: white;
+            background-color: #ffc107; /* 노란색으로 변경 */
+            color: #212529;
         }
 
         #update-btn:hover {
-            background-color: #0056b3;
+            background-color: #e0a800;
         }
 
         #delete-btn {
@@ -69,7 +106,7 @@
         }
 
         #delete-btn:hover {
-            background-color: #c82333;
+            background-color: #bd2130;
         }
 
         #reserve-btn {
@@ -79,6 +116,15 @@
 
         #reserve-btn:hover {
             background-color: #218838;
+        }
+
+        #view-trainer-profile-btn {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        #view-trainer-profile-btn:hover {
+            background-color: #138496;
         }
     </style>
 </head>
@@ -108,25 +154,6 @@
             <!-- 트레이너 프로필 버튼 -->
             <button id="view-trainer-profile-btn" style="background-color: #17a2b8; color: white;">트레이너 프로필 확인</button>
 
-            <!-- 트레이너 프로필 영역 -->
-            <div id="trainer-profile" class="card mt-3" style="display: none;">
-                <div class="card-body">
-                    <!-- 트레이너 프로필 이미지 영역 -->
-                    <img id="trainer-image" src="https://via.placeholder.com/150" alt="트레이너 이미지" class="mb-3" style="width:150px; height:150px; border-radius:50%;">
-                    <h5 class="card-title" id="trainer-name">이름: </h5>
-                    <p class="card-text" id="trainer-specialization">전문 분야: </p>
-                    <p class="card-text" id="trainer-description">소개: </p>
-                    <p class="card-text" id="trainer-contact">연락처: </p>
-                    <p class="card-text" id="trainer-age">나이: </p> <!-- 추가 -->
-                    <p class="card-text" id="trainer-gender">성별: </p> <!-- 추가 -->
-                    <p class="card-text" id="trainer-experience">경력: </p> <!-- 추가 -->
-                    <p class="card-text" id="trainer-certifications">자격증: </p> <!-- 추가 -->
-                    <!-- 트레이너 프로필 자격증 이미지 갤러리 영역 -->
-                    <h5>자격증 이미지</h5>
-                    <div id="trainer-certifications-gallery" style="display: flex; flex-wrap: wrap;"></div> <!-- 자격증 이미지들이 표시될 영역 -->
-                </div>
-            </div>
-
             <!-- 카카오 맵 표시 -->
             <div id="map" style="width: 500px; height: 400px;"></div>
             <p id="distance"></p> <!-- 거리 표시 -->
@@ -135,12 +162,14 @@
             <h5>PT 이미지</h5>
             <div id="image-gallery" style="display: flex; flex-wrap: wrap;"></div> <!-- 이미지가 표시될 영역 -->
 
-            <!-- 버튼들 -->
-            <button id="complete-pt-btn" class="btn btn-success">완료 처리</button>
-            <button id="update-btn">수정</button>
-            <button id="delete-btn">삭제</button>
-            <button id="reserve-btn">예약</button>
-            <button id="chat-user">채팅걸기</button>
+            <div class="left-menu" id="pt-button">
+                <a id="complete-pt-btn" class="btn btn-success">완료 처리</a>
+                <a id="update-btn" class="btn btn-warning">수정</a>
+                <a id="delete-btn" class="btn btn-danger">삭제</a>
+                <a id="reserve-btn" class="btn btn-primary">예약</a>
+                <a id="chat-user" class="btn btn-primary">채팅걸기</a>
+            </div>
+
         </div>
     </div>
 </div>

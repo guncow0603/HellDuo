@@ -45,13 +45,13 @@ public class UserController {
     public ResponseEntity<UserOwnProfileGetRes> getOwnProfile(
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return  ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getOwnProfile(userDetails.getUser().getId()));
+                .body(userService.getOwnProfile(userDetails.getUser()));
     }
     @GetMapping("/trainer")
     public ResponseEntity<TrainerOwnProfileGetRes> getOwnTrainerProfile(
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return  ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getOwnTrainerProfile(userDetails.getUser().getId()));
+                .body(userService.getOwnTrainerProfile(userDetails.getUser()));
     }
 
     @PutMapping
@@ -59,7 +59,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody UserProfileUpdateReq req){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.updateUserProfile(userDetails.getUser().getId(),req));
+                .body(userService.updateUserProfile(userDetails.getUser(),req));
     }
 
     @PutMapping("/trainer")
@@ -67,7 +67,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody TrainerProfileUpdateReq req){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.updateTrainerProfile(userDetails.getUser().getId(),req));
+                .body(userService.updateTrainerProfile(userDetails.getUser(),req));
     }
 
     @PostMapping("/logout")

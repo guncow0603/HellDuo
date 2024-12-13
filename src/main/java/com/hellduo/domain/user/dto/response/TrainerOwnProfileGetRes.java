@@ -12,6 +12,7 @@ public record TrainerOwnProfileGetRes(
         String specialization,  // 전문 분야
         Integer experience,  // 경력(년수)
         String certifications,  // 자격증
-        String bio  // 자기소개
+        String bio,  // 자기소개
+        Double rating
 ) {
 }

@@ -1,6 +1,6 @@
 package com.hellduo.domain.pt.dto.request;
 
-import com.hellduo.domain.pt.entity.PTSpecialization;
+import com.hellduo.domain.pt.entity.enums.PTSpecialization;
 
 import java.time.LocalDateTime;
 

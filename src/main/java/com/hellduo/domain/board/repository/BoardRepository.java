@@ -20,4 +20,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select p from Board p where" +
             "(:keyword is null or p.title like %:keyword%)")
     List<Board> searchByKeyword(@Param("keyword") String keyword);
+
+    List<Board> findTop10ByOrderByLikeCountDesc();
 }

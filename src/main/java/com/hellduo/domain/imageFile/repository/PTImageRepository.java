@@ -15,4 +15,6 @@ public interface PTImageRepository extends JpaRepository<PTImage,Long> {
     List<PTImage> findAllByPtId(Long ptId);
 
     Optional<PTImage> findFirstByPtIdAndType(Long ptId, ImageType type);
+
+    List<PTImage> findByPtId(Long ptId);
 }

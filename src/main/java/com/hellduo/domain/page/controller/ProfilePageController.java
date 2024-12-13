@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProfilePageController {
     @GetMapping("/profile")
     public String profilePage() {
-        return "profile";
+        return "/profile/profile";
     }
 
     @GetMapping("/profile-edit")
     public String profileEditPage() {
-        return "profile-edit";
+        return "/profile/profile-edit";
     }
 
     @GetMapping("/trainer-profile/{trainerId}")
     public String trainerProfile(@PathVariable Long trainerId, Model model) {
         model.addAttribute("trainerId", trainerId);
-        return "trainer-profile";
+        return "/profile/trainer-profile";
     }
 }
