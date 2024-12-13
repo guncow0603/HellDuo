@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>HellDuo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+    <script src="/js/basic.js"></script>
+    <style>
+        .pt-list {
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .pt-item {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pt-item:hover {
+            background-color: #d1e7dd;
+            transform: scale(1.05);
+        }
+
+        .pt-item img {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+
+        .pt-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .pt-item h5 {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .pt-specialization,
+        .pt-date {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .pt-price {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #20c997;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .pt-status {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .review-button {
+            background-color: #20c997;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .review-button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        // PT 데이터를 가져오는 함수
+        function loadPTs() {
+            $.ajax({
+                url: `/api/v1/pt/completedPTs`,
+                type: "GET",
+                success: function (response) {
+                    renderPTs(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("PT 데이터를 가져오는 중 오류 발생:", xhr.responseText || error);
+                    alert("PT 데이터를 불러오는 데 실패했습니다. 다시 시도해주세요.");
+                },
+            });
+        }
+        // 리뷰 버튼 클릭 이벤트 핸들러
+        function handleReviewButton(event, ptId) {
+            event.stopPropagation(); // 클릭 이벤트 전파를 막음
+            window.location.href = `/api/v1/page/reviewCreate/${ptId}`;
+        }
+        // PT 데이터를 HTML에 표시하는 함수
+        function renderPTs(pts) {
+            const ptListContainer = $('#pt-list');
+            ptListContainer.empty(); // 기존 항목들 지우기
+
+            if (!pts || pts.length === 0) {
+                ptListContainer.append("<p>등록된 PT가 없습니다.</p>");
+                return;
+            }
+
+            pts.forEach(pt => {
+                const ptItem = $(`
+                    <div class="pt-item" onclick="window.location.href='/api/v1/page/ptRead/${pt.ptId}'">
+                        <img alt="썸네일 이미지" id="thumbnail-${pt.ptId}">
+                        <div class="pt-details">
+                            <h5>${pt.title}</h5>
+                            <p class="pt-specialization">전문 분야: ${pt.specialization}</p>
+                            <p class="pt-date">예약 날짜: ${new Date(pt.scheduledDate).toLocaleString()}</p>
+                        </div>
+                        <div class="pt-price-status">
+                            <p class="pt-price">${pt.price.toLocaleString()}원</p>
+                            <p class="pt-status">${pt.ptStatus}</p>
+                            ${pt.ptStatus === '완료됨' ? `
+                                <button class="review-button" onclick="handleReviewButton(event, '${pt.ptId}')">후기 쓰기</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `);
+                ptListContainer.append(ptItem);
+                loadThumbnail(pt.ptId); // 썸네일 이미지 로드
+            });
+        }
+
+        // PT 썸네일 이미지를 로드하는 함수
+        function loadThumbnail(ptId) {
+            $.ajax({
+                url: `/api/v1/userImage/pt/thumbnail/${ptId}`,
+                type: "GET",
+                success: function (response) {
+                    const imgElement = $(`#thumbnail-${ptId}`);
+                    if (response.imageUrl) {
+                        imgElement.attr("src", response.imageUrl);
+                    } else {
+                        imgElement.attr("src", "/path/to/default-image.jpg");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    const imgElement = $(`#thumbnail-${ptId}`);
+                    console.error(`썸네일 이미지를 가져오는 중 오류 발생 (PT ID: ${ptId}):`, error);
+                    imgElement.attr("src", "/path/to/default-image.jpg");
+                }
+            });
+        }
+
+        // 페이지가 로드될 때 자동으로 PT 정보를 가져오기
+        $(document).ready(function() {
+            loadPTs();  // PT 목록을 가져오는 함수 호출
+        });
+    </script>
+</head>
+<body>
+<header id="header"></header>
+<div class="container mt-4">
+    <div id="pt-list">
+        <!-- 게시글 목록이 여기에 표시됩니다 -->
+    </div>
+</div>
+</body>
+</html>

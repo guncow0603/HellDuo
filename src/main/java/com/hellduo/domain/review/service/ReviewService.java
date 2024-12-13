@@ -9,6 +9,8 @@ import com.hellduo.domain.review.dto.request.ReviewCreateReq;
 import com.hellduo.domain.review.dto.response.GetReviewsRes;
 import com.hellduo.domain.review.dto.response.ReviewCreateRes;
 import com.hellduo.domain.review.entity.Review;
+import com.hellduo.domain.review.exception.ReviewErrorCode;
+import com.hellduo.domain.review.exception.ReviewException;
 import com.hellduo.domain.review.repository.ReviewRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
@@ -42,6 +44,10 @@ public class ReviewService {
             throw new UserException(UserErrorCode.NOT_ROLE_USER);
         }
 
+        if(pt.getReview()!=null) {
+            throw new ReviewException(ReviewErrorCode.PT_REVIEW_ALREADY_WRITTEN);
+        }
+
         User trainer = pt.getTrainer();
 
         Review review = Review.builder().
@@ -52,6 +58,8 @@ public class ReviewService {
                 rating(req.rating()).
                 build();
         reviewRepository.save(review);
+
+        pt.updateReviewWritten(review);
 
         updateTrainerRating(trainer);
 

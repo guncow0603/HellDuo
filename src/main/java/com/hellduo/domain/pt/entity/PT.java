@@ -1,6 +1,7 @@
 package com.hellduo.domain.pt.entity;
 
 import com.hellduo.domain.common.BaseEntity;
+import com.hellduo.domain.review.entity.Review;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -57,6 +58,9 @@ public class PT extends BaseEntity {
     @Column( length = 20)
     private PTSpecialization specialization;
 
+    @OneToOne
+    private Review review;
+
     @Builder
     public PT(String title, LocalDateTime scheduledDate, Long price, String description,
               PTStatus status, User trainer, PTSpecialization specialization,
@@ -82,4 +86,5 @@ public class PT extends BaseEntity {
     public void updateStatus(PTStatus ptStatus){ this.status=ptStatus; }
     public void updateLatitude(Double latitude){ this.latitude=latitude; }
     public void updateLongitude(Double longitude){ this.longitude=longitude; }
+    public void updateReviewWritten(Review review) { this.review = review; } // 리뷰 상태 업데이트
 }
