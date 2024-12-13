@@ -18,7 +18,7 @@ public class ReviewPageController {
     @GetMapping("/reviewCreate/{ptId}")
     public String reviewCreatePage(@PathVariable Long ptId, Model model) {
         model.addAttribute("ptId", ptId);
-        return "review-create"; // pt-read.html 페이지로 이동
+        return "review-create";
     }
 
 

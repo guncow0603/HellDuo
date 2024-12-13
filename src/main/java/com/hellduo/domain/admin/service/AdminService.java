@@ -46,7 +46,7 @@ public class AdminService {
         List<GetNoticeListRes> noticeResList = new ArrayList<>();
         for (Notice notice : noticeList)
         {
-            noticeResList.add(new GetNoticeListRes(notice.getTitle()));
+            noticeResList.add(new GetNoticeListRes(notice.getTitle(),notice.getId()));
         }
         return noticeResList;
     }
