@@ -9,7 +9,10 @@ $(document).ready(function () {
         $('#header-chat-list').hide();
         $('#banner').hide();
 
-
+        $('#update-delete-button').hide();
+        $('#notice-delete-button').hide();
+        $('#board-create-button').hide();
+        $('#my-pt').hide();
         $('#review-create-button').hide();
         $('#chat-user').hide();
         $('#pt-button').hide();
@@ -22,19 +25,14 @@ $(document).ready(function () {
         const role = getUserRole();
         $('#logout-button').show();
         $('#login-button').hide();
-
         $('#header-chat-list').show();
 
-        if (role === 'ADMIN') {
-            $('#review-create-button').hide();
-            $('#chat-user').show();
-            $('#reserve-btn').hide();
-            $('#update-btn').hide();
-            $('#delete-btn').show();
-            $('#complete-pt-btn').hide();
-            $('#pt-create-button').hide();
-            loadAdminHeader();
-        } else if(role === 'USER') {
+        if(role === 'USER') {
+
+            $('#update-delete-button').hide();
+            $('#notice-delete-button').hide();
+            $('#board-create-button').show();
+            $('#my-pt').show();
             $('#review-create-button').show();
             $('#chat-user').show();
             $('#update-btn').hide();
@@ -43,6 +41,11 @@ $(document).ready(function () {
             $('#pt-create-button').hide();
             loadUserHeader();
         }else if(role === 'TRAINER'){
+
+            $('#update-delete-button').hide();
+            $('#notice-delete-button').hide();
+            $('#board-create-button').show();
+            $('#my-pt').show();
             $('#review-create-button').hide();
             $('#chat-user').show();
             $('#reserve-btn').hide();
@@ -63,10 +66,6 @@ $(document).ready(function () {
             alertBadge();
         });
     }
-
-    // 로그인하지 않은 상태일 때도 일반 사용자 헤더 로드
-    loadUserHeader();
-
     // 로그아웃 버튼 클릭 이벤트
     $('#logout-button').click(function () {
         $.ajax({
@@ -108,19 +107,6 @@ function getUserRole() {
         }
     });
     return role;
-}
-
-// 관리자용 헤더 로드
-function loadAdminHeader() {
-    if (!$("#header").hasClass("loaded")) {
-        $("#header").load("/adminHeader.html", function (response, status, xhr) {
-            if (status === "error") {
-                console.error("헤더 로드 실패:", xhr.status, xhr.statusText);
-            } else {
-                $("#header").addClass("loaded");
-            }
-        });
-    }
 }
 
 // 일반 사용자용 헤더 로드

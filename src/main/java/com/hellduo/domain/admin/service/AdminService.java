@@ -10,24 +10,22 @@ import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AdminService {
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
 
-    public NoticeRes createNotice(NoticeReq req, User user)
-    {
-        if(user.getRole() != UserRoleType.ADMIN)
-        {
+    @Transactional
+    public NoticeRes createNotice(NoticeReq req, User user) {
+        if (user.getRole() != UserRoleType.ADMIN) {
             throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
         }
         Notice notice = Notice.builder()
@@ -35,73 +33,63 @@ public class AdminService {
                 .content(req.content())
                 .user(user)
                 .build();
-        noticeRepository.save(notice); //
+        noticeRepository.save(notice);
         return new NoticeRes("공지사항이 생성되었습니다.");
-
     }
 
-    public List<GetNoticeListRes> getNoticeList()
-    {
+    @Transactional(readOnly = true)
+    public List<GetNoticeListRes> getNoticeList() {
         List<Notice> noticeList = noticeRepository.findAll();
         List<GetNoticeListRes> noticeResList = new ArrayList<>();
-        for (Notice notice : noticeList)
-        {
-            noticeResList.add(new GetNoticeListRes(notice.getTitle(),notice.getId()));
+        for (Notice notice : noticeList) {
+            noticeResList.add(new GetNoticeListRes(notice.getTitle(), notice.getId()));
         }
         return noticeResList;
     }
 
-    public GetNoticeRes getNotice(Long noticeId)
-    {
+    @Transactional(readOnly = true)
+    public GetNoticeRes getNotice(Long noticeId) {
         Notice notice = noticeRepository.findNoticeByIdWithThrow(noticeId);
         return new GetNoticeRes(notice.getTitle(),
-                                notice.getContent(),
-                                notice.getUser().getId(),
-                                notice.getId());
+                notice.getContent(),
+                notice.getUser().getId(),
+                notice.getId());
     }
 
-    public UpdateNoticeRes updateNotice(User user, Long noticeId, NoticeUpdateReq req)
-    {
-        if(user.getRole() != UserRoleType.ADMIN)
-        {
+    @Transactional
+    public UpdateNoticeRes updateNotice(User user, Long noticeId, NoticeUpdateReq req) {
+        if (user.getRole() != UserRoleType.ADMIN) {
             throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
         }
         Notice notice = noticeRepository.findNoticeByIdWithThrow(noticeId);
-        if (req.title() != null)
-        {
+        if (req.title() != null) {
             notice.updateTitle(req.title());
         }
-        if (req.content() != null)
-        {
+        if (req.content() != null) {
             notice.updateContent(req.content());
         }
         return new UpdateNoticeRes("공지사항 수정완료");
     }
 
-    public DeleteNoticeRes deleteNotice(User user, Long id)
-    {
-        if (user.getRole() != UserRoleType.ADMIN)
-        {
+    @Transactional
+    public DeleteNoticeRes deleteNotice(User user, Long id) {
+        if (user.getRole() != UserRoleType.ADMIN) {
             throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
         }
         noticeRepository.deleteById(id);
         return new DeleteNoticeRes("공지사항이 삭제되었습니다.");
     }
 
-    public List<GetUserListRes> getUserList(User user)
-    {
-
-        if (user.getRole() != UserRoleType.ADMIN)
-        {
+    @Transactional(readOnly = true)
+    public List<GetUserListRes> getUserList(User user) {
+        if (user.getRole() != UserRoleType.ADMIN) {
             throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
         }
         List<User> userList = userRepository.findAll();
         List<GetUserListRes> userResList = new ArrayList<>();
 
-        for (User user1 : userList)
-        {
-            if (user1.getRole() == UserRoleType.USER)
-            {
+        for (User user1 : userList) {
+            if (user1.getRole() == UserRoleType.USER) {
                 userResList.add(new GetUserListRes(user1.getId(),
                         user1.getName(),
                         user1.getEmail(),
@@ -112,22 +100,19 @@ public class AdminService {
                         user1.getWeight(),
                         user1.getHeight()));
             }
-
         }
         return userResList;
     }
 
+    @Transactional(readOnly = true)
     public List<GetTrainerListRes> getTrainerList(User user) {
-        if (user.getRole() != UserRoleType.ADMIN)
-        {
+        if (user.getRole() != UserRoleType.ADMIN) {
             throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
         }
         List<User> userList = userRepository.findAll();
         List<GetTrainerListRes> trainerResList = new ArrayList<>();
-        for (User user1 : userList)
-        {
-            if (user1.getRole() == UserRoleType.TRAINER)
-            {
+        for (User user1 : userList) {
+            if (user1.getRole() == UserRoleType.TRAINER) {
                 trainerResList.add(new GetTrainerListRes(user1.getId(),
                         user1.getEmail(),
                         user1.getName(),
@@ -139,7 +124,6 @@ public class AdminService {
                         user1.getCertifications(),
                         user1.getBio()));
             }
-
         }
         return trainerResList;
     }

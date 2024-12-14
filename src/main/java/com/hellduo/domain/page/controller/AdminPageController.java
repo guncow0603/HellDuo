@@ -11,28 +11,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminPageController {
     @GetMapping("/banner")
     public String bannerPage() {
-        return "banner";
+        return "/admin/banner-create";
     }
 
     @GetMapping("/noticeList")
     public String noticeListPage() {
-        return "notice-list";
+        return "/admin/notice-list";
     }
 
     @GetMapping("/notice/{noticeId}")
     public String noticePage(@PathVariable Long noticeId, Model model) {
         model.addAttribute("noticeId", noticeId);
-        return "notice-read";
+        return "/admin/notice-read";
     }
 
     @GetMapping("/noticeCreate")
     public String noticeCreatePage() {
-        return "notice-create";
+        return "/admin/notice-create";
     }
 
     @GetMapping("/noticeUpdate/{noticeId}")
     public String noticeUpdatePage(@PathVariable Long noticeId, Model model) {
         model.addAttribute("noticeId", noticeId);
-        return "notice-update";
+        return "/admin/notice-update";
     }
 }

@@ -1,6 +1,7 @@
-package com.hellduo.domain.imageFile.entitiy;
+package com.hellduo.domain.imageFile.entity;
 
-import com.hellduo.domain.imageFile.entitiy.enums.ImageType;
+import com.hellduo.domain.imageFile.entity.enums.ImageType;
+import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -11,8 +12,8 @@ import org.hibernate.annotations.Comment;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_user_image")
-public class UserImage {
+@Table(name = "tb_pt_image")
+public class PTImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,20 +22,25 @@ public class UserImage {
     @Column(name = "user_image_url", nullable = false)
     private String userImageUrl;
 
-    @Comment("프로필 이미지 or 자격증 이미지")
     @Column(name = "type")
     @Enumerated(value = EnumType.STRING)
     private ImageType type;
+
+    @Comment("피티 id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pt_id")
+    private PT pt;
 
     @Comment("유저 id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
     @Builder
-    private UserImage(String userImageUrl, User user, ImageType type) {
+    private PTImage(String userImageUrl, PT pt,User user, ImageType type) {
         this.userImageUrl = userImageUrl;
-        this.user = user;
+        this.pt = pt;
+        this.user=user;
         this.type = type;
     }
-
 }

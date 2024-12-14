@@ -1,7 +1,6 @@
 package com.hellduo.domain.imageFile.controller;
 
 import com.hellduo.domain.imageFile.dto.response.*;
-import com.hellduo.domain.imageFile.entitiy.BannerImage;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
