@@ -1,4 +1,4 @@
-package com.hellduo.domain.imageFile.entitiy.enums;
+package com.hellduo.domain.imageFile.entity.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

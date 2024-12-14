@@ -1,6 +1,6 @@
 package com.hellduo.domain.pt.service;
 
-import com.hellduo.domain.imageFile.entitiy.PTImage;
+import com.hellduo.domain.imageFile.entity.PTImage;
 import com.hellduo.domain.imageFile.repository.PTImageRepository;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
@@ -166,7 +166,7 @@ public class PTService {
             throw new PTException(PTErrorCode.NOT_OWN_TRAINER);
         }
 
-        List<PTImage> ptImages = ptImageRepository.findByPtId(ptId);
+        List<PTImage> ptImages = ptImageRepository.findAllByPtId(ptId);
         for (PTImage ptImage : ptImages) {
             String imageUrl = ptImage.getUserImageUrl();
             String s3Key = imageUrl.replace(s3Url, "");

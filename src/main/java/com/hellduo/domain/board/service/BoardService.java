@@ -7,9 +7,14 @@ import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.exception.BoardErrorCode;
 import com.hellduo.domain.board.exception.BoardException;
 import com.hellduo.domain.board.repository.BoardRepository;
+import com.hellduo.domain.imageFile.entity.BoardImage;
+import com.hellduo.domain.imageFile.entity.PTImage;
+import com.hellduo.domain.imageFile.repository.BoardImageRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.repository.UserRepository;
+import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +23,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
-    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final BoardImageRepository boardImageRepository;
+    private final S3Uploader s3Uploader;
+
+    @Value("${s3.url}")
+    private String s3Url;
 
     // 게시글 작성 (트랜잭션 적용)
     @Transactional
@@ -30,7 +39,7 @@ public class BoardService {
                 .user(user)
                 .build();
         boardRepository.save(board); // DB에 저장
-        return new BoardCreateRes("글 작성 완료");
+        return new BoardCreateRes(board.getId(),"글 작성 완료");
     }
 
     // 게시글 조회 (읽기 전용 트랜잭션 적용)
@@ -74,6 +83,12 @@ public class BoardService {
         Board board = boardRepository.findBoardByIdWithThrow(boardId); // 게시글 조회
         if (!board.getUser().getId().equals(user.getId())) { // 사용자 확인
             throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
+        }
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+        for (BoardImage boardImage : boardImages) {
+            String imageUrl = boardImage.getBoardImageUrl();
+            String s3Key = imageUrl.replace(s3Url, "");
+            s3Uploader.deleteS3(s3Key);
         }
         boardRepository.delete(board); // 게시글 삭제
         return new BoardDeleteRes("게시글이 삭제 되었습니다.");

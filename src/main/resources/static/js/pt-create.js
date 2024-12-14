@@ -39,7 +39,7 @@ $(document).ready(function () {
                 // PT 생성 성공 시 이미지 업로드 요청
                 uploadPTImages(res.ptId, function (uploadSuccess) {
                     if (uploadSuccess) {
-                        alert("PT 생성 및 이미지 업로드 성공!");
+                        alert("PT 생성 성공!");
                         window.location.href = '/api/v1/page/ptList';
                     } else {
                         // 이미지 업로드 실패 시 PT 생성 취소 요청

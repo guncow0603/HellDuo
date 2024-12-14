@@ -1,10 +1,10 @@
 package com.hellduo.domain.imageFile.service;
 
 import com.hellduo.domain.imageFile.dto.response.*;
-import com.hellduo.domain.imageFile.entitiy.BannerImage;
-import com.hellduo.domain.imageFile.entitiy.PTImage;
-import com.hellduo.domain.imageFile.entitiy.enums.ImageType;
-import com.hellduo.domain.imageFile.entitiy.UserImage;
+import com.hellduo.domain.imageFile.entity.BannerImage;
+import com.hellduo.domain.imageFile.entity.PTImage;
+import com.hellduo.domain.imageFile.entity.enums.ImageType;
+import com.hellduo.domain.imageFile.entity.UserImage;
 import com.hellduo.domain.imageFile.exception.ImageErrorCode;
 import com.hellduo.domain.imageFile.exception.ImageException;
 import com.hellduo.domain.imageFile.repository.BannerRepository;
@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

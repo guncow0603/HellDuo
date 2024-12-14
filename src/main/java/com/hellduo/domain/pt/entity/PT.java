@@ -1,7 +1,7 @@
 package com.hellduo.domain.pt.entity;
 
 import com.hellduo.domain.common.BaseEntity;
-import com.hellduo.domain.imageFile.entitiy.PTImage;
+import com.hellduo.domain.imageFile.entity.PTImage;
 import com.hellduo.domain.pt.entity.enums.PTSpecialization;
 import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.review.entity.Review;
