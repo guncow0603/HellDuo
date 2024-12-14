@@ -31,13 +31,10 @@ $(document).ready(function () {
                 window.location.href = `/api/v1/page/boardRead/${boardId}`; // 수정 후 해당 게시글 페이지로 이동
             })
             .fail(function (res) {
-                try {
                     const jsonObject = JSON.parse(res.responseText);
                     const messages = jsonObject.messages || "게시글 수정에 실패했습니다.";
                     alert(messages); // 서버에서 제공된 오류 메시지 출력
-                } catch (error) {
-                    alert("오류가 발생했습니다. 다시 시도해주세요."); // 예외 상황 처리
-                }
+
             });
     });
 

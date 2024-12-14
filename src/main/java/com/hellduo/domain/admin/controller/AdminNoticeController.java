@@ -5,6 +5,7 @@ import com.hellduo.domain.admin.dto.response.*;
 import com.hellduo.domain.admin.dto.request.NoticeReq;
 import com.hellduo.domain.admin.service.AdminService;
 import com.hellduo.global.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,22 +33,22 @@ public class AdminNoticeController
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getNoticeList());
     }
 
-    @GetMapping("/notice/{id}")
-    public ResponseEntity<GetNoticeRes> getNotice(@PathVariable Long id)
+    @GetMapping("/notice/{noticeId}")
+    public ResponseEntity<GetNoticeRes> getNotice(@PathVariable Long noticeId)
     {
-        return  ResponseEntity.status(HttpStatus.OK).body((adminService.getNotice(id)));
+        return  ResponseEntity.status(HttpStatus.OK).body((adminService.getNotice(noticeId)));
     }
-    @PutMapping("/notice/{id}")
+    @PutMapping("/notice/{noticeId}")
     public ResponseEntity<UpdateNoticeRes> updateNotice(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                        @PathVariable Long id,
+                                                        @PathVariable Long noticeId,
                                                         @RequestBody NoticeUpdateReq req)
     {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateNotice(userDetails.getUser(),id,req));
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateNotice(userDetails.getUser(),noticeId,req));
     }
-    @DeleteMapping("/notice/{id}")
-    public ResponseEntity<DeleteNoticeRes> deleteNotice(@PathVariable Long id,
+    @DeleteMapping("/notice/{noticeId}")
+    public ResponseEntity<DeleteNoticeRes> deleteNotice(@PathVariable Long noticeId,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.deleteNotice(userDetails.getUser(),id));
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.deleteNotice(userDetails.getUser(),noticeId));
     }
 }
