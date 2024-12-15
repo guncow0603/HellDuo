@@ -24,4 +24,10 @@ public class ProfilePageController {
         model.addAttribute("trainerId", trainerId);
         return "/profile/trainer-profile";
     }
+
+    @GetMapping("/user-profile/{ptId}")
+    public String userProfile(@PathVariable Long ptId, Model model) {
+        model.addAttribute("ptId", ptId);
+        return "/profile/user-profile";
+    }
 }

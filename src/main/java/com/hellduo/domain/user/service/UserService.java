@@ -1,13 +1,18 @@
 package com.hellduo.domain.user.service;
 
-import com.hellduo.domain.imageFile.entity.enums.ImageType;
 import com.hellduo.domain.imageFile.entity.UserImage;
+import com.hellduo.domain.imageFile.entity.enums.ImageType;
 import com.hellduo.domain.imageFile.repository.UserImageRepository;
+import com.hellduo.domain.pt.entity.PT;
+import com.hellduo.domain.pt.entity.enums.PTStatus;
+import com.hellduo.domain.pt.exception.PTErrorCode;
+import com.hellduo.domain.pt.exception.PTException;
+import com.hellduo.domain.pt.repository.PTRepository;
 import com.hellduo.domain.user.dto.request.*;
 import com.hellduo.domain.user.dto.response.*;
+import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;
-import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
@@ -37,6 +42,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserImageRepository userImageRepository;
+    private final PTRepository ptRepository;
     @Value("${admin-token}")
     private String ADMIN_TOKEN;
 
@@ -342,5 +348,28 @@ public class UserService {
         }
 
         return result;
+    }
+
+    public UserOwnProfileGetRes getUserProfile(User trainer, Long ptId) {
+        PT pt = ptRepository.findPTByIdWithThrow(ptId);
+        if(!pt.getTrainer().getId().equals(trainer.getId())){
+            throw new PTException(PTErrorCode.TRAINER_ID_MISMATCH);
+        }
+        if(pt.getStatus().equals(PTStatus.UNRESERVED)){
+            throw new PTException(PTErrorCode.PT_UNRESERVED);
+        }
+
+        User user = pt.getUser();
+        return new UserOwnProfileGetRes(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getGender().getDescription(),
+                user.getAge(),
+                user.getPhoneNumber(),
+                user.getNickname(),
+                user.getWeight(),
+                user.getHeight()
+        );
     }
 }

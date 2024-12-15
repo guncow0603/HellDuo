@@ -96,6 +96,14 @@ public class UserController {
                 .body(userService.getTrainerProfile(trainerId));
     }
 
+    @GetMapping("/pt/{ptId}")
+    public ResponseEntity<UserOwnProfileGetRes> getUserProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long ptId){
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUserProfile(userDetails.getUser(),ptId));
+    }
+
     @GetMapping("/trainer/bestRating")
     public ResponseEntity<List<BestRatingTrainerRes>>getBestRatingTrainer() {
         return ResponseEntity.status(HttpStatus.OK)
