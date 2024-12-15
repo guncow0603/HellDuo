@@ -2,10 +2,7 @@ package com.hellduo.domain.imageFile.service;
 
 import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.repository.BoardRepository;
-import com.hellduo.domain.imageFile.dto.response.GetBoardImagesRes;
-import com.hellduo.domain.imageFile.dto.response.GetReviewImagesRes;
-import com.hellduo.domain.imageFile.dto.response.UploadBoardImagesRes;
-import com.hellduo.domain.imageFile.dto.response.UploadReviewImagesRes;
+import com.hellduo.domain.imageFile.dto.response.*;
 import com.hellduo.domain.imageFile.entity.BoardImage;
 import com.hellduo.domain.imageFile.entity.ReviewImage;
 import com.hellduo.domain.imageFile.exception.ImageErrorCode;
@@ -79,6 +76,15 @@ public class ReviewImageService {
         }
 
         return response;
+    }
+
+    public GetReviewImageRes getReviewImage(Long reviewId) {
+        List<ReviewImage> reviewImages = reviewImageRepository.findAllByReviewId(reviewId);
+
+        ReviewImage reviewImage = reviewImages.get(0);
+        return new GetReviewImageRes(
+                reviewImage.getId(),
+                reviewImage.getReviewImageUrl());
     }
 }
 

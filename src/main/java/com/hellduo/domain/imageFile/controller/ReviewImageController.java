@@ -1,9 +1,6 @@
 package com.hellduo.domain.imageFile.controller;
 
-import com.hellduo.domain.imageFile.dto.response.GetBoardImagesRes;
-import com.hellduo.domain.imageFile.dto.response.GetReviewImagesRes;
-import com.hellduo.domain.imageFile.dto.response.UploadBoardImagesRes;
-import com.hellduo.domain.imageFile.dto.response.UploadReviewImagesRes;
+import com.hellduo.domain.imageFile.dto.response.*;
 import com.hellduo.domain.imageFile.service.BoardImageService;
 import com.hellduo.domain.imageFile.service.ReviewImageService;
 import com.hellduo.global.security.UserDetailsImpl;
@@ -29,11 +26,16 @@ public class ReviewImageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewImageService.uploadReviewImages(userDetails.getUser(), multipartFiles, reviewId));
     }
 
-    // 게시판 이미지 조회
     @GetMapping
     public ResponseEntity<List<GetReviewImagesRes>> getReviewImages(
             @PathVariable Long reviewId) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewImageService.getReviewImages(reviewId));
+    }
+
+    @GetMapping("/thumbnail")
+    public ResponseEntity<GetReviewImageRes> getReviewImage(
+            @PathVariable Long reviewId) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewImageService.getReviewImage(reviewId));
     }
 }
 

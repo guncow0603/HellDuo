@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -18,83 +18,63 @@
     <script src="/js/admin.js"></script>
     <script src="/js/trainer-review-list.js"></script>
 
+    <!-- CSS 스타일 -->
     <style>
-        .left-menu {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #fff;
+        /* PT 리스트 스타일 */
+        .review-list {
+            margin-top: 20px;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 200px;
-        }
-
-        .left-menu a {
-            display: block;
-            padding: 10px 20px;
-            margin-bottom: 10px;
-            background-color: #007bff;
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .left-menu a:hover {
-            background-color: #0056b3;
-        }
-
-        #review-list {
-            display: block; /* 그리드에서 블록으로 변경하여 세로로 배치 */
         }
 
         .review-item {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-bottom: 20px; /* 리뷰 간 간격 */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #e9ecef; /* 배경색 */
+            padding: 20px; /* 패딩 */
+            margin-bottom: 15px; /* 항목 간 간격 */
+            border-radius: 10px; /* 모서리 둥글게 */
+            display: flex; /* 가로로 배치 */
+            justify-content: space-between; /* 양쪽 끝에 배치 */
+            align-items: center; /* 세로 정렬 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 */
+            transition: transform 0.2s ease, background-color 0.2s ease; /* 마우스 오버 효과 */
         }
 
         .review-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            background-color: #d1e7dd; /* 마우스 오버 시 색상 변경 */
+            transform: scale(1.02); /* 살짝 확대 */
         }
 
-        .review-item a {
-            text-decoration: none;
-            color: inherit;
-            padding: 20px;
-            display: block;
+        /* 썸네일 이미지 스타일 */
+        .review-item img {
+            width: 120px; /* 썸네일 이미지 크기 */
+            height: 120px; /* 썸네일 이미지 크기 */
+            border-radius: 5px; /* 둥글게 */
+            margin-right: 15px; /* 이미지와 텍스트 간 간격 */
         }
 
-        .review-item h3 {
-            font-size: 1.5rem;
-            color: #333;
-            margin: 0 0 10px;
+        .review-item .review-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1; /* 텍스트 영역이 썸네일 이미지와 다른 요소들 사이에서 남은 공간을 차지하도록 */
         }
 
-        .review-item p {
-            color: #777;
-            font-size: 1rem;
-            margin: 0;
+        .review-item h5 {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px; /* 제목과 다른 정보들 간의 간격 */
         }
-
     </style>
 </head>
 
 <body>
-
-<header id="header" class="text-center py-3"></header>
+<header id="header"></header>
 
 <div class="container mt-4">
-    <h2>리뷰 목록</h2>
-    <div id="reviews-list">
-        <!-- 리뷰 목록이 여기에 표시됩니다 -->
-    </div>
-</div>
-</body>
 
+    <h2>리뷰 목록</h2>
+    <div id="reviews-list" class="review-list"></div>
+
+</div>
+
+</body>
 </html>

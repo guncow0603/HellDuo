@@ -92,7 +92,6 @@ public class ReviewService {
             GetReviewsResList.add(new GetReviewsRes(
                     review.getId(),
                     review.getTitle(),
-                    review.getContent(),
                     review.getPt().getId(),
                     review.getTrainer().getId(),
                     review.getRating()));
@@ -107,7 +106,6 @@ public class ReviewService {
             GetReviewsResList.add(new GetReviewsRes(
                     review.getId(),
                     review.getTitle(),
-                    review.getContent(),
                     review.getPt().getId(),
                     review.getTrainer().getId(),
                     review.getRating()));
