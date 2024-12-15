@@ -239,17 +239,6 @@
         .then(data => renderBestRatingTrainerList(data))
         .catch(error => console.error('평점 높은 트레이너 조회 실패:', error));
 
-    // 페이지 로드 시 가장 높은 평점을 받은 트레이너 정보 가져오기
-    fetch('/api/v1/users/trainer/bestRating')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json(); // JSON 데이터 파싱
-        })
-        .then(data => renderBestRatingTrainerList(data))
-        .catch(error => console.error('평점 높은 트레이너 조회 실패:', error));
-
     // 트레이너 목록 렌더링 함수
     function renderBestRatingTrainerList(trainers) {
         const trainerListContainer = document.getElementById('best-rating-trainer-list');
@@ -259,8 +248,23 @@
             const trainerCard = document.createElement('div');
             trainerCard.classList.add('pt-card'); // 카드 스타일 재사용
 
+            // 기본 이미지 설정 (플레이스홀더)
+            let profileImageUrl = "https://via.placeholder.com/250x200";
+
+            // 프로필 이미지 불러오기
+            fetch(`/api/v1/userImage/profile?trainerId=${trainer.trainerId}`)
+                .then(response => response.json())
+                .then(imageData => {
+                    if (imageData && imageData.imageUrl) {
+                        profileImageUrl = imageData.imageUrl;
+                    }
+                    trainerCard.querySelector('img').src = profileImageUrl; // 이미지 업데이트
+                })
+                .catch(error => console.error('프로필 이미지 불러오기 실패:', error));
+
             // 트레이너 카드 HTML 생성
             trainerCard.innerHTML = `
+            <img src="${profileImageUrl}" alt="트레이너 프로필" style="width: 100%; height: 200px; object-fit: cover;">
             <h5>${trainer.name}</h5>
             <p>평점: ${trainer.rating.toFixed(1)}</p> <!-- 소수점 1자리로 표시 -->
             <p>전문 분야: ${trainer.specialization}</p>
