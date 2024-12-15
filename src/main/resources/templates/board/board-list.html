@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -18,6 +18,7 @@
     <script src="/js/admin.js"></script>
     <script src="/js/board-list.js"></script>
 
+    <!-- CSS 스타일 -->
     <style>
         body {
             background-color: #f8f9fa !important;
@@ -55,52 +56,57 @@
         .left-menu a:hover {
             background-color: #0056b3;
         }
-
-        #board-list {
-            display: block; /* 그리드에서 블록으로 변경하여 세로로 배치 */
+        /* PT 리스트 스타일 */
+        .board-list {
+            margin-top: 20px;
+            padding: 20px;
         }
 
         .board-item {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-bottom: 20px; /* 게시글 간 간격 */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #e9ecef; /* 배경색 */
+            padding: 20px; /* 패딩 */
+            margin-bottom: 15px; /* 항목 간 간격 */
+            border-radius: 10px; /* 모서리 둥글게 */
+            display: flex; /* 가로로 배치 */
+            justify-content: space-between; /* 양쪽 끝에 배치 */
+            align-items: center; /* 세로 정렬 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 */
+            transition: transform 0.2s ease, background-color 0.2s ease; /* 마우스 오버 효과 */
         }
 
         .board-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            background-color: #d1e7dd; /* 마우스 오버 시 색상 변경 */
+            transform: scale(1.02); /* 살짝 확대 */
         }
 
-        .board-item a {
-            text-decoration: none;
-            color: inherit;
-            padding: 20px;
-            display: block;
+        /* 썸네일 이미지 스타일 */
+        .board-item img {
+            width: 120px; /* 썸네일 이미지 크기 */
+            height: 120px; /* 썸네일 이미지 크기 */
+            border-radius: 5px; /* 둥글게 */
+            margin-right: 15px; /* 이미지와 텍스트 간 간격 */
         }
 
-        .board-item h3 {
-            font-size: 1.5rem;
-            color: #333;
-            margin: 0 0 10px;
+        .board-item .board-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1; /* 텍스트 영역이 썸네일 이미지와 다른 요소들 사이에서 남은 공간을 차지하도록 */
         }
 
-        .board-item p {
-            color: #777;
-            font-size: 1rem;
-            margin: 0;
+        .board-item h5 {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px; /* 제목과 다른 정보들 간의 간격 */
         }
-
+        .board-like-count {
+            color: #6c757d;
+        }
     </style>
 </head>
 
 <body>
-
-<header id="header" class="text-center py-3">
-    <h2>게시글 목록</h2>
-</header>
+<header id="header"></header>
 
 <div class="container mt-4">
     <!-- 검색 필드 -->
@@ -112,14 +118,16 @@
             <button id="search-btn" class="btn btn-primary w-100">검색</button>
         </div>
     </div>
-    <div id="board-list">
-        <!-- 게시글 목록이 여기에 표시됩니다 -->
+
+    <!-- PT 목록 -->
+    <h2>게시글 목록</h2>
+    <div id="board-list" class="board-list"></div>
+
+    <!-- PT 생성 버튼 -->
+    <div class="left-menu" id="board-create-button">
+        <a href="/api/v1/page/boardCreate">게시글 생성</a>
     </div>
 </div>
 
-<div class="left-menu" id="board-create-button">
-    <a href="/api/v1/page/boardCreate">게시글 작성</a>
-</div>
 </body>
-
 </html>
