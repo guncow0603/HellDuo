@@ -43,7 +43,7 @@ public class Board {
 
     // Board 삭제 시 관련된 이미지도 함께 삭제되도록 설정
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardImage> boardImage = new ArrayList<>();
+    private List<BoardImage> boardImageList = new ArrayList<>();
 
     @Builder
     private Board(String title, String content, User user) {

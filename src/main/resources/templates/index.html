@@ -252,7 +252,7 @@
             let profileImageUrl = "https://via.placeholder.com/250x200";
 
             // 프로필 이미지 불러오기
-            fetch(`/api/v1/userImage/profile?trainerId=${trainer.trainerId}`)
+            fetch(`/api/v1/userImage/profile/${trainer.trainerId}`)
                 .then(response => response.json())
                 .then(imageData => {
                     if (imageData && imageData.imageUrl) {
