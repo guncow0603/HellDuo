@@ -4,7 +4,7 @@ const trainerId = window.location.pathname.split("/").filter(Boolean).pop(); // 
 
 async function loadTrainerReviews() {
     try {
-        const response = await fetch(`/api/v1/review/${trainerId}`);
+        const response = await fetch(`/api/v1/review/trainer/${trainerId}`);
         if (!response.ok) {
             throw new Error('리뷰 데이터를 불러오는 중 오류가 발생했습니다.');
         }

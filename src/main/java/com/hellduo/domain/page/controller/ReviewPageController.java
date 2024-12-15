@@ -29,4 +29,10 @@ public class ReviewPageController {
     public String noReviewPtListPage() {
         return "/review/no-review-pt-list";
     }
+
+    @GetMapping("/reviewRead/{reviewId}")
+    public String reviewReadPage(@PathVariable Long reviewId, Model model) {
+        model.addAttribute("reviewId", reviewId);
+        return "/review/review-read";
+    }
 }

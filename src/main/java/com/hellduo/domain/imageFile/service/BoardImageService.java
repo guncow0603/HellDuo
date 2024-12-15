@@ -36,7 +36,7 @@ public class BoardImageService {
 
         List<BoardImage> userImageList = createBoardImageList(fileUrlList, user, board);
         boardImageRepository.saveAll(userImageList);
-        return new UploadBoardImagesRes("자격증 이미지가 업로드되었습니다.");
+        return new UploadBoardImagesRes("리뷰 이미지가 업로드되었습니다.");
     }
     // 다수 파일 S3 업로드
     private List<String> uploadFilesToS3(List<MultipartFile> multipartFiles, Long userId, String filePath) {

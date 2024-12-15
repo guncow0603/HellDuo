@@ -1,18 +1,19 @@
 $(document).ready(function() {
     // 페이지가 로드될 때 리뷰 데이터를 가져오기 위한 AJAX 요청
     $.ajax({
-        url: '/api/v1/review',  // GET 요청을 보낼 URL
+        url: '/api/v1/review',  // 서버 API 엔드포인트
         method: 'GET',
         success: function(response) {
             // 응답을 받은 후 리스트를 생성하여 HTML에 추가
-            var reviewsList = $('#reviews-list');
+            var reviewsList = $('#reviews-list'); // 올바른 ID
             response.forEach(function(review) {
-                // 각 리뷰에 대해 카드 형식으로 스타일링하여 추가
                 reviewsList.append(
-                    '<div class="review-card">' +
-                    '<div class="review-title">' + review.title + '</div>' +
-                    '<div class="review-content">' + review.content + '</div>' +
-                    '<div class="review-rating">Rating: ' + review.rating + ' ⭐</div>' +
+                    '<div class="review-item">' +  // 스타일링된 클래스 사용
+                    '<a href="/api/v1/page/reviewRead/' + review.reviewId + '">' +
+                    '<h3>' + review.title + '</h3>' +
+                    '<p>' + review.content + '</p>' +
+                    '<p>평점: ' + review.rating + ' ⭐</p>' +
+                    '</a>' +
                     '</div>'
                 );
             });

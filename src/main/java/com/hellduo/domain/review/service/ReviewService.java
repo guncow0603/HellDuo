@@ -1,11 +1,14 @@
 package com.hellduo.domain.review.service;
 
+import com.hellduo.domain.board.dto.response.BoardReadRes;
+import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
 import com.hellduo.domain.pt.repository.PTRepository;
 import com.hellduo.domain.review.dto.request.ReviewCreateReq;
+import com.hellduo.domain.review.dto.response.GetReviewRes;
 import com.hellduo.domain.review.dto.response.GetReviewsRes;
 import com.hellduo.domain.review.dto.response.ReviewCreateRes;
 import com.hellduo.domain.review.entity.Review;
@@ -63,7 +66,7 @@ public class ReviewService {
 
         updateTrainerRating(trainer);
 
-        return new ReviewCreateRes("후기 작성 완료.");
+        return new ReviewCreateRes(review.getId(),"후기 작성 완료.");
     }
 
     // 트레이너의 평균 평점 계산 메서드
@@ -87,6 +90,7 @@ public class ReviewService {
         List<GetReviewsRes> GetReviewsResList = new ArrayList<>();
         for(Review review : reviews){
             GetReviewsResList.add(new GetReviewsRes(
+                    review.getId(),
                     review.getTitle(),
                     review.getContent(),
                     review.getPt().getId(),
@@ -101,6 +105,7 @@ public class ReviewService {
         List<GetReviewsRes> GetReviewsResList = new ArrayList<>();
         for(Review review : reviews){
             GetReviewsResList.add(new GetReviewsRes(
+                    review.getId(),
                     review.getTitle(),
                     review.getContent(),
                     review.getPt().getId(),
@@ -109,4 +114,14 @@ public class ReviewService {
         }
         return GetReviewsResList;
     }
+
+    public GetReviewRes getReview(Long reviewId) {
+        Review review = reviewRepository.findReviewByIdWithThrow(reviewId);
+        return new GetReviewRes(
+                review.getId(),
+                review.getTitle(),
+                review.getContent(),
+                review.getRating());
+    }
+
 }

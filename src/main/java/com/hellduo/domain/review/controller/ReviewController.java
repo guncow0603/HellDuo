@@ -1,6 +1,7 @@
 package com.hellduo.domain.review.controller;
 
 import com.hellduo.domain.review.dto.request.ReviewCreateReq;
+import com.hellduo.domain.review.dto.response.GetReviewRes;
 import com.hellduo.domain.review.dto.response.GetReviewsRes;
 import com.hellduo.domain.review.dto.response.ReviewCreateRes;
 import com.hellduo.domain.review.service.ReviewService;
@@ -32,8 +33,13 @@ public class ReviewController {
     public ResponseEntity<List<GetReviewsRes>>getReviews(){
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviews());
     }
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<GetReviewRes>getReview(
+            @PathVariable Long reviewId){
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReview(reviewId));
+    }
 
-    @GetMapping("/{trainerId}")
+    @GetMapping("/trainer/{trainerId}")
     public ResponseEntity<List<GetReviewsRes>>getTrainerReviews(
             @PathVariable Long trainerId){
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getTrainerReviews(trainerId));

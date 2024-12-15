@@ -8,10 +8,8 @@ import com.hellduo.domain.board.exception.BoardErrorCode;
 import com.hellduo.domain.board.exception.BoardException;
 import com.hellduo.domain.board.repository.BoardRepository;
 import com.hellduo.domain.imageFile.entity.BoardImage;
-import com.hellduo.domain.imageFile.entity.PTImage;
 import com.hellduo.domain.imageFile.repository.BoardImageRepository;
 import com.hellduo.domain.user.entity.User;
-import com.hellduo.domain.user.repository.UserRepository;
 import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +42,7 @@ public class BoardService {
 
     // 게시글 조회 (읽기 전용 트랜잭션 적용)
     @Transactional(readOnly = true)
-    public BoardReadRes getBoardById(Long boardId) {
+    public BoardReadRes getBoard(Long boardId) {
         Board board = boardRepository.findBoardByIdWithThrow(boardId); // 조회만 하는 메서드이므로 읽기 전용 트랜잭션 적용
         return new BoardReadRes(board.getId(), board.getLikeCount(), board.getTitle(), board.getContent());
     }
