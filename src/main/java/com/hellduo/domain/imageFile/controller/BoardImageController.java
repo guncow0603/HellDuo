@@ -32,5 +32,10 @@ public class BoardImageController {
         return ResponseEntity.status(HttpStatus.OK).body(boardImageService.getBoardImages(boardId));
     }
 
-
+    // 게시판 썸네일 이미지 조회
+    @GetMapping("/thumbnail")
+    public ResponseEntity<GetBoardImageRes> getBoardImage(
+            @PathVariable Long boardId) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardImageService.getBoardImage(boardId));
+    }
 }
