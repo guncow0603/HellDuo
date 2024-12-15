@@ -28,7 +28,7 @@ $(document).ready(function () {
         $('#header-chat-list').show();
 
         if(role === 'USER') {
-
+            $('#view-user-profile-btn').hide();
             $('#update-delete-button').hide();
             $('#notice-delete-button').hide();
             $('#board-create-button').show();

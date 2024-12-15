@@ -1,10 +1,9 @@
 package com.hellduo.domain.review.dto.response;
 
-public record GetReviewsRes (
+public record GetReviewRes(
         Long reviewId,
         String title,
-        Long ptId,
-        Long trainerId,
+        String content,
         Double rating
-){
+) {
 }

@@ -14,6 +14,7 @@ public record PTReadRes(
         String userName,         // 예약자 이름
         String status,            // PT 상태
         Double latitude, // 위도
-        Double longitude // 경도
+        Double longitude, // 경도
+        Long userId
 ) {
 }

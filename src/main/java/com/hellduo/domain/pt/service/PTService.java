@@ -69,6 +69,11 @@ public class PTService {
     @Transactional(readOnly = true)
     public PTReadRes ptRead(Long ptId) {
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
+
+        // User가 null인 경우를 처리하도록 수정
+        Long userId = (pt.getUser() != null) ? pt.getUser().getId() : null;
+        String userName = (pt.getUser() != null) ? pt.getUser().getName() : "미예약";
+
         return new PTReadRes(
                 pt.getId(),
                 pt.getTrainer().getId(),
@@ -78,10 +83,12 @@ public class PTService {
                 pt.getDescription(),
                 pt.getTrainer().getName(),
                 pt.getSpecialization().getName(),
-                pt.getUser() != null ? pt.getUser().getName() : "미예약",
+                userName, // "미예약"을 기본 값으로 설정
                 pt.getStatus().getDescription(),
                 pt.getLatitude(),
-                pt.getLongitude());
+                pt.getLongitude(),
+                userId // null이 될 수 있음
+        );
     }
 
     @Transactional(readOnly = true)

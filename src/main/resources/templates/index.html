@@ -192,28 +192,42 @@
             ptListContainer.appendChild(ptCard);
         });
     }
-    // 페이지 로드 시 좋아요 수가 많은 게시물 가져오기
+    // 게시물 목록 API 호출
     fetch('/api/v1/board/bestLike')
         .then(response => response.json())
-        .then(data => renderBestLikeList(data))
-        .catch(error => console.error('좋아요 게시물 조회 실패:', error));
+        .then(boards => renderBestLikeList(boards))
+        .catch(error => console.error('좋아요 많은 게시물 조회 실패:', error));
 
-    // 좋아요 게시물을 화면에 렌더링하는 함수
     function renderBestLikeList(boards) {
         const bestLikeListContainer = document.getElementById('best-like-list');
         bestLikeListContainer.innerHTML = ''; // 기존 목록 비우기
 
         boards.forEach(board => {
             const boardCard = document.createElement('div');
-            boardCard.classList.add('pt-card'); // 기존 스타일 재사용
-            boardCard.innerHTML = `
-                <h5>${board.title}</h5>
-                <p>좋아요 수: ${board.boardLikeCount}</p>
-            `;
+            boardCard.classList.add('pt-card');
 
-            // 클릭 시 상세 페이지로 이동
+            // 기본 썸네일 설정
+            const thumbnailImage = document.createElement('img');
+            thumbnailImage.alt = '썸네일';
+            thumbnailImage.style = 'width: 100%; height: auto;';
+
+            // 게시물 정보 추가
+            boardCard.innerHTML = `
+            <h5>${board.title}</h5>
+            <p>좋아요 수: ${board.boardLikeCount}</p>
+        `;
+
+            // 썸네일 불러오기
+            fetch(`/api/v1/boards/${board.boardId}/images/thumbnail`)
+                .then(response => response.json())
+                .then(response => {
+                    thumbnailImage.src = response.imageUrl;
+                })
+                .catch(() => console.error(`썸네일 불러오기 실패 (ID: ${board.boardId})`));
+
+            boardCard.prepend(thumbnailImage); // 이미지 추가
             boardCard.addEventListener('click', () => {
-                window.location.href = `/api/v1/page/boardRead/${board.boardId}`; // 상세 페이지 경로로 이동
+                window.location.href = `/api/v1/page/boardRead/${board.boardId}`;
             });
 
             bestLikeListContainer.appendChild(boardCard);
@@ -222,17 +236,6 @@
     // 페이지 로드 시 가장 높은 평점을 받은 트레이너 정보 가져오기
     fetch('/api/v1/users/trainer/bestRating')
         .then(response => response.json())
-        .then(data => renderBestRatingTrainerList(data))
-        .catch(error => console.error('평점 높은 트레이너 조회 실패:', error));
-
-    // 페이지 로드 시 가장 높은 평점을 받은 트레이너 정보 가져오기
-    fetch('/api/v1/users/trainer/bestRating')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json(); // JSON 데이터 파싱
-        })
         .then(data => renderBestRatingTrainerList(data))
         .catch(error => console.error('평점 높은 트레이너 조회 실패:', error));
 
@@ -245,8 +248,23 @@
             const trainerCard = document.createElement('div');
             trainerCard.classList.add('pt-card'); // 카드 스타일 재사용
 
+            // 기본 이미지 설정 (플레이스홀더)
+            let profileImageUrl = "https://via.placeholder.com/250x200";
+
+            // 프로필 이미지 불러오기
+            fetch(`/api/v1/userImage/profile/${trainer.trainerId}`)
+                .then(response => response.json())
+                .then(imageData => {
+                    if (imageData && imageData.imageUrl) {
+                        profileImageUrl = imageData.imageUrl;
+                    }
+                    trainerCard.querySelector('img').src = profileImageUrl; // 이미지 업데이트
+                })
+                .catch(error => console.error('프로필 이미지 불러오기 실패:', error));
+
             // 트레이너 카드 HTML 생성
             trainerCard.innerHTML = `
+            <img src="${profileImageUrl}" alt="트레이너 프로필" style="width: 100%; height: 200px; object-fit: cover;">
             <h5>${trainer.name}</h5>
             <p>평점: ${trainer.rating.toFixed(1)}</p> <!-- 소수점 1자리로 표시 -->
             <p>전문 분야: ${trainer.specialization}</p>

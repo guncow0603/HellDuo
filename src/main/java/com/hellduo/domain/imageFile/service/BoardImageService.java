@@ -2,10 +2,7 @@ package com.hellduo.domain.imageFile.service;
 
 import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.repository.BoardRepository;
-import com.hellduo.domain.imageFile.dto.response.DeleteBoardImageRes;
-import com.hellduo.domain.imageFile.dto.response.GetBoardImagesRes;
-import com.hellduo.domain.imageFile.dto.response.UploadBoardImagesRes;
-import com.hellduo.domain.imageFile.dto.response.UserImageDeleteRes;
+import com.hellduo.domain.imageFile.dto.response.*;
 import com.hellduo.domain.imageFile.entity.BoardImage;
 import com.hellduo.domain.imageFile.exception.ImageErrorCode;
 import com.hellduo.domain.imageFile.exception.ImageException;
@@ -36,7 +33,7 @@ public class BoardImageService {
 
         List<BoardImage> userImageList = createBoardImageList(fileUrlList, user, board);
         boardImageRepository.saveAll(userImageList);
-        return new UploadBoardImagesRes("자격증 이미지가 업로드되었습니다.");
+        return new UploadBoardImagesRes("리뷰 이미지가 업로드되었습니다.");
     }
     // 다수 파일 S3 업로드
     private List<String> uploadFilesToS3(List<MultipartFile> multipartFiles, Long userId, String filePath) {
@@ -75,5 +72,14 @@ public class BoardImageService {
         }
 
         return response;
+    }
+
+    public GetBoardImageRes getBoardImage(Long boardId) {
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+
+        BoardImage boardImage = boardImages.get(0);
+        return new GetBoardImageRes(
+                boardImage.getId(),
+                boardImage.getBoardImageUrl());
     }
 }

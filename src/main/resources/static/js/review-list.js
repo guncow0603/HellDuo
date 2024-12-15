@@ -1,24 +1,64 @@
-$(document).ready(function() {
-    // 페이지가 로드될 때 리뷰 데이터를 가져오기 위한 AJAX 요청
+function loadReviews() {
     $.ajax({
-        url: '/api/v1/review',  // GET 요청을 보낼 URL
-        method: 'GET',
-        success: function(response) {
-            // 응답을 받은 후 리스트를 생성하여 HTML에 추가
-            var reviewsList = $('#reviews-list');
-            response.forEach(function(review) {
-                // 각 리뷰에 대해 카드 형식으로 스타일링하여 추가
-                reviewsList.append(
-                    '<div class="review-card">' +
-                    '<div class="review-title">' + review.title + '</div>' +
-                    '<div class="review-content">' + review.content + '</div>' +
-                    '<div class="review-rating">Rating: ' + review.rating + ' ⭐</div>' +
-                    '</div>'
-                );
-            });
+        url: `/api/v1/review`,
+        type: "GET",
+        success: function (response) {
+            renderReviews(response);
         },
-        error: function() {
-            alert('리뷰를 불러오는 데 실패했습니다.');
+        error: function (xhr, status, error) {
+            console.error("Review 데이터를 가져오는 중 오류 발생:", xhr.responseText || error);
+            $('#reviews-list').html("<p>리뷰 데이터를 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</p>");
+        },
+    });
+}
+
+function renderReviews(reviews) {
+    const reviewListContainer = $('#reviews-list');
+    reviewListContainer.empty();
+
+    if (!reviews || reviews.length === 0) {
+        reviewListContainer.append("<p>등록된 리뷰가 없습니다.</p>");
+        return;
+    }
+
+    reviews.forEach(review => {
+        const reviewItem = $(`
+            <div class="review-item" style="cursor: pointer;" onclick="window.location.href='/api/v1/page/reviewRead/${review.reviewId}'">
+                <img alt="썸네일 이미지" id="thumbnail-${review.reviewId}" 
+                    style="width: 150px; height: 150px; border-radius: 5px; margin-right: 20px;">
+                
+                <div class="review-details">
+                    <h5>${review.title}</h5>
+                    <p class="review-rating">평점: ${review.rating}⭐</p>
+                </div>
+            </div>
+        `);
+
+        reviewListContainer.append(reviewItem);
+        loadThumbnail(review.reviewId); // 이미지 로드
+    });
+}
+
+function loadThumbnail(reviewId) {
+    $.ajax({
+        url: `/api/v1/reviews/${reviewId}/images/thumbnail`,
+        type: "GET",
+        success: function (response) {
+            if (response.imageUrl) {
+                $(`#thumbnail-${reviewId}`).attr("src", response.imageUrl);
+            } else {
+                console.error("이미지 URL이 응답에 포함되어 있지 않습니다.");
+                $(`#thumbnail-${reviewId}`).attr("src", "/path/to/default-image.jpg");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(`썸네일 이미지를 가져오는 중 오류 발생 (Review ID: ${reviewId}):`, error);
+            $(`#thumbnail-${reviewId}`).attr("src", "/path/to/default-image.jpg");
         }
     });
+}
+
+// 페이지 로드 시 초기 데이터 로드
+$(document).ready(function () {
+    loadReviews();
 });

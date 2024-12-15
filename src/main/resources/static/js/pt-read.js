@@ -19,6 +19,10 @@ $(document).ready(function() {
             $('#pt-status').text(`상태: ${res.status}`);
             trainerId = res.trainerId;
 
+            if (res.status === '미예약') {
+                $('#view-user-profile-btn').hide();
+            }
+
             // 예약 상태가 "예약"이면 예약 버튼 숨기기
             if (res.status === '예약됨' || res.status === '완료됨') {
                 $('#reserve-btn').hide();
@@ -147,6 +151,10 @@ $(document).ready(function() {
     // 트레이너 프로필 보기 버튼 클릭
     document.getElementById('view-trainer-profile-btn').addEventListener('click', () => {
         window.location.href = `/api/v1/page/trainer-profile/${trainerId}`;
+    });
+
+    document.getElementById('view-user-profile-btn').addEventListener('click', () => {
+        window.location.href = `/api/v1/page/user-profile/${ptId}`;
     });
 
     // PT 완료 버튼 클릭
