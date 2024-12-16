@@ -1,17 +1,17 @@
 package com.hellduo.domain.admin.controller;
 
 
+import com.hellduo.domain.admin.dto.request.UserUpdateReq;
 import com.hellduo.domain.admin.dto.response.GetTrainerListRes;
 import com.hellduo.domain.admin.dto.response.GetUserListRes;
+import com.hellduo.domain.admin.dto.response.UserUpdateRes;
 import com.hellduo.domain.admin.service.AdminService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,4 +32,11 @@ public class AdminUserController
     {
         return  ResponseEntity.status(HttpStatus.OK).body(adminService.getTrainerList(userdetails.getUser()));
     }
+    @PutMapping("/userUpdate")
+    public ResponseEntity<UserUpdateRes> userUpdate(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                    @RequestBody UserUpdateReq req)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.userUpdate(userDetails.getUser(),req));
+    }
+
 }

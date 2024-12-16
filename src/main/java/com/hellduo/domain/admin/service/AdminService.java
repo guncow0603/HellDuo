@@ -1,9 +1,11 @@
 package com.hellduo.domain.admin.service;
 
 import com.hellduo.domain.admin.dto.request.NoticeUpdateReq;
+import com.hellduo.domain.admin.dto.request.UserUpdateReq;
 import com.hellduo.domain.admin.dto.response.*;
 import com.hellduo.domain.admin.dto.request.NoticeReq;
 import com.hellduo.domain.admin.entity.Notice;
+import com.hellduo.domain.admin.entity.enums.UserStatus;
 import com.hellduo.domain.admin.repository.NoticeRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
@@ -126,5 +128,21 @@ public class AdminService {
             }
         }
         return trainerResList;
+    }
+
+    public UserUpdateRes userUpdate(User admin, UserUpdateReq req) {
+        if (admin.getRole() != UserRoleType.ADMIN) {
+            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+        }
+        User user = userRepository.findUserByIdWithThrow(req.userId());
+        if (req.userstatus().equals(UserStatus.DELETED)) {
+            user.updateUserStatus(UserStatus.DELETED);
+        } else if (req.userstatus().equals(UserStatus.REST)) {
+            user.updateUserStatus(UserStatus.REST);
+        }
+        else if (req.userstatus().equals(UserStatus.ACTION)){
+            user.updateUserStatus(UserStatus.ACTION);
+        }
+        return new UserUpdateRes("유저상태 변경완료");
     }
 }
