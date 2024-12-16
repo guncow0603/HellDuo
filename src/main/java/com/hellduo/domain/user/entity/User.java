@@ -1,5 +1,6 @@
 package com.hellduo.domain.user.entity;
 
+import com.hellduo.domain.admin.entity.enums.UserStatus;
 import com.hellduo.domain.common.BaseEntity;
 import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;
@@ -82,9 +83,12 @@ public class User extends BaseEntity {
     @Column(name = "bio")
     private String bio;  // 자기소개
 
-    @Comment("탈퇴 여부")
-    @Column(name = "deleted")
-    private boolean deleted = false;
+    @Comment("회원상태")
+    @Column(name = "user_status")
+    @Enumerated(value = EnumType.STRING)
+    private UserStatus userStatus;
+
+
 
     @Comment("회원 보유 포인트")
     @Column(name = "point", nullable = false)
@@ -99,7 +103,7 @@ public class User extends BaseEntity {
     public User(String email, String password, UserRoleType role, String nickname, Gender gender,
                 Integer age, Double weight, Double height, String phoneNumber,
                 String name, Specialization specialization, Integer experience,
-                String certifications, String bio) {
+                String certifications, String bio, UserStatus userStatus) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -114,6 +118,7 @@ public class User extends BaseEntity {
         this.experience = experience;
         this.certifications = certifications;
         this.bio = bio;
+        this.userStatus = userStatus;
     }
 
     public void updateNickName(String nickname) { this.nickname = nickname; }
@@ -141,8 +146,7 @@ public class User extends BaseEntity {
     public void updateBio(String bio) {
         this.bio = bio;
     }
-    public void withdrawal() { this.deleted = true; }
-
+    public void updateUserStatus(UserStatus userStatus) {}
     public void addPoint(Long point) {
         this.point += point;
     }

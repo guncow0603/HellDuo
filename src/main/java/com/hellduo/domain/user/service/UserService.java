@@ -1,5 +1,6 @@
 package com.hellduo.domain.user.service;
 
+import com.hellduo.domain.admin.entity.enums.UserStatus;
 import com.hellduo.domain.imageFile.entity.UserImage;
 import com.hellduo.domain.imageFile.entity.enums.ImageType;
 import com.hellduo.domain.imageFile.repository.UserImageRepository;
@@ -91,6 +92,7 @@ public class UserService {
                 .phoneNumber(phoneNumber)
                 .weight(weight)
                 .height(height)
+                .userStatus(UserStatus.ACTION)
                 .build();
         UserImage userImage = UserImage.builder()
                 .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
@@ -169,7 +171,7 @@ public class UserService {
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new UserException(UserErrorCode.BAD_LOGIN);
             }
-            if(user.isDeleted()){
+            if(user.getUserStatus().equals(UserStatus.DELETED)){
                 throw new UserException(UserErrorCode.DELETED_USER);
             }
 
@@ -266,7 +268,7 @@ public class UserService {
         }
 
         // 탈퇴 처리
-        user.withdrawal();
+        user.updateUserStatus(UserStatus.DELETED);
 
         // 로그아웃 직접 처리
         triggerLogout(response);
@@ -315,7 +317,7 @@ public class UserService {
 
         List<User> trainers = new ArrayList<>();
         for (User user : allUsers) {
-            if (user.getRole() == UserRoleType.TRAINER && !user.isDeleted()) { // 트레이너이면서 탈퇴하지 않은 유저
+            if (user.getRole() == UserRoleType.TRAINER && !user.getUserStatus().equals(UserStatus.DELETED)) { // 트레이너이면서 탈퇴하지 않은 유저
                 trainers.add(user);
             }
         }
