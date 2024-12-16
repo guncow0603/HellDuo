@@ -26,6 +26,7 @@ public class Board {
 
     private String content;
 
+    @Column(name = "likeCount", nullable = false)
     @ColumnDefault("0")
     private Long likeCount = 0L;
 
