@@ -1,22 +1,22 @@
 INSERT INTO TB_USER (
-    email, password, gender, age, phone_number, nickname, weight, height, role, name, specialization, experience, certifications, bio, deleted, point, rating, created_at, modified_at
+    email, password, gender, age, phone_number, nickname, weight, height, role, name, specialization, experience, certifications, bio, point, rating, created_at, modified_at, user_status
 ) VALUES
-      ('user1@email.com', '$2a$10$0RZk/.Sti/Zg4whSYptoSO38eLry3MjRz648MEPOcdW2zhpSquA6i', 'MAN', 32, '010-1111-1111', '유저1', 80.0, 185.0, 'TRAINER', '김철수', 'FITNESS', 5, 'PT Level 1', '피트니스 전문가입니다.', false, 300, 4.8, NOW(), NOW()),
-      ('user2@email.com', 'userPass2', 'WOMAN', 28, '010-2222-2222', '유저2', 60.0, 165.0, 'TRAINER', '이영희', 'YOGA', 4, '요가 강사 자격증', '요가 전문 강사입니다.', false, 280, 4.7, NOW(), NOW()),
-      ('user3@email.com', 'userPass3', 'MAN', 35, '010-3333-3333', '유저3', 90.0, 190.0, 'TRAINER', '박성민', 'CROSSFIT', 6, 'Crossfit Level 1', '크로스핏 전문가입니다.', false, 350, 4.9, NOW(), NOW()),
-      ('trainer4@email.com', 'trainerPass4', 'WOMAN', 30, '010-4444-4444', '트레이너4', 58.0, 162.0, 'TRAINER', '최은정', 'PILATES', 5, '필라테스 Level 2', '필라테스 강사입니다.', false, 310, 4.6, NOW(), NOW()),
-      ('trainer5@email.com', 'trainerPass5', 'MAN', 40, '010-5555-5555', '트레이너5', 85.0, 180.0, 'TRAINER', '강호동', 'REHABILITATION', 8, '재활운동 전문가', '재활 운동을 돕습니다.', false, 400, 5.0, NOW(), NOW()),
-      ('trainer6@email.com', 'trainerPass6', 'WOMAN', 26, '010-6666-6666', '트레이너6', 55.0, 160.0, 'TRAINER', '수지', 'NUTRITION', 3, '영양사 자격증', '영양 관리 전문입니다.', false, 220, 4.5, NOW(), NOW()),
-      ('trainer7@email.com', 'trainerPass7', 'MAN', 29, '010-7777-7777', '트레이너7', 70.0, 175.0, 'TRAINER', '이승기', 'FITNESS', 4, 'PT Level 2', '운동 목표를 달성하도록 돕습니다.', false, 250, 4.7, NOW(), NOW()),
-      ('trainer8@email.com', 'trainerPass8', 'WOMAN', 34, '010-8888-8888', '트레이너8', 62.0, 168.0, 'TRAINER', '김연아', 'PILATES', 7, '필라테스 강사', '코어 및 유연성 강사입니다.', false, 330, 4.8, NOW(), NOW()),
-      ('trainer9@email.com', 'trainerPass9', 'MAN', 31, '010-9999-9999', '트레이너9', 75.0, 178.0, 'TRAINER', '공유', 'CROSSFIT', 5, 'Crossfit Level 2', '고강도 크로스핏 훈련자입니다.', false, 300, 4.6, NOW(), NOW()),
-      ('trainer10@email.com', 'trainerPass10', 'WOMAN', 27, '010-1010-1010', '트레이너10', 57.0, 163.0, 'TRAINER', '송혜교', 'YOGA', 4, '명상 및 요가 강사', '요가와 명상 훈련을 제공합니다.', false, 290, 4.5, NOW(), NOW()),
-      ('trainer11@email.com', 'trainerPass11', 'MAN', 36, '010-1112-1112', '트레이너11', 78.0, 182.0, 'TRAINER', '정우성', 'REHABILITATION', 10, '재활 트레이너 자격증', '부상 후 회복 운동을 돕습니다.', false, 420, 5.0, NOW(), NOW()),
-      ('trainer12@email.com', 'trainerPass12', 'WOMAN', 33, '010-1212-1212', '트레이너12', 64.0, 170.0, 'TRAINER', '한지민', 'NUTRITION', 6, '영양 전문가', '식단 관리 및 영양 상담 전문가입니다.', false, 310, 4.7, NOW(), NOW()),
-      ('trainer13@email.com', 'trainerPass13', 'MAN', 28, '010-1313-1313', '트레이너13', 72.0, 177.0, 'TRAINER', '박보검', 'FITNESS', 3, '헬스 트레이너', '운동 입문자를 위한 강사입니다.', false, 260, 4.5, NOW(), NOW()),
-      ('trainer14@email.com', 'trainerPass14', 'WOMAN', 30, '010-1414-1414', '트레이너14', 59.0, 164.0, 'TRAINER', '신민아', 'PILATES', 5, '필라테스 레벨 1', '기초부터 심화 과정까지 지도합니다.', false, 280, 4.6, NOW(), NOW()),
-      ('trainer15@email.com', 'trainerPass15', 'MAN', 39, '010-1515-1515', '트레이너15', 88.0, 188.0, 'TRAINER', '마동석', 'CROSSFIT', 9, 'Crossfit Expert', '최고의 강도로 훈련을 진행합니다.', false, 400, 4.9, NOW(), NOW());
-
+      ('admin@email.com', '$2a$10$0RZk/.Sti/Zg4whSYptoSO38eLry3MjRz648MEPOcdW2zhpSquA6i', 'MAN', 32, '010-1111-1112', '관리자', 80.0, 185.0, 'ADMIN', '김철수', 'PILATES', 5, 'PT Level 1', '피트니스 전문가입니다.', 300, 4.8, NOW(), NOW(), 'ACTION'),
+      ('user1@email.com', '$2a$10$0RZk/.Sti/Zg4whSYptoSO38eLry3MjRz648MEPOcdW2zhpSquA6i', 'MAN', 32, '010-1111-1111', '유저1', 80.0, 185.0, 'USER', '김철수', 'PILATES', 5, 'PT Level 1', '피트니스 전문가입니다.', 300, 4.8, NOW(), NOW(), 'ACTION'),
+      ('user2@email.com', 'userPass2', 'WOMAN', 28, '010-2222-2222', '유저2', 60.0, 165.0, 'USER', '이영희', 'YOGA', 4, '요가 강사 자격증', '요가 전문 강사입니다.' , 280, 4.7, NOW(), NOW(), 'ACTION'),
+      ('user3@email.com', 'userPass3', 'MAN', 35, '010-3333-3333', '유저3', 90.0, 190.0, 'USER', '박성민', 'CROSSFIT', 6, 'Crossfit Level 1', '크로스핏 전문가입니다.', 350, 4.9, NOW(), NOW(), 'ACTION'),
+      ('trainer4@email.com', 'trainerPass4', 'WOMAN', 30, '010-4444-4444', '최은정', 58.0, 162.0, 'TRAINER', '최은정', 'PILATES', 5, '필라테스 Level 2', '필라테스 강사입니다.', 310, 4.6, NOW(), NOW(), 'ACTION'),
+      ('trainer5@email.com', 'trainerPass5', 'MAN', 40, '010-5555-5555', '강호동', 85.0, 180.0, 'TRAINER', '강호동', 'REHABILITATION', 8, '재활운동 전문가', '재활 운동을 돕습니다.' , 400, 5.0, NOW(), NOW(), 'ACTION'),
+      ('trainer6@email.com', 'trainerPass6', 'WOMAN', 26, '010-6666-6666', '수지', 55.0, 160.0, 'TRAINER', '수지', 'NUTRITION', 3, '영양사 자격증', '영양 관리 전문입니다.' , 220, 4.5, NOW(), NOW(), 'ACTION'),
+      ('trainer7@email.com', 'trainerPass7', 'MAN', 29, '010-7777-7777', '이승기', 70.0, 175.0, 'TRAINER', '이승기', 'FITNESS', 4, 'PT Level 2', '운동 목표를 달성하도록 돕습니다.' , 250, 4.7, NOW(), NOW(), 'ACTION'),
+      ('trainer8@email.com', 'trainerPass8', 'WOMAN', 34, '010-8888-8888', '김연아', 62.0, 168.0, 'TRAINER', '김연아', 'PILATES', 7, '필라테스 강사', '코어 및 유연성 강사입니다.' , 330, 4.8, NOW(), NOW(), 'ACTION'),
+      ('trainer9@email.com', 'trainerPass9', 'MAN', 31, '010-9999-9999', '공유', 75.0, 178.0, 'TRAINER', '공유', 'CROSSFIT', 5, 'Crossfit Level 2', '고강도 크로스핏 훈련자입니다.' , 300, 4.6, NOW(), NOW(), 'ACTION'),
+      ('trainer10@email.com', 'trainerPass10', 'WOMAN', 27, '010-1010-1010', '송혜교', 57.0, 163.0, 'TRAINER', '송혜교', 'YOGA', 4, '명상 및 요가 강사', '요가와 명상 훈련을 제공합니다.' , 290, 4.5, NOW(), NOW(), 'ACTION'),
+      ('trainer11@email.com', 'trainerPass11', 'MAN', 36, '010-1112-1112', '손흥민', 78.0, 182.0, 'TRAINER', '손흥민', 'REHABILITATION', 10, '재활 트레이너 자격증', '부상 후 회복 운동을 돕습니다.', 420, 5.0, NOW(), NOW(), 'ACTION'),
+      ('trainer12@email.com', 'trainerPass12', 'WOMAN', 33, '010-1212-1212', '한지민', 64.0, 170.0, 'TRAINER', '한지민', 'NUTRITION', 6, '영양 전문가', '식단 관리 및 영양 상담 전문가입니다.' , 310, 4.7, NOW(), NOW(), 'ACTION'),
+      ('trainer13@email.com', 'trainerPass13', 'MAN', 28, '010-1313-1313', '박보검', 72.0, 177.0, 'TRAINER', '박보검', 'FITNESS', 3, '헬스 트레이너', '운동 입문자를 위한 강사입니다.' , 260, 4.5, NOW(), NOW(), 'ACTION'),
+      ('trainer14@email.com', 'trainerPass14', 'WOMAN', 30, '010-1414-1414', '신민아', 59.0, 164.0, 'TRAINER', '신민아', 'PILATES', 5, '필라테스 레벨 1', '기초부터 심화 과정까지 지도합니다.' , 280, 4.6, NOW(), NOW(), 'ACTION'),
+      ('trainer15@email.com', 'trainerPass15', 'MAN', 39, '010-1515-1515', '마동석', 88.0, 188.0, 'TRAINER', '마동석', 'CROSSFIT', 9, 'Crossfit Expert', '최고의 강도로 훈련을 진행합니다.' , 400, 4.9, NOW(), NOW(), 'ACTION');
 
 INSERT INTO tb_user_image (user_image_url, type, user_id) VALUES
                                                               ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/profiles/trainer1.png', 'PROFILE_IMG', 1),
@@ -54,7 +54,7 @@ INSERT INTO TB_Board (title, content, like_count, user_id) VALUES
                                                                ('운동 동기 부여', '헬스를 지속할 수 있는 동기를 찾는 방법에 대해 이야기합니다. 운동을 할 때 필요한 마음가짐과 목표 설정 방법도 다룹니다.', 5, 14),
                                                                ('운동 후 회복과 휴식', '운동 후 회복을 위한 중요한 요소들, 예를 들어 충분한 수면과 영양 섭취에 대해 이야기합니다.', 9, 15);
 
-INSERT INTO board_like (board_id, user_id) VALUES
+INSERT INTO tb_board_like (board_id, user_id) VALUES
                                                (1, 1), (1, 3), (1, 4), (1, 6), (1, 8),
                                                (2, 5), (2, 7), (2, 2), (2, 9), (2, 10),
                                                (3, 2), (3, 3), (3, 6), (3, 11), (3, 12),
@@ -242,3 +242,230 @@ VALUES
     ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt19.png', 'REGULAR', 40, 9),
     ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt20.png', 'REGULAR', 41, 10),
     ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt21.png', 'REGULAR', 42, 11);
+
+INSERT INTO tb_banner (user_image_url, user_id)
+VALUES
+    ('https://hellduo.s3.ap-northeast-2.amazonaws.com/banners/banner1.png', 1),
+    ('https://hellduo.s3.ap-northeast-2.amazonaws.com/banners/banner2.png', 2);
+
+INSERT INTO tb_comment (content, board_id, user_id) VALUES
+                                                        ('첫 번째 게시물에 대한 댓글입니다.', 1, 1),
+                                                        ('정말 도움이 되는 글이네요! 감사합니다.', 1, 2),
+                                                        ('저도 헬스 시작하려고 하는데 참고할게요.', 1, 3),
+                                                        ('주 3회 운동, 저도 시도해봐야겠네요.', 2, 4),
+                                                        ('꾸준히 운동하는 게 정말 중요한 것 같아요.', 2, 5),
+                                                        ('PT와의 첫 만남이라니, 기대되네요!', 3, 6),
+                                                        ('퍼스널 트레이너 추천받고 싶습니다.', 3, 7),
+                                                        ('스쿼트는 정말 하체에 최고인 것 같아요.', 4, 8),
+                                                        ('스쿼트와 데드리프트로 하체 근육이 많이 좋아졌습니다.', 4, 9),
+                                                        ('유산소와 근력 운동의 밸런스를 잘 맞춰야겠네요.', 5, 10),
+                                                        ('좋은 정보 감사합니다!', 5, 11),
+                                                        ('헬스에서 식단이 정말 중요하죠.', 6, 12),
+                                                        ('식단 관리가 운동만큼 힘들어요 ㅠㅠ', 6, 13),
+                                                        ('헬스장에서 실수 많이 해봤네요. 조심해야겠어요.', 7, 14),
+                                                        ('부상을 방지하는 게 정말 중요하죠.', 7, 15),
+                                                        ('체중 감량하면서 근육량도 늘리기 힘들던데 대단합니다.', 8, 1),
+                                                        ('초보자를 위한 운동 루틴 정말 좋아요.', 9, 2),
+                                                        ('운동 루틴 잘 참고하겠습니다!', 9, 3),
+                                                        ('상체 운동 팁 유익하네요. 덤벨 활용법 배워갑니다.', 10, 4),
+                                                        ('상체 운동도 중요하죠! 감사합니다.', 10, 5),
+                                                        ('체력 향상을 위한 훈련이 필요하네요.', 11, 6),
+                                                        ('운동 전 스트레칭은 꼭 해야 하는 것 같아요.', 12, 7),
+                                                        ('스트레칭 덕분에 부상이 줄어들었어요.', 12, 8),
+                                                        ('헬스장에서 부상 당한 적이 있어서 더 조심해야겠어요.', 13, 9),
+                                                        ('부상을 예방하는 정보 감사합니다.', 13, 10),
+                                                        ('운동 동기 부여가 필요했는데 이 글이 큰 도움이 됐어요.', 14, 11),
+                                                        ('꾸준히 하다 보면 동기부여도 생기겠죠.', 14, 12),
+                                                        ('운동 후 휴식이 정말 중요하죠.', 15, 13),
+                                                        ('충분한 수면과 영양 섭취 기억해야겠네요.', 15, 14),
+                                                        ('댓글로 좋은 의견 남겨주셔서 감사합니다.', 1, 15),
+                                                        ('저도 헬스 열심히 해봐야겠어요.', 2, 1),
+                                                        ('운동에 대해 잘 정리된 글이네요!', 3, 2),
+                                                        ('하체 근력에 더 신경을 써야겠네요.', 4, 3),
+                                                        ('유산소와 근력 운동의 밸런스 유지가 어렵네요.', 5, 4),
+                                                        ('헬스와 식단 관리법 정말 유익해요.', 6, 5),
+                                                        ('부상 예방을 위한 자세 교정이 필요하겠네요.', 7, 6),
+                                                        ('초보자 루틴 너무 좋아요! 따라 해볼게요.', 9, 7),
+                                                        ('상체 근력 운동 덕분에 팔 힘이 좋아졌어요.', 10, 8),
+                                                        ('체력 훈련법 정말 감사합니다!', 11, 9);
+
+
+INSERT INTO tb_notice (title, content, admin_id) VALUES
+                                                    ('사이트 점검 안내',
+                                                     '안녕하세요, 헬듀오 운영팀입니다.
+                                                      시스템 점검으로 인해 내일 오전 3시부터 오전 5시까지 약 2시간 동안 서비스가 일시 중단될 예정입니다.
+                                                      원활한 서비스 제공을 위한 점검 작업이오니 이용에 불편을 드리게 된 점 양해 부탁드립니다.
+                                                      작업이 완료되는 즉시 서비스를 정상화할 예정이며, 이용에 참고해주시길 바랍니다. 감사합니다.',
+                                                     1),
+
+                                                    ('신규 기능 업데이트',
+                                                     '안녕하세요, 헬듀오 운영팀입니다.
+                                                      이번에 저희 서비스에 신규 알림 기능이 추가되었습니다.
+                                                      이 기능을 통해 회원님들은 주요 공지사항, 이벤트 소식 및 계정 관련 알림을 더욱 빠르고 편리하게 확인할 수 있습니다.
+                                                      새로운 알림 기능은 설정 메뉴에서 활성화 및 비활성화가 가능하며, 원하는 알림 유형을 선택할 수도 있습니다.
+                                                      앞으로도 더 나은 서비스를 제공하기 위해 계속해서 노력하겠습니다. 많은 관심 부탁드립니다.',
+                                                     1),
+
+                                                    ('정기 점검 공지',
+                                                     '안녕하세요, 헬듀오 운영팀입니다.
+                                                      다음 주 월요일에 정기 시스템 점검이 예정되어 있습니다.
+                                                      점검 시간은 오전 2시부터 오전 6시까지로, 이 시간 동안 일부 서비스가 원활하게 작동하지 않을 수 있습니다.
+                                                      점검 작업은 시스템 성능 개선과 보안 강화를 위해 이루어지며, 더욱 안정적인 서비스를 제공하기 위함입니다.
+                                                      점검 이후에도 혹시나 발생할 수 있는 오류는 고객센터로 알려주시면 빠르게 처리하겠습니다.
+                                                      이용에 불편을 드려 죄송하며, 양해 부탁드립니다.',
+                                                     1),
+
+                                                    ('보안 패치 적용',
+                                                     '안녕하세요, 헬듀오 운영팀입니다.
+                                                      최근 보안 위협에 대응하기 위해 중요한 보안 패치가 적용되었습니다.
+                                                      이번 패치는 회원님의 계정 정보와 서비스 데이터를 보다 안전하게 보호하기 위한 작업으로,
+                                                      최신 보안 기술을 도입하여 외부 침입 및 해킹 시도를 방지하도록 강화되었습니다.
+                                                      안전한 사용을 위해 회원님들께서는 비밀번호를 정기적으로 변경하고, 보안 설정을 점검해주시길 권장드립니다.
+                                                      저희 헬듀오는 앞으로도 회원님의 정보 보호를 최우선으로 생각하며, 더욱 안전하고 신뢰할 수 있는 서비스를 제공하기 위해 최선을 다하겠습니다.
+                                                      감사합니다.',
+                                                     1);
+
+
+
+INSERT INTO tb_review (title, content, rating, pt_id, trainer_id) VALUES
+                                                                      ('최고의 PT 프로그램',
+                                                                       '이 PT 프로그램은 매우 유익했습니다. 트레이너의 지도와 세심한 관리 덕분에 목표를 빠르게 달성할 수 있었습니다.',
+                                                                       4.5,
+                                                                       15,  -- pt_id (PT 프로그램 15)
+                                                                       4),  -- trainer_id (트레이너 4)
+
+                                                                      ('트레이너가 훌륭해요',
+                                                                       '트레이너 분의 친절하고 세심한 관리로 운동을 즐기게 되었습니다. 항상 긍정적인 피드백을 주셔서 더욱 동기부여가 되었습니다.',
+                                                                       5.0,
+                                                                       16,  -- pt_id (PT 프로그램 16)
+                                                                       5),  -- trainer_id (트레이너 5)
+
+                                                                      ('PT로 체중 감량 성공',
+                                                                       '이 프로그램 덕분에 체중을 10kg 감량하는데 성공했습니다. 매우 체계적이고 효율적인 프로그램이었습니다.',
+                                                                       4.7,
+                                                                       17,  -- pt_id (PT 프로그램 17)
+                                                                       6),  -- trainer_id (트레이너 6)
+
+                                                                      ('운동을 즐겁게 할 수 있었어요',
+                                                                       '운동이 힘들고 지루할 줄 알았는데, 트레이너의 도움 덕분에 즐겁게 운동할 수 있었습니다. 감사합니다.',
+                                                                       4.3,
+                                                                       18,  -- pt_id (PT 프로그램 18)
+                                                                       7),  -- trainer_id (트레이너 7)
+
+                                                                      ('무리하지 않아서 좋았어요',
+                                                                       '트레이너님이 항상 제 상태를 체크하고 무리가 가지 않도록 조절해주셔서 매우 안전하게 운동할 수 있었습니다.',
+                                                                       4.6,
+                                                                       19,  -- pt_id (PT 프로그램 19)
+                                                                       8),  -- trainer_id (트레이너 8)
+
+                                                                      ('운동 효과가 확실하게 나타났어요',
+                                                                       '짧은 시간 안에 체형 변화가 느껴졌습니다. 트레이너님의 철저한 피드백 덕분에 효율적으로 운동할 수 있었습니다.',
+                                                                       4.8,
+                                                                       20,  -- pt_id (PT 프로그램 20)
+                                                                       9),  -- trainer_id (트레이너 9)
+
+                                                                      ('피로가 풀렸어요',
+                                                                       '이 PT는 정말 피로 회복에 도움이 되었습니다. 트레이너님의 지도 덕분에 몸이 가벼워진 느낌이 듭니다.',
+                                                                       4.4,
+                                                                       21,  -- pt_id (PT 프로그램 21)
+                                                                       10),  -- trainer_id (트레이너 10)
+
+                                                                      ('운동이 즐겁습니다',
+                                                                       '운동을 즐길 수 있게 해주신 트레이너님께 감사드립니다. 처음에는 힘들었지만, 점점 재미있어졌습니다.',
+                                                                       4.2,
+                                                                       22,  -- pt_id (PT 프로그램 22)
+                                                                       11),  -- trainer_id (트레이너 11)
+
+                                                                      ('PT 프로그램이 체형 변화에 도움을 주었어요',
+                                                                       'PT 프로그램 덕분에 복부와 하체의 체형 변화가 확실히 느껴졌습니다. 트레이너님의 프로그램이 아주 효과적이었어요.',
+                                                                       4.6,
+                                                                       23,  -- pt_id (PT 프로그램 23)
+                                                                       12),  -- trainer_id (트레이너 12)
+
+                                                                      ('꾸준히 운동할 수 있도록 도와주셨어요',
+                                                                       '트레이너님의 격려 덕분에 운동을 꾸준히 할 수 있었고, 목표를 달성했습니다. 더 좋은 결과를 위해 계속할 예정입니다.',
+                                                                       4.9,
+                                                                       24,  -- pt_id (PT 프로그램 24)
+                                                                       13),  -- trainer_id (트레이너 13)
+
+                                                                      ('체력이 많이 늘었어요',
+                                                                       '체력도 늘고, 운동을 시작한 지 1개월 만에 확실한 변화를 느꼈습니다. 매우 만족하고 있습니다.',
+                                                                       4.7,
+                                                                       25,  -- pt_id (PT 프로그램 25)
+                                                                       14),  -- trainer_id (트레이너 14)
+
+                                                                      ('근육량 증가',
+                                                                       '근육량을 늘리는 데 큰 도움이 되었습니다. 트레이너님이 체계적으로 운동을 지도해주셔서 효과를 봤습니다.',
+                                                                       5.0,
+                                                                       26,  -- pt_id (PT 프로그램 26)
+                                                                       4),  -- trainer_id (트레이너 4)
+
+                                                                      ('더 나은 결과를 위해 노력하고 있습니다',
+                                                                       '트레이너님이 제공하는 맞춤형 운동 프로그램 덕분에 점차 나아지는 결과를 느끼고 있습니다.',
+                                                                       4.3,
+                                                                       27,  -- pt_id (PT 프로그램 27)
+                                                                       5),  -- trainer_id (트레이너 5)
+
+                                                                      ('목표를 달성했어요',
+                                                                       '목표 체중을 달성할 수 있었고, 몸이 가벼워지는 기분이 들었습니다. 트레이너님 덕분이에요.',
+                                                                       4.8,
+                                                                       28,  -- pt_id (PT 프로그램 28)
+                                                                       6);  -- trainer_id (트레이너 6)
+
+
+INSERT INTO tb_review_image (review_image_url, review_id) VALUES
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt1.png', 1),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt2.png', 2),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt3.png', 3),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt4.png', 4),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt5.png', 5),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt6.png', 6),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt7.png', 7),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt8.png', 8),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt9.png', 9),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt10.png', 10),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt11.png', 11),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt12.png', 12),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt13.png', 13),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt14.png', 14),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt7.png', 1),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt8.png', 2),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt9.png', 3),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt10.png', 4),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt11.png', 5),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt12.png', 6),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt13.png', 7),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt14.png', 8),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt15.png', 9),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt16.png', 10),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt17.png', 11),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt18.png', 12);
+
+
+INSERT INTO tb_user_image (user_image_url, type, user_id) VALUES
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications1.png', 'CERTS_IMG', 4),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications2.png', 'CERTS_IMG', 5),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications3.png', 'CERTS_IMG', 6),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications4.png', 'CERTS_IMG', 7),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications5.png', 'CERTS_IMG', 8),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications6.png', 'CERTS_IMG', 9),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications7.png', 'CERTS_IMG', 10),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications8.png', 'CERTS_IMG', 11),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications9.png', 'CERTS_IMG', 12),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications10.png', 'CERTS_IMG', 13),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications1.png', 'CERTS_IMG', 14),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications2.png', 'CERTS_IMG', 15),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications3.png', 'CERTS_IMG', 5),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications4.png', 'CERTS_IMG', 6),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications5.png', 'CERTS_IMG', 7),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications6.png', 'CERTS_IMG', 8),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications7.png', 'CERTS_IMG', 9),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications8.png', 'CERTS_IMG', 10),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications9.png', 'CERTS_IMG', 11),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications10.png', 'CERTS_IMG', 12),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications2.png', 'CERTS_IMG', 13),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications3.png', 'CERTS_IMG', 14),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications9.png', 'CERTS_IMG', 15),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications10.png', 'CERTS_IMG', 13),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications1.png', 'CERTS_IMG', 14),
+                                                              ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/certifications/certifications2.png', 'CERTS_IMG', 15);

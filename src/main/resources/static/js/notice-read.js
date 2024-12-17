@@ -51,14 +51,14 @@ $(document).ready(function () {
     }
 
     // 삭제 버튼 클릭 이벤트
-    $('#delete-button').click(function () {
+    $('#notice-delete-button').click(function () {
         if (confirm("정말 이 공지사항을 삭제하시겠습니까?")) {
             deleteNotice();
         }
     });
 
     // 수정 버튼 클릭 이벤트
-    $('#update-button').click(function () {
+    $('#notice-update-button').click(function () {
         goToUpdatePage();
     });
 

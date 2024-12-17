@@ -5,7 +5,7 @@ import com.hellduo.domain.admin.dto.request.UserUpdateReq;
 import com.hellduo.domain.admin.dto.response.*;
 import com.hellduo.domain.admin.dto.request.NoticeReq;
 import com.hellduo.domain.admin.entity.Notice;
-import com.hellduo.domain.admin.entity.enums.UserStatus;
+import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.admin.repository.NoticeRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;

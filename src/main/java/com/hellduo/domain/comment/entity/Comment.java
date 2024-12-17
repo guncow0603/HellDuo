@@ -5,11 +5,12 @@ import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 
-@Entity
-@Data
+@Entity(name="tb_comment")
+@Getter
 @RequiredArgsConstructor
 public class Comment {
     @Id

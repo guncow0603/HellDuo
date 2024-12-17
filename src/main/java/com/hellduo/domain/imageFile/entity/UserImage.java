@@ -10,8 +10,7 @@ import org.hibernate.annotations.Comment;
 
 @Getter
 @NoArgsConstructor
-@Entity
-@Table(name = "tb_user_image")
+@Entity(name = "tb_user_image")
 public class UserImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

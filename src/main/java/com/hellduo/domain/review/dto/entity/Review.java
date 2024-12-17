@@ -1,4 +1,4 @@
-package com.hellduo.domain.review.entity;
+package com.hellduo.domain.review.dto.entity;
 
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.user.entity.User;
@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Entity
+@Entity(name ="tb_review")
 @RequiredArgsConstructor
 @Getter
 public class Review {

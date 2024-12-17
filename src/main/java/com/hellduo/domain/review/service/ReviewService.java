@@ -1,7 +1,5 @@
 package com.hellduo.domain.review.service;
 
-import com.hellduo.domain.board.dto.response.BoardReadRes;
-import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
@@ -11,7 +9,7 @@ import com.hellduo.domain.review.dto.request.ReviewCreateReq;
 import com.hellduo.domain.review.dto.response.GetReviewRes;
 import com.hellduo.domain.review.dto.response.GetReviewsRes;
 import com.hellduo.domain.review.dto.response.ReviewCreateRes;
-import com.hellduo.domain.review.entity.Review;
+import com.hellduo.domain.review.dto.entity.Review;
 import com.hellduo.domain.review.exception.ReviewErrorCode;
 import com.hellduo.domain.review.exception.ReviewException;
 import com.hellduo.domain.review.repository.ReviewRepository;

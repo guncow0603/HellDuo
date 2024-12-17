@@ -1,15 +1,11 @@
 package com.hellduo.domain.imageFile.service;
 
-import com.hellduo.domain.board.entity.Board;
-import com.hellduo.domain.board.repository.BoardRepository;
 import com.hellduo.domain.imageFile.dto.response.*;
-import com.hellduo.domain.imageFile.entity.BoardImage;
 import com.hellduo.domain.imageFile.entity.ReviewImage;
 import com.hellduo.domain.imageFile.exception.ImageErrorCode;
 import com.hellduo.domain.imageFile.exception.ImageException;
-import com.hellduo.domain.imageFile.repository.BoardImageRepository;
 import com.hellduo.domain.imageFile.repository.ReviewImageRepository;
-import com.hellduo.domain.review.entity.Review;
+import com.hellduo.domain.review.dto.entity.Review;
 import com.hellduo.domain.review.repository.ReviewRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.global.util.S3Uploader;
@@ -35,7 +31,7 @@ public class ReviewImageService {
         List<String> fileUrlList = uploadFilesToS3(multipartFiles, user.getId(), "reviews/");
         Review review = reviewRepository.findReviewByIdWithThrow(reviewId);
 
-        List<ReviewImage> userImageList = createReviewImageList(fileUrlList, user, review);
+        List<ReviewImage> userImageList = createReviewImageList(fileUrlList, review);
         reviewImageRepository.saveAll(userImageList);
         return new UploadReviewImagesRes("리뷰 이미지가 업로드 되었습니다.");
     }
@@ -50,11 +46,10 @@ public class ReviewImageService {
 
         return fileUrls;
     }
-    private List<ReviewImage> createReviewImageList(List<String> fileUrls, User user, Review review) {
+    private List<ReviewImage> createReviewImageList(List<String> fileUrls, Review review) {
         List<ReviewImage> reviewImageList = new ArrayList<>();
         for (String fileUrl : fileUrls) {
             reviewImageList.add(ReviewImage.builder()
-                    .user(user)
                     .reviewImageUrl(s3Url+fileUrl)
                     .review(review)
                     .build());

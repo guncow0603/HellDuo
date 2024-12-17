@@ -1,6 +1,6 @@
 package com.hellduo.domain.user.service;
 
-import com.hellduo.domain.admin.entity.enums.UserStatus;
+import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.imageFile.entity.UserImage;
 import com.hellduo.domain.imageFile.entity.enums.ImageType;
 import com.hellduo.domain.imageFile.repository.UserImageRepository;

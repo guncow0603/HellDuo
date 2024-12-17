@@ -14,16 +14,18 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="/js/basic.js"></script>
+    <script src="/js/admin.js"></script>
     <script src="/js/board-read.js"></script>
     <style>
         body {
-            background-color: #f4f6f9;
-            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa !important;
         }
-
         .container {
-            max-width: 900px;
-            margin-top: 30px;
+            margin-left: 250px !important;
+            padding: 20px !important;
+            background-color: #fff !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
         }
 
         .board-title {
@@ -124,6 +126,48 @@
         .comment-item .content {
             margin-top: 10px;
         }
+        .left-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 200px;
+        }
+
+        .left-menu a {
+            display: block;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .left-menu a:hover {
+            background-color: #0056b3;
+        }
+        #update-board-button {
+            background-color: #ffc107; /* 노란색으로 변경 */
+            color: #212529;
+        }
+
+        #update-board-button:hover {
+            background-color: #e0a800;
+        }
+
+        #delete-board-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #delete-board-button:hover {
+            background-color: #bd2130;
+        }
     </style>
 </head>
 
@@ -139,10 +183,10 @@
 
     </div>
 
-    <!-- 게시글 삭제 버튼 -->
-    <a href="#" class="delete-button" id="delete-board-button">게시글 삭제</a>
-
-    <a href="#" class="update-button" id="update-board-button">게시글 수정</a>
+    <div class="left-menu" id="pt-button">
+        <a id="delete-board-button" class="btn btn-danger">삭제</a>
+        <a id="update-board-button" class="btn btn-warning">수정</a>
+    </div>
 
     <!-- 댓글 작성 폼 -->
     <div class="comment-form">
@@ -160,6 +204,7 @@
         <button class="comment-button" id="edit-comment-submit">수정하기</button>
         <button class="comment-button" id="cancel-edit-comment">취소</button>
     </div>
+
 </div>
 </body>
 </html>

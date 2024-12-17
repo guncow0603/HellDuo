@@ -1,6 +1,6 @@
 package com.hellduo.domain.user.entity;
 
-import com.hellduo.domain.admin.entity.enums.UserStatus;
+import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.common.BaseEntity;
 import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;
