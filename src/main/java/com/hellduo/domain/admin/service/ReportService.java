@@ -47,9 +47,10 @@ public class ReportService {
                     new GetReportListRes(
                             report.getReporterUser().getEmail(),
                             report.getReportedUser().getEmail(),
-                            report.getReportReason(),
+                            report.getReportReason().getReportReason(),
                             report.getContent(),
-                            report.getReportedUser().getId()));
+                            report.getReportedUser().getId(),
+                            report.getReportedUser().getUserStatus()));
         }
         return getReportListRes;
     }

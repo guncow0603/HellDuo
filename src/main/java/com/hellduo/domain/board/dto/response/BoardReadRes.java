@@ -4,7 +4,8 @@ public record BoardReadRes(
         Long boardId,
         Long boardLikeCount,
         String title,
-        String content
+        String content,
+        Long userId
 ){
     
 }

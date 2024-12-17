@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HellDuo</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- js-cookie -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <!-- sockjs-client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+    <script src="/js/admin.js"></script>
+</head>
+
+<body>
+<!-- Header -->
+<header id="header"></header>
+
+<div class="container mt-4">
+    <h2 class="mb-4">신고 목록</h2>
+
+    <!-- 신고 목록 테이블 -->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>신고자 이메일</th>
+            <th>신고 대상 이메일</th>
+            <th>신고 사유</th>
+            <th>내용</th>
+            <th>신고 대상 ID</th>
+        </tr>
+        </thead>
+        <tbody id="reports-list">
+        <!-- 신고 목록 데이터가 여기에 추가됩니다. -->
+        </tbody>
+    </table>
+
+    <div id="error-message" class="text-danger"></div>
+</div>
+
+<!-- 알림 메시지 -->
+<div id="statusUpdateAlert" class="alert alert-success" style="display: none;">
+    상태가 성공적으로 업데이트되었습니다.
+</div>
+<div id="statusUpdateErrorAlert" class="alert alert-danger" style="display: none;">
+    상태 업데이트에 실패했습니다.
+</div>
+
+<script>
+    $(document).ready(function () {
+        // 신고 목록을 가져오는 함수
+        function loadReportList() {
+            $.ajax({
+                url: "/api/v1/report/admin", // 백엔드 엔드포인트
+                type: "GET",
+                contentType: "application/json",
+                success: function (response) {
+                    // 테이블에 데이터 추가
+                    let reportListHtml = "";
+                    response.forEach((report, index) => {
+                        let buttonHtml = '';
+
+                        if (report.userStatus === 'ACTION') {
+                            buttonHtml = `
+                                    <button class="btn btn-danger update-status-btn" data-reported-id="${report.reportedId}" data-new-status="DELETED">회원 정지</button>
+                                `;
+                        } else if (report.userStatus === 'DELETED') {
+                            buttonHtml = `
+                                    <button class="btn btn-primary update-status-btn" data-reported-id="${report.reportedId}" data-new-status="ACTION">정지 해제</button>
+                                `;
+                        }
+
+                        reportListHtml += `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${report.reporterEmail}</td>
+                                    <td>${report.reportedEmail}</td>
+                                    <td>${report.reportReason}</td>
+                                    <td>${report.content}</td>
+                                    <td>${buttonHtml}</td>
+                                </tr>
+                            `;
+                    });
+                    $("#reports-list").html(reportListHtml);
+                },
+                error: function (xhr) {
+                    $("#error-message").text("신고 목록을 불러오는 데 실패했습니다.");
+                }
+            });
+        }
+
+        // 최초 페이지 로딩 시 신고 목록 로드
+        loadReportList();
+
+        // 이벤트 위임: 동적으로 추가된 버튼에 클릭 이벤트 적용
+        $(document).on("click", ".update-status-btn", function () {
+            const reportedId = $(this).data("reported-id"); // 신고 대상 ID 가져오기
+            const newStatus = $(this).data("new-status"); // 새 상태 가져오기
+            const button = $(this); // 버튼 자체를 참조
+
+            // 상태 업데이트 요청
+            $.ajax({
+                url: "/api/v1/admin/userUpdate",
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    userId: reportedId,
+                    userStatus: newStatus
+                }),
+                success: function (response) {
+                    // 성공 알림 표시
+                    $("#statusUpdateAlert").fadeIn().delay(2000).fadeOut();
+
+                    // 버튼 텍스트 및 스타일 업데이트
+                    if (newStatus === "DELETED") {
+                        button.text("정지 해제").removeClass("btn-danger").addClass("btn-primary");
+                    } else {
+                        button.text("회원 정지").removeClass("btn-primary").addClass("btn-danger");
+                    }
+
+                    // 신고 목록 다시 로드 (리로드처럼 보이게)
+                    loadReportList();
+                },
+                error: function (error) {
+                    // 실패 알림 표시
+                    $("#statusUpdateErrorAlert").fadeIn().delay(2000).fadeOut();
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+
+</html>
