@@ -1,5 +1,5 @@
 const boardId = window.location.pathname.split("/").pop(); // 게시글 ID 추출
-
+var userId;
 // 게시글 조회
 async function getBoardById(boardId) {
     try {
@@ -16,7 +16,6 @@ async function getBoardById(boardId) {
         alert('게시글을 불러오는 중 오류가 발생했습니다.');
     }
 }
-
 // 게시글 상세 내용 렌더링
 function renderBoardDetails(board) {
     const boardDetails = document.getElementById('board-details');
@@ -32,6 +31,7 @@ function renderBoardDetails(board) {
             </button>
         </div>
     `;
+    userId=board.userId;
 }
 
 // 이미지 조회 및 렌더링
@@ -202,5 +202,8 @@ $(document).ready(function () {
     // 게시글 수정 페이지로 이동
     $('#update-board-button').click(() => {
         window.location.href = `/api/v1/page/boardUpdate/${boardId}`;
+    });
+    document.getElementById('report').addEventListener('click', () => {
+        window.location.href = `/api/v1/page/reportCreate/${userId}`;
     });
 });

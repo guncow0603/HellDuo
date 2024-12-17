@@ -45,7 +45,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardReadRes getBoard(Long boardId) {
         Board board = boardRepository.findBoardByIdWithThrow(boardId); // 조회만 하는 메서드이므로 읽기 전용 트랜잭션 적용
-        return new BoardReadRes(board.getId(), board.getLikeCount(), board.getTitle(), board.getContent());
+        return new BoardReadRes(board.getId(), board.getLikeCount(), board.getTitle(), board.getContent(),board.getUser().getId());
     }
 
     // 모든 게시글 조회 (읽기 전용 트랜잭션 적용)

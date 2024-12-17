@@ -157,6 +157,10 @@ $(document).ready(function() {
         window.location.href = `/api/v1/page/user-profile/${ptId}`;
     });
 
+    document.getElementById('report').addEventListener('click', () => {
+        window.location.href = `/api/v1/page/reportCreate/${trainerId}`;
+    });
+
     // PT 완료 버튼 클릭
     $('#complete-pt-btn').click(function () {
         fetch(`/api/v1/pt/completed/${ptId}`, {

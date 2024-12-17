@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/api/v1/page")
@@ -39,5 +40,16 @@ public class AdminPageController {
     @GetMapping("/userList")
     public String userListPage(){
         return "/admin/user-list";
+    }
+
+    @GetMapping("/reportCreate/{userId}")
+    public String reportCreatePage(@PathVariable Long userId, Model model) {
+        model.addAttribute("userId", userId);
+        return "/admin/report-create";
+    }
+
+    @GetMapping("/reportList")
+    public String reportListPage() {
+        return "/admin/report-list";
     }
 }
