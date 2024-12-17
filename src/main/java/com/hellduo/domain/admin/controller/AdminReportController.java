@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/report")
 @RestController
 public class AdminReportController {
     private final ReportService reportService;
-    @PostMapping("/report")
+    @PostMapping
     public ResponseEntity<UserReportRes> reportCreate(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                       @RequestBody UserReportReq req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(reportService.reportCreate(userDetails.getUser(),req));
     }
-    @GetMapping("/report")
+    @GetMapping("/admin")
     public ResponseEntity<List<GetReportListRes>> getReportList(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return ResponseEntity.status(HttpStatus.OK).body(reportService.getReportList(userDetails.getUser()));

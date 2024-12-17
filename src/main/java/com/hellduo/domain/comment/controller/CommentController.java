@@ -28,7 +28,7 @@ public class CommentController {
                 @RequestBody CommentCreatReq req,
                 @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.commentCreate(req,userDetails.getUser().getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.commentCreate(req,userDetails.getUser()));
     }
 
     @GetMapping("/{boardId}")

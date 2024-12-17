@@ -1,6 +1,6 @@
 package com.hellduo.domain.user.service;
 
-import com.hellduo.domain.admin.entity.enums.UserStatus;
+import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.imageFile.entity.UserImage;
 import com.hellduo.domain.imageFile.entity.enums.ImageType;
 import com.hellduo.domain.imageFile.repository.UserImageRepository;
@@ -145,6 +145,7 @@ public class UserService {
                 .certifications(certifications)
                 .bio(bio)
                 .nickname(name)
+                .userStatus(UserStatus.ACTION)
                 .build();
 
         UserImage userImage = UserImage.builder()
@@ -212,13 +213,17 @@ public class UserService {
                 trainer.getRating());
     }
 
-    public UserProfileUpdateRes updateUserProfile(User user, UserProfileUpdateReq req) {
+    public UserProfileUpdateRes updateUserProfile(Long userId, UserProfileUpdateReq req) {
+        User user= userRepository.findUserByIdWithThrow(userId);
+
         if (userRepository.findByPhoneNumber(req.phoneNumber()).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_PHONE_NUMBER);
         }
+
         if (userRepository.findByNickname(req.nickname()).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_NICKNAME);
         }
+
         // 전화번호 업데이트
         if (req.phoneNumber() != null && !req.phoneNumber().isEmpty()) { user.updatePhoneNumber(req.phoneNumber()); }
         // 나이 업데이트
@@ -233,8 +238,8 @@ public class UserService {
         return new UserProfileUpdateRes("수정 완료");
     }
 
-    public TrainerProfileUpdateRes updateTrainerProfile(User trainer, TrainerProfileUpdateReq req) {
-
+    public TrainerProfileUpdateRes updateTrainerProfile(Long trainerId, TrainerProfileUpdateReq req) {
+        User trainer = userRepository.findUserByIdWithThrow(trainerId);
 
         if (userRepository.findByPhoneNumber(req.phoneNumber()).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_PHONE_NUMBER);

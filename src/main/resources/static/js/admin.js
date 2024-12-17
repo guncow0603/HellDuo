@@ -11,6 +11,9 @@ $(document).ready(function () {
         const role = getUserRole();
         if (role === 'ADMIN') {
             loadAdminHeader()
+            $('#update-board-button').hide();
+            $('#notice-update-button').show();
+            $('#notice-delete-button').show();
             $('#board-create-button').hide();
             $('#review-create-button').hide();
             $('#reserve-btn').hide();

@@ -64,7 +64,7 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readUserProfileImage(userDetails.getUser().getId()));
     }
 
-    // 프로필 이미지 조회
+    // 트레이너 프로필 이미지 조회
     @GetMapping("/profile/{trainerId}")
     public ResponseEntity<UserImageReadRes> getUserProfileImage(
             @PathVariable Long trainerId
@@ -102,7 +102,7 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readBannerImages());
     }
 
-    // 배너 이미지 조회
+    // 배너 이미지 삭제
     @DeleteMapping("/banner/{bannerId}")
     public ResponseEntity<BannerImageDeleteRes> readBannerImages(
             @AuthenticationPrincipal UserDetailsImpl userDetails,

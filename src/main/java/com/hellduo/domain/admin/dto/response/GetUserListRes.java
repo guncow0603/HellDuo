@@ -1,5 +1,7 @@
 package com.hellduo.domain.admin.dto.response;
 
+import com.hellduo.domain.user.entity.enums.UserStatus;
+
 public record GetUserListRes(
         Long id,
         String name,
@@ -9,6 +11,7 @@ public record GetUserListRes(
         String phoneNumber, // 전화번호
         String nickname,    // 닉네임
         Double weight,    // 체중
-        Double height
+        Double height,
+        UserStatus userStatus
 ) {
 }

@@ -1,4 +1,4 @@
-package com.hellduo.domain.admin.entity.enums;
+package com.hellduo.domain.user.entity.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

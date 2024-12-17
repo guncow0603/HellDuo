@@ -10,6 +10,7 @@ import com.hellduo.domain.board.repository.BoardRepository;
 import com.hellduo.domain.imageFile.entity.BoardImage;
 import com.hellduo.domain.imageFile.repository.BoardImageRepository;
 import com.hellduo.domain.user.entity.User;
+import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,7 +80,7 @@ public class BoardService {
     @Transactional
     public BoardDeleteRes deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findBoardByIdWithThrow(boardId); // 게시글 조회
-        if (!board.getUser().getId().equals(user.getId())) { // 사용자 확인
+        if (!board.getUser().getId().equals(user.getId())&& !user.getRole().equals(UserRoleType.ADMIN)) { // 사용자 확인
             throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
         }
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);

@@ -4,9 +4,11 @@ import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Entity
+@Entity(name="tb_board_like")
+@Getter
 @RequiredArgsConstructor
 public class BoardLike {
     @Id

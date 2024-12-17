@@ -4,7 +4,7 @@ import com.hellduo.domain.common.BaseEntity;
 import com.hellduo.domain.imageFile.entity.PTImage;
 import com.hellduo.domain.pt.entity.enums.PTSpecialization;
 import com.hellduo.domain.pt.entity.enums.PTStatus;
-import com.hellduo.domain.review.entity.Review;
+import com.hellduo.domain.review.dto.entity.Review;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;

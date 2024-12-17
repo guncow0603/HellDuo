@@ -1,9 +1,6 @@
 package com.hellduo.domain.review.repository;
 
-import com.hellduo.domain.pt.entity.PT;
-import com.hellduo.domain.pt.exception.PTErrorCode;
-import com.hellduo.domain.pt.exception.PTException;
-import com.hellduo.domain.review.entity.Review;
+import com.hellduo.domain.review.dto.entity.Review;
 import com.hellduo.domain.review.exception.ReviewErrorCode;
 import com.hellduo.domain.review.exception.ReviewException;
 import org.springframework.data.jpa.repository.JpaRepository;

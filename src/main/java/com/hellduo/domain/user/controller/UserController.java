@@ -59,7 +59,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody UserProfileUpdateReq req){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.updateUserProfile(userDetails.getUser(),req));
+                .body(userService.updateUserProfile(userDetails.getUser().getId(),req));
     }
 
     @PutMapping("/trainer")
@@ -67,7 +67,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody TrainerProfileUpdateReq req){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.updateTrainerProfile(userDetails.getUser(),req));
+                .body(userService.updateTrainerProfile(userDetails.getUser().getId(),req));
     }
 
     @PostMapping("/logout")

@@ -1,6 +1,6 @@
 package com.hellduo.domain.user.entity;
 
-import com.hellduo.domain.admin.entity.enums.UserStatus;
+import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.common.BaseEntity;
 import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;
@@ -146,7 +146,7 @@ public class User extends BaseEntity {
     public void updateBio(String bio) {
         this.bio = bio;
     }
-    public void updateUserStatus(UserStatus userStatus) {}
+    public void updateUserStatus(UserStatus userStatus) { this.userStatus = userStatus; }
     public void addPoint(Long point) {
         this.point += point;
     }
