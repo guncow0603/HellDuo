@@ -146,7 +146,7 @@ public class User extends BaseEntity {
     public void updateBio(String bio) {
         this.bio = bio;
     }
-    public void updateUserStatus(UserStatus userStatus) {}
+    public void updateUserStatus(UserStatus userStatus) { this.userStatus = userStatus; }
     public void addPoint(Long point) {
         this.point += point;
     }

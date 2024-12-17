@@ -5,6 +5,6 @@ import com.hellduo.domain.user.entity.enums.UserStatus;
 public record UserUpdateReq
         (
                 Long userId,
-                UserStatus userstatus
+                UserStatus userStatus
         ) {
 }

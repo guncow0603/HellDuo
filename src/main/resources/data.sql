@@ -1,22 +1,22 @@
 INSERT INTO TB_USER (
     email, password, gender, age, phone_number, nickname, weight, height, role, name, specialization, experience, certifications, bio, point, rating, created_at, modified_at, user_status
 ) VALUES
-      ('admin@email.com', '$2a$10$0RZk/.Sti/Zg4whSYptoSO38eLry3MjRz648MEPOcdW2zhpSquA6i', 'MAN', 32, '010-1111-1112', '관리자', 80.0, 185.0, 'ADMIN', '김철수', 'PILATES', 5, 'PT Level 1', '피트니스 전문가입니다.', 300, 4.8, NOW(), NOW(), 'ACTION'),
-      ('user1@email.com', '$2a$10$0RZk/.Sti/Zg4whSYptoSO38eLry3MjRz648MEPOcdW2zhpSquA6i', 'MAN', 32, '010-1111-1111', '유저1', 80.0, 185.0, 'USER', '김철수', 'PILATES', 5, 'PT Level 1', '피트니스 전문가입니다.', 300, 4.8, NOW(), NOW(), 'ACTION'),
-      ('user2@email.com', 'userPass2', 'WOMAN', 28, '010-2222-2222', '유저2', 60.0, 165.0, 'USER', '이영희', 'YOGA', 4, '요가 강사 자격증', '요가 전문 강사입니다.' , 280, 4.7, NOW(), NOW(), 'ACTION'),
-      ('user3@email.com', 'userPass3', 'MAN', 35, '010-3333-3333', '유저3', 90.0, 190.0, 'USER', '박성민', 'CROSSFIT', 6, 'Crossfit Level 1', '크로스핏 전문가입니다.', 350, 4.9, NOW(), NOW(), 'ACTION'),
-      ('trainer4@email.com', 'trainerPass4', 'WOMAN', 30, '010-4444-4444', '최은정', 58.0, 162.0, 'TRAINER', '최은정', 'PILATES', 5, '필라테스 Level 2', '필라테스 강사입니다.', 310, 4.6, NOW(), NOW(), 'ACTION'),
-      ('trainer5@email.com', 'trainerPass5', 'MAN', 40, '010-5555-5555', '강호동', 85.0, 180.0, 'TRAINER', '강호동', 'REHABILITATION', 8, '재활운동 전문가', '재활 운동을 돕습니다.' , 400, 5.0, NOW(), NOW(), 'ACTION'),
-      ('trainer6@email.com', 'trainerPass6', 'WOMAN', 26, '010-6666-6666', '수지', 55.0, 160.0, 'TRAINER', '수지', 'NUTRITION', 3, '영양사 자격증', '영양 관리 전문입니다.' , 220, 4.5, NOW(), NOW(), 'ACTION'),
-      ('trainer7@email.com', 'trainerPass7', 'MAN', 29, '010-7777-7777', '이승기', 70.0, 175.0, 'TRAINER', '이승기', 'FITNESS', 4, 'PT Level 2', '운동 목표를 달성하도록 돕습니다.' , 250, 4.7, NOW(), NOW(), 'ACTION'),
-      ('trainer8@email.com', 'trainerPass8', 'WOMAN', 34, '010-8888-8888', '김연아', 62.0, 168.0, 'TRAINER', '김연아', 'PILATES', 7, '필라테스 강사', '코어 및 유연성 강사입니다.' , 330, 4.8, NOW(), NOW(), 'ACTION'),
-      ('trainer9@email.com', 'trainerPass9', 'MAN', 31, '010-9999-9999', '공유', 75.0, 178.0, 'TRAINER', '공유', 'CROSSFIT', 5, 'Crossfit Level 2', '고강도 크로스핏 훈련자입니다.' , 300, 4.6, NOW(), NOW(), 'ACTION'),
-      ('trainer10@email.com', 'trainerPass10', 'WOMAN', 27, '010-1010-1010', '송혜교', 57.0, 163.0, 'TRAINER', '송혜교', 'YOGA', 4, '명상 및 요가 강사', '요가와 명상 훈련을 제공합니다.' , 290, 4.5, NOW(), NOW(), 'ACTION'),
-      ('trainer11@email.com', 'trainerPass11', 'MAN', 36, '010-1112-1112', '손흥민', 78.0, 182.0, 'TRAINER', '손흥민', 'REHABILITATION', 10, '재활 트레이너 자격증', '부상 후 회복 운동을 돕습니다.', 420, 5.0, NOW(), NOW(), 'ACTION'),
-      ('trainer12@email.com', 'trainerPass12', 'WOMAN', 33, '010-1212-1212', '한지민', 64.0, 170.0, 'TRAINER', '한지민', 'NUTRITION', 6, '영양 전문가', '식단 관리 및 영양 상담 전문가입니다.' , 310, 4.7, NOW(), NOW(), 'ACTION'),
-      ('trainer13@email.com', 'trainerPass13', 'MAN', 28, '010-1313-1313', '박보검', 72.0, 177.0, 'TRAINER', '박보검', 'FITNESS', 3, '헬스 트레이너', '운동 입문자를 위한 강사입니다.' , 260, 4.5, NOW(), NOW(), 'ACTION'),
-      ('trainer14@email.com', 'trainerPass14', 'WOMAN', 30, '010-1414-1414', '신민아', 59.0, 164.0, 'TRAINER', '신민아', 'PILATES', 5, '필라테스 레벨 1', '기초부터 심화 과정까지 지도합니다.' , 280, 4.6, NOW(), NOW(), 'ACTION'),
-      ('trainer15@email.com', 'trainerPass15', 'MAN', 39, '010-1515-1515', '마동석', 88.0, 188.0, 'TRAINER', '마동석', 'CROSSFIT', 9, 'Crossfit Expert', '최고의 강도로 훈련을 진행합니다.' , 400, 4.9, NOW(), NOW(), 'ACTION');
+      ('admin@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 32, '010-1111-1112', '관리자', 80.0, 185.0, 'ADMIN', '김철수', 'PILATES', 5, 'PT Level 1', '피트니스 전문가입니다.', 300, 4.8, NOW(), NOW(), 'ACTION'),
+      ('user@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 32, '010-1111-1111', '유저1', 80.0, 185.0, 'USER', '김철수', 'PILATES', 5, 'PT Level 1', '피트니스 전문가입니다.', 300, 4.8, NOW(), NOW(), 'ACTION'),
+      ('user2@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'WOMAN', 28, '010-2222-2222', '유저2', 60.0, 165.0, 'USER', '이영희', 'YOGA', 4, '요가 강사 자격증', '요가 전문 강사입니다.' , 280, 4.7, NOW(), NOW(), 'ACTION'),
+      ('user3@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 35, '010-3333-3333', '유저3', 90.0, 190.0, 'USER', '박성민', 'CROSSFIT', 6, 'Crossfit Level 1', '크로스핏 전문가입니다.', 350, 4.9, NOW(), NOW(), 'ACTION'),
+      ('trainer@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'WOMAN', 30, '010-4444-4444', '최은정', 58.0, 162.0, 'TRAINER', '최은정', 'PILATES', 5, '필라테스 Level 2', '필라테스 강사입니다.', 310, 4.6, NOW(), NOW(), 'ACTION'),
+      ('trainer5@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 40, '010-5555-5555', '강호동', 85.0, 180.0, 'TRAINER', '강호동', 'REHABILITATION', 8, '재활운동 전문가', '재활 운동을 돕습니다.' , 400, 5.0, NOW(), NOW(), 'ACTION'),
+      ('trainer6@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'WOMAN', 26, '010-6666-6666', '수지', 55.0, 160.0, 'TRAINER', '수지', 'NUTRITION', 3, '영양사 자격증', '영양 관리 전문입니다.' , 220, 4.5, NOW(), NOW(), 'ACTION'),
+      ('trainer7@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 29, '010-7777-7777', '이승기', 70.0, 175.0, 'TRAINER', '이승기', 'FITNESS', 4, 'PT Level 2', '운동 목표를 달성하도록 돕습니다.' , 250, 4.7, NOW(), NOW(), 'ACTION'),
+      ('trainer8@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'WOMAN', 34, '010-8888-8888', '김연아', 62.0, 168.0, 'TRAINER', '김연아', 'PILATES', 7, '필라테스 강사', '코어 및 유연성 강사입니다.' , 330, 4.8, NOW(), NOW(), 'ACTION'),
+      ('trainer9@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 31, '010-9999-9999', '공유', 75.0, 178.0, 'TRAINER', '공유', 'CROSSFIT', 5, 'Crossfit Level 2', '고강도 크로스핏 훈련자입니다.' , 300, 4.6, NOW(), NOW(), 'ACTION'),
+      ('trainer10@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'WOMAN', 27, '010-1010-1010', '송혜교', 57.0, 163.0, 'TRAINER', '송혜교', 'YOGA', 4, '명상 및 요가 강사', '요가와 명상 훈련을 제공합니다.' , 290, 4.5, NOW(), NOW(), 'ACTION'),
+      ('trainer11@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 36, '010-1112-1112', '손흥민', 78.0, 182.0, 'TRAINER', '손흥민', 'REHABILITATION', 10, '재활 트레이너 자격증', '부상 후 회복 운동을 돕습니다.', 420, 5.0, NOW(), NOW(), 'ACTION'),
+      ('trainer12@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'WOMAN', 33, '010-1212-1212', '한지민', 64.0, 170.0, 'TRAINER', '한지민', 'NUTRITION', 6, '영양 전문가', '식단 관리 및 영양 상담 전문가입니다.' , 310, 4.7, NOW(), NOW(), 'ACTION'),
+      ('trainer13@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 28, '010-1313-1313', '박보검', 72.0, 177.0, 'TRAINER', '박보검', 'FITNESS', 3, '헬스 트레이너', '운동 입문자를 위한 강사입니다.' , 260, 4.5, NOW(), NOW(), 'ACTION'),
+      ('trainer14@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'WOMAN', 30, '010-1414-1414', '신민아', 59.0, 164.0, 'TRAINER', '신민아', 'PILATES', 5, '필라테스 레벨 1', '기초부터 심화 과정까지 지도합니다.' , 280, 4.6, NOW(), NOW(), 'ACTION'),
+      ('trainer15@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 39, '010-1515-1515', '마동석', 88.0, 188.0, 'TRAINER', '마동석', 'CROSSFIT', 9, 'Crossfit Expert', '최고의 강도로 훈련을 진행합니다.' , 400, 4.9, NOW(), NOW(), 'ACTION');
 
 INSERT INTO tb_user_image (user_image_url, type, user_id) VALUES
                                                               ('https://hellduo.s3.ap-northeast-2.amazonaws.com/users/profiles/trainer1.png', 'PROFILE_IMG', 1),

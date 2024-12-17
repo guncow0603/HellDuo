@@ -100,7 +100,8 @@ public class AdminService {
                         user1.getPhoneNumber(),
                         user1.getNickname(),
                         user1.getWeight(),
-                        user1.getHeight()));
+                        user1.getHeight(),
+                        user1.getUserStatus()));
             }
         }
         return userResList;
@@ -124,23 +125,24 @@ public class AdminService {
                         user1.getSpecialization().getName(),
                         user1.getExperience(),
                         user1.getCertifications(),
-                        user1.getBio()));
+                        user1.getBio(),
+                        user1.getUserStatus()));
             }
         }
         return trainerResList;
     }
-
+    @Transactional
     public UserUpdateRes userUpdate(User admin, UserUpdateReq req) {
         if (admin.getRole() != UserRoleType.ADMIN) {
             throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
         }
         User user = userRepository.findUserByIdWithThrow(req.userId());
-        if (req.userstatus().equals(UserStatus.DELETED)) {
+        if (req.userStatus().equals(UserStatus.DELETED)) {
             user.updateUserStatus(UserStatus.DELETED);
-        } else if (req.userstatus().equals(UserStatus.REST)) {
+        } else if (req.userStatus().equals(UserStatus.REST)) {
             user.updateUserStatus(UserStatus.REST);
         }
-        else if (req.userstatus().equals(UserStatus.ACTION)){
+        else if (req.userStatus().equals(UserStatus.ACTION)){
             user.updateUserStatus(UserStatus.ACTION);
         }
         return new UserUpdateRes("유저상태 변경완료");

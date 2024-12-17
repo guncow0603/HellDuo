@@ -35,4 +35,9 @@ public class AdminPageController {
         model.addAttribute("noticeId", noticeId);
         return "/admin/notice-update";
     }
+
+    @GetMapping("/userList")
+    public String userListPage(){
+        return "/admin/user-list";
+    }
 }
