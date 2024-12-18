@@ -43,18 +43,23 @@ jobs:
 
       - name: Test with Gradle
         env:
-          REDIS_HOST: localhost  # 로컬 테스트용
-          REDIS_PORT: 6379
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          S3_URL: ${{ secrets.S3_URL }}
+          DB_DATABASE_NAME: ${{ secrets.DB_DATABASE_NAME }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          FAIL_URL: ${{ secrets.FAIL_URL }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+          S3_URL: ${{ secrets.S3_URL }}
+          SUCCESS_URL: ${{ secrets.SUCCESS_URL }}
           TOSS_CLIENT_KEY: ${{ secrets.TOSS_CLIENT_KEY }}
           TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
-          SUCCESS_URL: ${{ secrets.SUCCESS_URL }}
-          FAIL_URL: ${{ secrets.FAIL_URL }}
-        run: ./gradlew test
+          REDIS_HOST: redis   # Redis 호스트
+          REDIS_PORT: 6379    # Redis 포트
+        run: ./gradlew test -Dspring.profiles.active=test
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
