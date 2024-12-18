@@ -44,7 +44,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserImageRepository userImageRepository;
     private final PTRepository ptRepository;
-    @Value("${ADMIN_TOKEN}")
+    @Value("${admin_token}")
     private String ADMIN_TOKEN;
 
     public UserSignupRes signup(UserSignupReq req) {
