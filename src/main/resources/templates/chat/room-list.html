@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+  <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+          integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+  <script src="/js/basic.js"></script>
+</head>
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  #chatRoomList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .chat-room-card {
+    width: 25rem;
+    margin: 15px; /* 카드 간격을 조절합니다. */
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과를 추가합니다. */
+  }
+
+  .chat-room-card:hover {
+    transform: scale(1.05);
+  }
+
+  .card-body {
+    background-color: #ffffff;
+    padding: 20px;
+  }
+
+  .card-title {
+    color: #343a40;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+</style>
+
+<body>
+<header id="header"></header>
+<div class="container mt-4">
+</div>
+
+<div class="container">
+  <div id="chatRoomList" class="d-flex flex-wrap justify-content-around">
+    <div class="card chat-room-card">
+      <div class="card-body">
+        <h5 class="card-title">채팅방 1</h5>
+        <a href="/api/v1/chats/room/1" class="btn btn-primary">
+          <i class="fas fa-comments"></i> 채팅방 입장
+          <i class="fasout fa-comments"></i> 채팅방 종료
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script th:inline="javascript">
+  const host = 'http://' + window.location.host;
+  const userId = /*[[${userId}]]*/
+
+
+      $(document).ready(function () {
+
+        $('#header-chat-list').empty(); // 알림표시 제거
+        $('#header-chat-list').text('채팅방');
+
+        $.ajax({
+          type: 'GET',
+          url: `/api/v1/chats/rooms`,
+        })
+        .done(function (res) {
+          $('#chatRoomList').empty();
+          console.log(res);
+          renderChatRoomList(res);
+
+        })
+        .fail(function (res) {
+          const jsonObject = JSON.parse(res.responseText);
+          const messages = jsonObject.messages;
+          alert(messages);
+        });
+
+        $('#my-page').click(function (event) {
+          event.preventDefault(); // Prevents the default behavior of the link
+
+          const auth = getToken();
+          if (auth === undefined || auth === '') {
+            alert('로그인 후 이용 가능합니다.');
+          } else {
+            // If authentication is valid, navigate to the link
+            window.location.href = $(this).attr('href');
+          }
+        });
+      });
+
+  function renderChatRoomList(chatRoomList) {
+
+    var roomListContainer = document.getElementById('chatRoomList');
+    chatRoomList.forEach(function (chatRoom) {
+
+      // 새로운 채팅방 카드 생성
+      const chatRoomCard = document.createElement('div');
+      chatRoomCard.className = 'card chat-room-card';
+
+      // 채팅방 카드의 내용 생성
+      const cardBody = document.createElement('div');
+      cardBody.className = 'card-body';
+
+// 채팅방 제목 생성
+      const cardTitle = document.createElement('h5');
+      cardTitle.className = 'card-title';
+      cardTitle.textContent = chatRoom.id + '번 채팅방';
+      cardTitle.textContent = chatRoom.sender + '와' + chatRoom.receiver + '의 채팅방';
+
+// 채팅방 입장 버튼 생성
+      const enterButton = document.createElement('a');
+      enterButton.href = '/api/v1/chats/rooms/' + chatRoom.id + '/front';
+      enterButton.className = 'btn btn-primary';
+      enterButton.innerHTML = '<i class="fas fa-comments"></i> 채팅방 입장';
+
+      const outButton = document.createElement('button');
+      outButton.textContent = '채팅방 종료'
+      outButton.className = 'btn btn-danger';
+      outButton.style.float = 'right';
+      outButton.addEventListener("click", function () {
+        // 클로저 내에서 buttonClickHandler 함수를 호출하면서 인자를 전달합니다.
+        removeRoom(chatRoom.id);
+      });
+
+// 버튼을 카드의 내용에 추가
+      cardBody.appendChild(cardTitle);
+      cardBody.appendChild(enterButton);
+      cardBody.appendChild(outButton);
+
+// 내용을 카드에 추가
+      chatRoomCard.appendChild(cardBody);
+      console.log(chatRoomCard);
+// 카드를 부모 요소에 추가
+      roomListContainer.appendChild(chatRoomCard);
+
+    })
+
+  }
+
+  function removeRoom(id) {
+
+    $.ajax({
+      type: "DELETE",
+      url: `/api/v1/chats/rooms/` + id,
+    })
+    .done(function (res) {
+      console.log("채팅방을 종료하였습니다..");
+      window.location.href = host + '/api/v1/page/index';
+    })
+    .fail(function (res) {
+      alert('전송실패');
+      const jsonObject = JSON.parse(res.responseText);
+      const messages = jsonObject.messages;
+      alert(messages);
+
+    });
+
+  }
+
+</script>
+
+</body>
+
+</html>
