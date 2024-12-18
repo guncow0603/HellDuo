@@ -28,7 +28,7 @@ public class BoardController{
 
     // 특정 게시글 조회
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardReadRes> getBoard(@PathVariable Long boardId) {
+    public ResponseEntity<BoardReadRes>getBoard(@PathVariable Long boardId) {
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId));
     }
 
