@@ -77,7 +77,7 @@ jobs:
         run: ./gradlew clean --no-build-cache --refresh-dependencies test --info --stacktrace
 
       - name: Publish unit test results
-        uses: EnricoMi/publish-unit-test-result-actions@v2
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: ${{ always() }}
         with:
           files: build/test-results/**/*.xml
