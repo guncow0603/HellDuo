@@ -1,7 +1,3 @@
-server:
-  port: 8080
-  host:
-    front: localhost8080
 spring:
   config:
     activate:
@@ -22,16 +18,9 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-  jackson:
-    serialization:
-      fail-on-empty-beans: false
-  sql:
-    init:
-      mode: never
-
 jwt:
   secret:
-    key: ${jwt_secret_key}
+    key: ${JWT_SECRET_KEY}
 
 cloud: # S3
   aws:
@@ -39,7 +28,8 @@ cloud: # S3
       access-key: ${AWS_ACCESS_KEY_ID}
       secret-key: ${AWS_SECRET_ACCESS_KEY}
     s3:
-      bucket: ${s3_bucket_name}
+      url: ${S3_URL}
+      bucket: ${S3_BUCKET_NAME}
     region:
       static: ap-northeast-2
     stack:
