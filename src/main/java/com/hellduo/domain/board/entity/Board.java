@@ -47,7 +47,7 @@ public class Board {
     private List<BoardImage> boardImageList = new ArrayList<>();
 
     @Builder
-    private Board(String title, String content, User user) {
+    public Board(String title, String content, User user) {
         this.title = title;
         this.content = content;
         this.user = user;
