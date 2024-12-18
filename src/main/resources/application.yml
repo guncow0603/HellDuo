@@ -1,13 +1,19 @@
 spring:
+  profiles:
+    active: local
+---
+spring:
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
   datasource:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:${DB_PORT}/${DB_DATABASE_NAME}
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,6 +26,7 @@ spring:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+
 cloud: # S3
   aws:
     credentials:
@@ -27,11 +34,12 @@ cloud: # S3
       secret-key: ${AWS_SECRET_ACCESS_KEY}
     s3:
       url: ${S3_URL}
-      bucket: ${s3_bucket_name}
+      bucket: ${S3_BUCKET_NAME}
     region:
       static: ap-northeast-2
     stack:
       auto: false
+
 data:
   redis:
     host: localhost
@@ -43,5 +51,3 @@ payment:
     secret-key: ${TOSS_SECRET_KEY}
     success-url: ${SUCCESS_URL}
     fail-url: ${FAIL_URL}
-
-
