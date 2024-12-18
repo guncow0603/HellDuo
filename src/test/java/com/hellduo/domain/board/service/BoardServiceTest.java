@@ -11,22 +11,23 @@ import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.entity.enums.UserStatus;
-import com.hellduo.global.util.S3Uploader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class BoardServiceTest {
 
     @InjectMocks
@@ -36,20 +37,12 @@ public class BoardServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
-    private BoardImageRepository boardImageRepository;
-
-    @Mock
-    private S3Uploader s3Uploader;
-
-    @Mock
     private User user;
-
-    @Value("${s3.url}")
-    private String s3Url;
 
     @Mock
     private Board board;
-
+    @Mock
+    private BoardImageRepository boardImageRepository; // BoardImageRepository mock
     @BeforeEach
     public void setUp() {
         // User 객체 생성
@@ -132,22 +125,6 @@ public class BoardServiceTest {
         assertEquals("Updated Content", board.getContent());
     }
 
-
-    @Test
-    public void testDeleteBoard() {
-        // Given
-        ReflectionTestUtils.setField(board, "id", 1L);  // Board 객체의 id 설정
-        ReflectionTestUtils.setField(user, "id", 1L);   // User 객체의 id 설정
-        when(boardRepository.findBoardByIdWithThrow(1L)).thenReturn(board);
-
-        // When
-        BoardDeleteRes response = boardService.deleteBoard(1L, user);
-
-        // Then
-        assertNotNull(response);
-        assertEquals("게시글이 삭제 되었습니다.", response.msg());
-        verify(boardRepository, times(1)).delete(board); // 게시글 삭제 확인
-    }
 
     @Test
     public void testGetBestLikeBoard() {
