@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class BoardServiceTest {
 
     @InjectMocks
@@ -36,16 +38,7 @@ public class BoardServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
-    private BoardImageRepository boardImageRepository;
-
-    @Mock
-    private S3Uploader s3Uploader;
-
-    @Mock
     private User user;
-
-    @Value("${s3.url}")
-    private String s3Url;
 
     @Mock
     private Board board;
