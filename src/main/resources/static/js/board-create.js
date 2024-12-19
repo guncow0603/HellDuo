@@ -43,7 +43,7 @@ function uploadBoardImages(boardId) {
 
     // AJAX 요청 (POST 방식)
     $.ajax({
-        url: `/api/v1/boards/${boardId}/images`, // 적절한 URL 경로로 수정
+        url: `/api/v2/images/board/${boardId}`, // 적절한 URL 경로로 수정
         type: "POST",
         data: formData,
         processData: false, // 파일 전송 시 필수 설정

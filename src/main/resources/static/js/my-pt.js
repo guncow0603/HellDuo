@@ -59,7 +59,7 @@ function handleReviewButton(event, ptId) {
 // 썸네일 이미지를 불러오는 함수
 function loadThumbnail(ptId) {
     $.ajax({
-        url: `/api/v1/userImage/pt/thumbnail/${ptId}`,
+        url: `/api/v2/images/pt/${ptId}/thumbnail`,
         type: "GET",
         success: function (response) {
             if (response.imageUrl) {
@@ -70,7 +70,6 @@ function loadThumbnail(ptId) {
         },
         error: function (xhr, status, error) {
             console.error(`썸네일 이미지를 가져오는 중 오류 발생 (PT ID: ${ptId}):`, error);
-            $(`#thumbnail-${ptId}`).attr("src", "/path/to/default-image.jpg");
         }
     });
 }

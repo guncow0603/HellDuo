@@ -5,7 +5,7 @@ $(document).ready(function () {
 
 // 배너 이미지 조회 함수
 function fetchBannerImages() {
-    fetch('/api/v1/userImage/banner', {
+    fetch('/api/v2/images/banner/1', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     })

@@ -39,7 +39,7 @@ function renderBoards(boards) {
 
 function loadThumbnail(boardId) {
     $.ajax({
-        url: `/api/v1/boards/${boardId}/images/thumbnail`,
+        url: `/api/v2/images/board/${boardId}/thumbnail`,
         type: "GET",
         success: function (response) {
             if (response.imageUrl) {

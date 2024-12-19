@@ -5,7 +5,6 @@ import com.hellduo.domain.board.dto.request.BoardUpdateReq;
 import com.hellduo.domain.board.dto.response.*;
 import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.repository.BoardRepository;
-import com.hellduo.domain.imageFile.repository.BoardImageRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;

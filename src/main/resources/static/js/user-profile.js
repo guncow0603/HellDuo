@@ -1,19 +1,20 @@
 const ptId = window.location.pathname.split("/").pop();
 
-function fetchUserImage(userId) {
-    const imageUrlApi = `/api/v1/userImage/profile/${userId}`;
-    fetch(imageUrlApi)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("이미지를 가져오는 데 실패했습니다.");
+function getProfileImage(userId) {
+    $.ajax({
+        url: `/api/v2/images/profile/${userId}`,
+        method: 'GET',
+    })
+        .done(function(res) {
+            if (res.length > 0) {
+                $('#user-image').attr('src', res[0].imageUrl);
             }
-            return response.json();
         })
-        .then(data => {
-            const imageUrl = data.imageUrl;
-            document.getElementById("user-image").src = imageUrl;
-        })
-        .catch(error => console.error("이미지 로드 오류:", error));
+        .fail(function(res) {
+            const jsonObject = JSON.parse(res.responseText);
+            const messages = jsonObject.messages;
+            alert(messages);
+        });
 }
 
 async function fetchUserProfile() {
@@ -32,7 +33,7 @@ async function fetchUserProfile() {
         document.getElementById("user-nickname").textContent = data.nickname;
         document.getElementById("user-weight").textContent = data.weight
         document.getElementById("user-height").textContent = data.height;
-        fetchUserImage(data.id);
+        getProfileImage(data.userId);
 
     } catch (error) {
         console.error("프로필 로드 오류:", error);
