@@ -33,14 +33,13 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Board 삭제 시 관련된 댓글도 함께 삭제되도록 설정
+    // 댓글 관계 추가
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 
-    // Board 삭제 시 관련된 좋아요도 함께 삭제되도록 설정
+    // 좋아요 관계 추가
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLike> boardLikeList = new ArrayList<>();
-
 
     @Builder
     public Board(String title, String content, User user) {
@@ -57,7 +56,11 @@ public class Board {
         this.content = content;
     }
 
-    public void addLikeCount(Long likeCount) {this.likeCount += likeCount; }
+    public void addLikeCount(Long likeCount) {
+        this.likeCount += likeCount;
+    }
 
-    public void minusLikeCount(Long likeCount) {this.likeCount -= likeCount; }
+    public void minusLikeCount(Long likeCount) {
+        this.likeCount -= likeCount;
+    }
 }
