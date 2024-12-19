@@ -53,14 +53,12 @@ function renderPTs(pts) {
 // PT 썸네일 이미지를 로드하는 함수
 function loadThumbnail(ptId) {
     $.ajax({
-        url: `/api/v1/userImage/pt/thumbnail/${ptId}`,
+        url: `/api/v2/images/pt/${ptId}/thumbnail`,
         type: "GET",
         success: function (response) {
             const imgElement = $(`#thumbnail-${ptId}`);
             if (response.imageUrl) {
                 imgElement.attr("src", response.imageUrl);
-            } else {
-                imgElement.attr("src", "/path/to/default-image.jpg");
             }
         },
         error: function (xhr, status, error) {

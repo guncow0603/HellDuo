@@ -45,7 +45,7 @@ function renderPTs(pts) {
 
 function loadThumbnail(ptId) {
     $.ajax({
-        url: `/api/v1/userImage/pt/thumbnail/${ptId}`,
+        url: `/api/v2/images/pt/${ptId}/thumbnail`,
         type: "GET",
         success: function (response) {
             if (response.imageUrl) {

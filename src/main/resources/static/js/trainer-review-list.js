@@ -45,7 +45,7 @@ function renderReviews(reviews) {
 
 function loadThumbnail(reviewId) {
     $.ajax({
-        url: `/api/v1/reviews/${reviewId}/images/thumbnail`,
+        url: `/api/v2/images/review/${reviewId}/thumbnail`,
         type: "GET",
         success: function (response) {
             if (response.imageUrl) {

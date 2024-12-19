@@ -2,7 +2,6 @@ package com.hellduo.domain.board.entity;
 
 import com.hellduo.domain.board_like.entity.BoardLike;
 import com.hellduo.domain.comment.entity.Comment;
-import com.hellduo.domain.imageFile.entity.BoardImage;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -42,9 +41,6 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLike> boardLikeList = new ArrayList<>();
 
-    // Board 삭제 시 관련된 이미지도 함께 삭제되도록 설정
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardImage> boardImageList = new ArrayList<>();
 
     @Builder
     public Board(String title, String content, User user) {

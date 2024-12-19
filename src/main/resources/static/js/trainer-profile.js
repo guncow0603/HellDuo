@@ -1,21 +1,5 @@
 const trainerId = window.location.pathname.split("/").pop();
 
-function fetchTrainerImage() {
-    const imageUrlApi = `/api/v1/userImage/profile/${trainerId}`;
-    fetch(imageUrlApi)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("이미지를 가져오는 데 실패했습니다.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            const imageUrl = data.imageUrl;
-            document.getElementById("trainer-image").src = imageUrl;
-        })
-        .catch(error => console.error("이미지 로드 오류:", error));
-}
-
 async function fetchTrainerProfile() {
     const profileApi = `/api/v1/users/trainer/${trainerId}`;
     try {
@@ -38,9 +22,25 @@ async function fetchTrainerProfile() {
         console.error("프로필 로드 오류:", error);
     }
 }
+function getProfileImage(userId) {
+    $.ajax({
+        url: `/api/v2/images/profile/${userId}`,
+        method: 'GET',
+    })
+        .done(function(res) {
+            if (res.length > 0) {
+                $('#trainer-image').attr('src', res[0].imageUrl);
+            }
+        })
+        .fail(function(res) {
+            const jsonObject = JSON.parse(res.responseText);
+            const messages = jsonObject.messages;
+            alert(messages);
+        });
+}
 
 $.ajax({
-    url: `/api/v1/userImage/certifications/${trainerId}`,
+    url: `/api/v2/images/certification/${trainerId}`,
     method: 'GET',
     success: function(res) {
         const certificationList = $('#certification-list');
@@ -72,6 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 document.addEventListener("DOMContentLoaded", () => {
-    fetchTrainerImage();
+    getProfileImage(trainerId);
     fetchTrainerProfile();
 });

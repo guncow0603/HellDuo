@@ -37,7 +37,7 @@ function renderBoardDetails(board) {
 // 이미지 조회 및 렌더링
 function fetchBoardImages(boardId) {
     $.ajax({
-        url: `/api/v1/boards/${boardId}/images`,
+        url: `/api/v2/images/board/${boardId}`,
         type: 'GET',
         success: function (imageList) {
             renderImages(imageList);

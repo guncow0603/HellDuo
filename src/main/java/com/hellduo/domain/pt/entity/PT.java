@@ -1,7 +1,6 @@
 package com.hellduo.domain.pt.entity;
 
 import com.hellduo.domain.common.BaseEntity;
-import com.hellduo.domain.imageFile.entity.PTImage;
 import com.hellduo.domain.pt.entity.enums.PTSpecialization;
 import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.review.dto.entity.Review;
@@ -66,9 +65,6 @@ public class PT extends BaseEntity {
     @JoinColumn(name = "review_id")
     private Review review;
 
-    // PT 이미지와 연결, PT 삭제 시 PTImage도 삭제되도록 Cascade 설정
-    @OneToMany(mappedBy = "pt", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PTImage> ptImages; // PT와 연결된 이미지들
 
 
     @Builder

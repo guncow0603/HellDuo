@@ -1,7 +1,7 @@
 package com.hellduo.domain.pt.service;
 
-import com.hellduo.domain.imageFile.entity.PTImage;
-import com.hellduo.domain.imageFile.repository.PTImageRepository;
+import com.hellduo.domain.imageFile.entity.ImageFile;
+import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
 import com.hellduo.domain.pt.dto.response.*;
@@ -34,13 +34,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PTService {
-    private final UserRepository userRepository;
     private final PTRepository ptRepository;
-    private final PTImageRepository ptImageRepository;
-    private final S3Uploader s3Uploader;
-
-    @Value("${s3.url}")
-    private String s3Url;
+    private final ImageFileService imageFileService;
 
     @Transactional
     public PTCreateRes ptCreate(PTCreateReq req, User trainer) {
@@ -173,12 +168,7 @@ public class PTService {
             throw new PTException(PTErrorCode.NOT_OWN_TRAINER);
         }
 
-        List<PTImage> ptImages = ptImageRepository.findAllByPtId(ptId);
-        for (PTImage ptImage : ptImages) {
-            String imageUrl = ptImage.getUserImageUrl();
-            String s3Key = imageUrl.replace(s3Url, "");
-            s3Uploader.deleteS3(s3Key);
-        }
+        imageFileService.deleteImages(ptId,"pt");
         ptRepository.delete(pt);
 
         return new PTDeleteRes("삭제 완료");

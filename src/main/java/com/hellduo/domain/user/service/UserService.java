@@ -1,9 +1,10 @@
 package com.hellduo.domain.user.service;
 
+import com.hellduo.domain.imageFile.entity.ImageFile;
+import com.hellduo.domain.imageFile.repository.ImageFileRepository;
+import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.user.entity.enums.UserStatus;
-import com.hellduo.domain.imageFile.entity.UserImage;
 import com.hellduo.domain.imageFile.entity.enums.ImageType;
-import com.hellduo.domain.imageFile.repository.UserImageRepository;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
@@ -42,8 +43,8 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final UserImageRepository userImageRepository;
     private final PTRepository ptRepository;
+    private final ImageFileRepository imageFileRepository;
     @Value("${admin_token}")
     private String ADMIN_TOKEN;
 
@@ -94,15 +95,15 @@ public class UserService {
                 .height(height)
                 .userStatus(UserStatus.ACTION)
                 .build();
-        UserImage userImage = UserImage.builder()
-                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+        ImageFile userImage = ImageFile.builder()
+                .imageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
                 .type(ImageType.PROFILE_IMG)
-                .user(user)
                 .build();
 
 
         userRepository.save(user);
-        userImageRepository.save(userImage);
+        imageFileRepository.save(userImage);
+
         return new UserSignupRes("회원 가입 완료");
     }
 
@@ -148,14 +149,13 @@ public class UserService {
                 .userStatus(UserStatus.ACTION)
                 .build();
 
-        UserImage userImage = UserImage.builder()
-                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+        ImageFile userImage = ImageFile.builder()
+                .imageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
                 .type(ImageType.PROFILE_IMG)
-                .user(trainer)
                 .build();
 
         userRepository.save(trainer);
-        userImageRepository.save(userImage);
+        imageFileRepository.save(userImage);
 
         return new TrainerSignupRes("회원 가입 완료");
     }
@@ -187,7 +187,8 @@ public class UserService {
     }
 
     public UserOwnProfileGetRes getOwnProfile(User user) {
-        return new UserOwnProfileGetRes(user.getId(),
+        return new UserOwnProfileGetRes(
+                user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getGender().getDescription(),
@@ -200,7 +201,8 @@ public class UserService {
 
     public TrainerOwnProfileGetRes getOwnTrainerProfile(User trainer) {
 
-        return new TrainerOwnProfileGetRes(trainer.getId(),
+        return new TrainerOwnProfileGetRes(
+                trainer.getId(),
                 trainer.getEmail(),
                 trainer.getName(),
                 trainer.getPhoneNumber(),
