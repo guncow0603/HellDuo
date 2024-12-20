@@ -13,6 +13,7 @@ import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,16 +101,17 @@ public class BoardService {
     }
 
     // 좋아요가 많은 게시글 조회 (읽기 전용 트랜잭션 적용)
+    @Cacheable(value = "bestLikeBoardCache", key = "'best_like_board'", unless = "#result == null or #result.size() == 0")
     @Transactional(readOnly = true)
     public List<BestLikeBoardRes> getBestLikeBoard() {
-        List<Board> top10Boards = boardRepository.findTop10ByOrderByLikeCountDesc(); // 좋아요 순으로 상위 10개 게시글 조회
+        List<Board> top10Boards = boardRepository.findTop10ByOrderByLikeCountDesc(); // DB 조회
         List<BestLikeBoardRes> result = new ArrayList<>();
         for (Board board : top10Boards) {
             BestLikeBoardRes dto = new BestLikeBoardRes(
                     board.getId(),
                     board.getLikeCount(),
                     board.getTitle(),
-                    board.getContent()); // 엔티티를 DTO로 변환
+                    board.getContent()); // DTO 변환
             result.add(dto);
         }
         return result;

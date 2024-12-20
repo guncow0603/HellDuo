@@ -15,7 +15,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByNickname(String nickname);
     Optional<User> findByPhoneNumber(String phoneNumber);
-    // 트레이너 역할을 가진 사용자만 조회
     List<User> findTop10ByRoleAndUserStatusNotOrderByRatingDesc(UserRoleType role, UserStatus status);
 
     @Cacheable(value = "user", key = "#email")
