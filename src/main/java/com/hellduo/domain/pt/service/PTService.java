@@ -19,6 +19,8 @@ import com.hellduo.domain.user.exception.PointException;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ public class PTService {
     private final PTRepository ptRepository;
     private final ImageFileService imageFileService;
     private final ReviewRepository reviewRepository;
+    private RedissonClient redissonClient;
 
     @Transactional
     public PTCreateRes ptCreate(PTCreateReq req, User trainer) {
@@ -175,20 +178,40 @@ public class PTService {
 
     @Transactional
     public PTReservRes ptReserv(Long ptId, User user) {
+        // 사용자 역할 확인
         if (!user.getRole().equals(UserRoleType.USER)) {
             throw new UserException(UserErrorCode.NOT_ROLE_USER);
         }
+
+        // PT 조회
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
+
+        // 사용자 포인트 확인
         if (user.getPoint() < pt.getPrice()) {
             throw new PointException(PointErrorCode.NOT_POINT);
         }
+
+        // PT 상태 확인
         if (pt.getStatus() != PTStatus.UNRESERVED) {
             throw new PTException(PTErrorCode.NOT_STATUS);
         }
-        user.minusPoint(pt.getPrice());
-        pt.updateUser(user);
-        pt.updateStatus(PTStatus.SCHEDULED);
-        return new PTReservRes("예약 완료 되었습니다.");
+
+        // 분산 잠금
+        RLock lock = redissonClient.getLock("ptReservLock:" + ptId);
+        try {
+            lock.lock(); // 잠금 획득
+
+            // 포인트 차감 및 상태 업데이트
+            user.minusPoint(pt.getPrice());
+            pt.updateUser(user);
+            pt.updateStatus(PTStatus.SCHEDULED);
+
+            // 예약 완료 응답
+            return new PTReservRes("예약 완료 되었습니다.");
+
+        } finally {
+            lock.unlock(); // 작업 후 잠금 해제
+        }
     }
 
     @Transactional(readOnly = true)
