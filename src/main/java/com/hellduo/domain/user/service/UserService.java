@@ -332,17 +332,10 @@ public class UserService {
                 trainer.getRating());
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(value = "trainerBestRatingCache", key = "'trainer_best_rating'", unless = "#result == null or #result.size() == 0")
     public List<BestRatingTrainerRes> getBestRatingTrainer() {
         // 트레이너 역할을 가진 사용자만 조회 (탈퇴하지 않은 트레이너)
-        List<User> trainers = userRepository.findByRoleAndUserStatusNot(UserRoleType.TRAINER, UserStatus.DELETED);
-
-        // 평점 순으로 정렬
-        trainers.sort((user1, user2) -> Double.compare(user2.getRating(), user1.getRating())); // 개선된 정렬 방식
-
-        // 상위 10명만 추출
-        List<User> top10Trainers = trainers.stream().limit(10).collect(Collectors.toList());
+        List<User> top10Trainers = userRepository.findTop10ByRoleAndUserStatusNotOrderByRatingDesc(UserRoleType.TRAINER, UserStatus.DELETED);
 
         // DTO 변환
         return top10Trainers.stream()
