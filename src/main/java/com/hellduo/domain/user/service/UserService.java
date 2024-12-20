@@ -1,10 +1,8 @@
 package com.hellduo.domain.user.service;
 
 import com.hellduo.domain.imageFile.entity.ImageFile;
-import com.hellduo.domain.imageFile.repository.ImageFileRepository;
-import com.hellduo.domain.imageFile.service.ImageFileService;
-import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.imageFile.entity.enums.ImageType;
+import com.hellduo.domain.imageFile.repository.ImageFileRepository;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
@@ -16,6 +14,7 @@ import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
+import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
@@ -26,13 +25,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -324,45 +324,24 @@ public class UserService {
                 trainer.getRating());
     }
 
+    @Cacheable(value = "trainerBestRatingCache", key = "'trainer_best_rating'", unless = "#result == null or #result.size() == 0")
     public List<BestRatingTrainerRes> getBestRatingTrainer() {
-        // 전체 유저 중에서 트레이너 역할(UserRoleType이 TRAINER)인 사용자만 필터링
-        List<User> allUsers = userRepository.findAll();
-
-        List<User> trainers = new ArrayList<>();
-        for (User user : allUsers) {
-            if (user.getRole() == UserRoleType.TRAINER && !user.getUserStatus().equals(UserStatus.DELETED)) { // 트레이너이면서 탈퇴하지 않은 유저
-                trainers.add(user);
-            }
-        }
+        // 트레이너 역할을 가진 사용자만 조회 (탈퇴하지 않은 트레이너)
+        List<User> trainers = userRepository.findByRoleAndUserStatusNot(UserRoleType.TRAINER, UserStatus.DELETED);
 
         // 평점 순으로 정렬
-        for (int i = 0; i < trainers.size(); i++) {
-            for (int j = i + 1; j < trainers.size(); j++) {
-                if (trainers.get(i).getRating() < trainers.get(j).getRating()) {
-                    // swap
-                    User temp = trainers.get(i);
-                    trainers.set(i, trainers.get(j));
-                    trainers.set(j, temp);
-                }
-            }
-        }
+        trainers.sort((user1, user2) -> Double.compare(user2.getRating(), user1.getRating())); // 개선된 정렬 방식
 
         // 상위 10명만 추출
-        List<User> top10Trainers = new ArrayList<>();
-        for (int i = 0; i < trainers.size() && i < 10; i++) {
-            top10Trainers.add(trainers.get(i));
-        }
+        List<User> top10Trainers = trainers.stream().limit(10).collect(Collectors.toList());
 
         // DTO 변환
-        List<BestRatingTrainerRes> result = new ArrayList<>();
-        for (User trainer : top10Trainers) {
-            result.add(new BestRatingTrainerRes(trainer.getId(),
-                    trainer.getName(),
-                    trainer.getRating(),
-                    trainer.getSpecialization().getName()));
-        }
-
-        return result;
+        return top10Trainers.stream()
+                .map(trainer -> new BestRatingTrainerRes(trainer.getId(),
+                        trainer.getName(),
+                        trainer.getRating(),
+                        trainer.getSpecialization().getName()))
+                .collect(Collectors.toList());
     }
 
     public UserOwnProfileGetRes getUserProfile(User trainer, Long ptId) {
