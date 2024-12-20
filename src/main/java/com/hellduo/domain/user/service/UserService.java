@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
 @Slf4j
 public class UserService {
     private final RefreshTokenService refreshTokenService;
@@ -48,6 +47,7 @@ public class UserService {
     @Value("${admin_token}")
     private String ADMIN_TOKEN;
 
+    @Transactional
     public UserSignupRes signup(UserSignupReq req) {
         String email = req.email();
         String password = passwordEncoder.encode(req.password());
@@ -109,7 +109,7 @@ public class UserService {
 
         return new UserSignupRes("회원 가입 완료");
     }
-
+    @Transactional
     public TrainerSignupRes trainerSignup(TrainerSignupReq req) {
         String email = req.email();
         String password = passwordEncoder.encode(req.password());
@@ -166,6 +166,7 @@ public class UserService {
         return new TrainerSignupRes("회원 가입 완료");
     }
 
+    @Transactional
     public UserLoginRes login(UserLoginReq req, HttpServletResponse res) {
         String email = req.email();
         String password = req.password();
@@ -192,6 +193,7 @@ public class UserService {
         return new UserLoginRes("로그인 완료");
     }
 
+    @Transactional(readOnly = true)
     public UserOwnProfileGetRes getOwnProfile(User user) {
         return new UserOwnProfileGetRes(
                 user.getId(),
@@ -205,6 +207,7 @@ public class UserService {
                 user.getHeight());
     }
 
+    @Transactional(readOnly = true)
     public TrainerOwnProfileGetRes getOwnTrainerProfile(User trainer) {
 
         return new TrainerOwnProfileGetRes(
@@ -221,6 +224,7 @@ public class UserService {
                 trainer.getRating());
     }
 
+    @Transactional
     public UserProfileUpdateRes updateUserProfile(Long userId, UserProfileUpdateReq req) {
         User user= userRepository.findUserByIdWithThrow(userId);
 
@@ -246,6 +250,7 @@ public class UserService {
         return new UserProfileUpdateRes("수정 완료");
     }
 
+    @Transactional
     public TrainerProfileUpdateRes updateTrainerProfile(Long trainerId, TrainerProfileUpdateReq req) {
         User trainer = userRepository.findUserByIdWithThrow(trainerId);
 
@@ -269,6 +274,7 @@ public class UserService {
         return new TrainerProfileUpdateRes("수정 완료");
     }
 
+    @Transactional
     public UserWithdrawalRes withdrawal(UserWithdrawalReq req, Long userId, HttpServletResponse response) {
         String password = req.password();
 
@@ -304,11 +310,13 @@ public class UserService {
         response.addCookie(refreshTokenCookie);
     }
 
+    @Transactional
     public UserLogoutRes logout(HttpServletResponse response) {
         triggerLogout(response);
         return new UserLogoutRes("로그아웃 완료");
     }
 
+    @Transactional(readOnly = true)
     public TrainerOwnProfileGetRes getTrainerProfile(Long trainerId) {
         User trainer = userRepository.findUserByIdWithThrow(trainerId);
         return new TrainerOwnProfileGetRes(trainer.getId(),
@@ -338,6 +346,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public UserOwnProfileGetRes getUserProfile(User trainer, Long ptId) {
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
         if(!pt.getTrainer().getId().equals(trainer.getId())){
