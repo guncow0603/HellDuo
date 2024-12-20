@@ -95,13 +95,16 @@ public class UserService {
                 .height(height)
                 .userStatus(UserStatus.ACTION)
                 .build();
+
+        userRepository.save(user);
+
         ImageFile userImage = ImageFile.builder()
                 .imageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
                 .type(ImageType.PROFILE_IMG)
+                .user(user)
+                .targetId(user.getId())
                 .build();
 
-
-        userRepository.save(user);
         imageFileRepository.save(userImage);
 
         return new UserSignupRes("회원 가입 완료");
@@ -149,12 +152,15 @@ public class UserService {
                 .userStatus(UserStatus.ACTION)
                 .build();
 
+        userRepository.save(trainer);
+
         ImageFile userImage = ImageFile.builder()
                 .imageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
                 .type(ImageType.PROFILE_IMG)
+                .user(trainer)
+                .targetId(trainer.getId())
                 .build();
 
-        userRepository.save(trainer);
         imageFileRepository.save(userImage);
 
         return new TrainerSignupRes("회원 가입 완료");
