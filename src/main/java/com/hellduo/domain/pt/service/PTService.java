@@ -167,7 +167,7 @@ public class PTService {
             throw new PTException(PTErrorCode.NOT_OWN_TRAINER);
         }
 
-        imageFileService.deleteImages(ptId,"pt");
+        imageFileService.deleteImages(ptId,"pt",trainer);
         ptRepository.delete(pt);
 
         return new PTDeleteRes("삭제 완료");

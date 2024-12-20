@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 
-@Entity(name="tb_comment")
+@Entity(name="TB_COMMENT")
 @Getter
 @RequiredArgsConstructor
 public class Comment {

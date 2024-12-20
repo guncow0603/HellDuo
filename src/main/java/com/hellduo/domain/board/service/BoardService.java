@@ -80,7 +80,7 @@ public class BoardService {
         if (!board.getUser().getId().equals(user.getId())&& !user.getRole().equals(UserRoleType.ADMIN)) { // 사용자 확인
             throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
         }
-        imageFileService.deleteImages(boardId,"board");
+        imageFileService.deleteImages(boardId,"board",user);
         boardRepository.delete(board); // 게시글 삭제
         return new BoardDeleteRes("게시글이 삭제 되었습니다.");
     }

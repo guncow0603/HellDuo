@@ -29,10 +29,15 @@ public class ImageFile {
     @Column(name = "target_id", nullable = false)
     private Long targetId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Builder
-    private ImageFile(String imageUrl, ImageType type,Long targetId) {
+    private ImageFile(String imageUrl, ImageType type,Long targetId,User user) {
         this.imageUrl = imageUrl;
         this.type = type;
         this.targetId = targetId;
+        this.user=user;
     }
 }

@@ -40,12 +40,12 @@ public class ImageFileService {
         Long userId = user.getId();
 
         if (category.equals("profile")) {
-            deleteImages(targetId , category);
+            deleteImages(targetId , category, user);
             // S3에 파일 업로드
             List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "profile/");
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
-            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.PROFILE_IMG);
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.PROFILE_IMG,user);
 
             // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
             imageFileRepository.save(imageFileList.get(0));
@@ -60,7 +60,7 @@ public class ImageFileService {
             List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "certification/");
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
-            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.CERTS_IMG);
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.CERTS_IMG,user);
 
             // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
             imageFileRepository.saveAll(imageFileList);
@@ -75,7 +75,7 @@ public class ImageFileService {
             List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "pt/");
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
-            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.PT_IMG);
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.PT_IMG,user);
 
             // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
             imageFileRepository.saveAll(imageFileList);
@@ -90,7 +90,7 @@ public class ImageFileService {
             List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "banner/");
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
-            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.BANNER_IMG);
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.BANNER_IMG,user);
 
             // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
             imageFileRepository.saveAll(imageFileList);
@@ -102,7 +102,7 @@ public class ImageFileService {
             List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "board/");
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
-            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.BOARD_IMG);
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.BOARD_IMG,user);
 
             // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
             imageFileRepository.saveAll(imageFileList);
@@ -117,7 +117,7 @@ public class ImageFileService {
             List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "review/");
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
-            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.REVIEW_IMG);
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.REVIEW_IMG,user);
 
             // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
             imageFileRepository.saveAll(imageFileList);
@@ -175,6 +175,10 @@ public class ImageFileService {
         ImageFile imageFile = imageFileRepository.findById(imageId)
                 .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_IMAGE));
 
+        if(user.getId().equals(imageFile.getUser().getId())){
+            throw new ImageException(ImageErrorCode.IMAGE_CURRENT_USER);
+        }
+
         String imageUrl = imageFile.getImageUrl();
         String s3Key = imageUrl.replace(s3Url, "");
         s3Uploader.deleteS3(s3Key);
@@ -186,12 +190,16 @@ public class ImageFileService {
         return new ImageDeleteRes("이미지 삭제 완료");
     }
 
-    public void deleteImages(Long targetId, String category) {
+    public void deleteImages(Long targetId, String category,User user) {
         // category를 ImageType으로 변환
         ImageType imageType = convertCategoryToImageType(category);
 
         // targetId와 category에 해당하는 이미지 조회
         List<ImageFile> imageFiles = imageFileRepository.findByTargetIdAndType(targetId, imageType);
+
+        if(user.getId().equals(imageFiles.get(0).getUser().getId())){
+            throw new ImageException(ImageErrorCode.IMAGE_CURRENT_USER);
+        }
 
         // 조회된 이미지가 없으면 예외 처리
         if (imageFiles.isEmpty()) {
@@ -222,7 +230,7 @@ public class ImageFileService {
     }
 
 
-    private List<ImageFile> createImageFileList(List<String> fileUrls,Long targetId , ImageType imageType) {
+    private List<ImageFile> createImageFileList(List<String> fileUrls,Long targetId , ImageType imageType,User user) {
         List<ImageFile> imageFileList = new ArrayList<>();
 
         for (String fileUrl : fileUrls) {
@@ -230,6 +238,7 @@ public class ImageFileService {
                     .targetId(targetId)
                     .imageUrl(s3Url+fileUrl)
                     .type(imageType)
+                    .user(user)
                     .build();
             imageFileList.add(imageFile);
         }
