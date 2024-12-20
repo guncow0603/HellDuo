@@ -40,8 +40,6 @@ public class BoardServiceTest {
 
     @Mock
     private Board board;
-    @Mock
-    private BoardImageRepository boardImageRepository; // BoardImageRepository mock
     @BeforeEach
     public void setUp() {
         // User 객체 생성

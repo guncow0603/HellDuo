@@ -27,7 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class CommentService {
-    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
@@ -48,24 +47,6 @@ public class CommentService {
         commentRepository.save(comment);
 
         return new CommentCreateRes("댓글 작성이 완료 되었습니다.");
-    }
-
-    public List<CommentReadRes> commentRead(Long boardId) {
-
-        Board board = boardRepository.findBoardByIdWithThrow(boardId);
-
-        List<Comment> commentList = commentRepository.findAllByBoard(board);
-
-        List<CommentReadRes> commentReadResList = new ArrayList<>();
-
-        for(Comment comment : commentList){
-            commentReadResList.add(new CommentReadRes(
-                    comment.getContent(),
-                    comment.getUser().getNickname(),
-                    comment.getId()));
-        }
-
-        return commentReadResList;
     }
 
     public CommentUpdateRes commentUpdate(CommentUpdateReq req, User user, Long commentId) {

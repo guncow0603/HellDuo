@@ -5,8 +5,9 @@ async function getBoardById(boardId) {
     try {
         const response = await fetch(`/api/v1/board/${boardId}`);
         if (response.ok) {
-            const board = await response.json();
+            const board = await response.json(); // BoardReadRes 객체
             renderBoardDetails(board);
+            renderComments(board.commentList); // 댓글 렌더링
             fetchBoardImages(boardId); // 이미지 호출 추가
         } else {
             alert('게시글을 불러오는 데 실패했습니다.');
@@ -16,7 +17,8 @@ async function getBoardById(boardId) {
         alert('게시글을 불러오는 중 오류가 발생했습니다.');
     }
 }
-// 게시글 상세 내용 렌더링
+
+// 게시글 렌더링
 function renderBoardDetails(board) {
     const boardDetails = document.getElementById('board-details');
     boardDetails.innerHTML = `
@@ -31,8 +33,44 @@ function renderBoardDetails(board) {
             </button>
         </div>
     `;
-    userId=board.userId;
+    userId = board.userId;
 }
+
+// 댓글 렌더링
+function renderComments(commentList) {
+    const commentListContainer = document.getElementById('comment-list');
+    commentListContainer.innerHTML = ''; // 이전 댓글 목록 초기화
+
+    if (commentList.length === 0) {
+        commentListContainer.innerHTML = '<p>댓글이 없습니다.</p>';
+    } else {
+        commentList.forEach(comment => {
+            const commentItem = document.createElement('div');
+            commentItem.classList.add('comment-item');
+            commentItem.innerHTML = `
+                <div class="user">${comment.userNickname}</div>
+                <div class="content">${comment.content}</div>
+                <button class="btn btn-warning edit-comment-btn" data-comment-id="${comment.commentId}">수정</button>
+                <button class="btn btn-danger delete-comment-btn" data-comment-id="${comment.commentId}">삭제</button>
+            `;
+            commentListContainer.appendChild(commentItem);
+        });
+    }
+}
+
+// 댓글 수정 및 삭제 처리
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('edit-comment-btn')) {
+        const commentId = e.target.getAttribute('data-comment-id');
+        const commentContent = e.target.previousElementSibling.innerText;
+        editComment(commentId, commentContent);
+    }
+
+    if (e.target.classList.contains('delete-comment-btn')) {
+        const commentId = e.target.getAttribute('data-comment-id');
+        deleteComment(commentId);
+    }
+});
 
 // 이미지 조회 및 렌더링
 function fetchBoardImages(boardId) {
@@ -67,35 +105,7 @@ function renderImages(imageList) {
     });
 }
 
-// 댓글 목록 조회
-function loadComments(boardId) {
-    $.ajax({
-        url: `/api/v1/comment/${boardId}`,
-        type: 'GET',
-        success: function (comments) {
-            renderComments(comments);
-        },
-        error: function () {
-            alert('댓글을 불러오는 데 실패했습니다.');
-        }
-    });
-}
 
-// 댓글 렌더링
-function renderComments(comments) {
-    const commentList = $('#comment-list');
-    commentList.empty();
-    comments.forEach(comment => {
-        commentList.append(`
-            <div class="comment-item" id="comment-${comment.id}">
-                <div class="user">${comment.userNickname}</div>
-                <div class="content">${comment.content}</div>
-                <button class="btn btn-sm btn-primary" onclick="editComment(${comment.commentId}, '${comment.content}')">수정</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.commentId})">삭제</button>
-            </div>
-        `);
-    });
-}
 
 // 댓글 수정
 function editComment(commentId, currentContent) {
@@ -105,15 +115,17 @@ function editComment(commentId, currentContent) {
             url: `/api/v1/comment/${commentId}`,
             type: 'PUT',
             contentType: 'application/json',
-            data: JSON.stringify({ content: newContent }),
-            success: function () {
-                alert('댓글이 수정되었습니다.');
-                loadComments(boardId);
-            },
-            error: function () {
-                alert('댓글 수정에 실패했습니다.');
-            }
-        });
+            data: JSON.stringify({ content: newContent })
+        })
+            .done(function (res) {
+                alert(res.msg);
+                getBoardById(boardId);
+            })
+            .fail(function (res) {
+                const jsonObject = JSON.parse(res.responseText);
+                const messages = jsonObject.messages;
+                alert(messages);
+            });
     }
 }
 
@@ -122,15 +134,17 @@ function deleteComment(commentId) {
     if (confirm('정말 삭제하시겠습니까?')) {
         $.ajax({
             url: `/api/v1/comment/${commentId}`,
-            type: 'DELETE',
-            success: function () {
-                alert('댓글이 삭제되었습니다.');
-                loadComments(boardId);
-            },
-            error: function () {
-                alert('댓글 삭제에 실패했습니다.');
-            }
-        });
+            type: 'DELETE'
+        })
+            .done(function (res) {
+                alert(res.msg);
+                getBoardById(boardId);
+            })
+            .fail(function (res) {
+                const jsonObject = JSON.parse(res.responseText);
+                const messages = jsonObject.messages;
+                alert(messages);
+            });
     }
 }
 
@@ -152,7 +166,6 @@ function likeBoard() {
 // 문서 로드 시 실행
 $(document).ready(function () {
     getBoardById(boardId);
-    loadComments(boardId);
 
     // 좋아요 버튼 이벤트
     $(document).on('click', '#likeBoardBtn', likeBoard);
@@ -169,7 +182,7 @@ $(document).ready(function () {
                 success: function (response) {
                     alert(response.msg);
                     $('#comment-input').val('');
-                    loadComments(boardId);
+                    getBoardById(boardId);
                 },
                 error: function () {
                     alert('댓글 작성에 실패했습니다.');

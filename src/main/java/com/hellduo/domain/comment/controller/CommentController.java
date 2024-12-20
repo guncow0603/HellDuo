@@ -31,13 +31,6 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.commentCreate(req,userDetails.getUser()));
     }
 
-    @GetMapping("/{boardId}")
-    public ResponseEntity<List<CommentReadRes>> commentRead(
-            @PathVariable Long boardId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.commentRead(boardId));
-    }
-
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentUpdateRes>commentUpdate(
             @RequestBody CommentUpdateReq req,

@@ -7,19 +7,18 @@ import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.exception.BoardErrorCode;
 import com.hellduo.domain.board.exception.BoardException;
 import com.hellduo.domain.board.repository.BoardRepository;
-import com.hellduo.domain.imageFile.entity.ImageFile;
-import com.hellduo.domain.imageFile.repository.ImageFileRepository;
+import com.hellduo.domain.comment.dto.response.CommentReadRes;
+import com.hellduo.domain.comment.entity.Comment;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
-import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -38,11 +37,26 @@ public class BoardService {
         return new BoardCreateRes(board.getId(),"글 작성 완료");
     }
 
-    // 게시글 조회 (읽기 전용 트랜잭션 적용)
     @Transactional(readOnly = true)
     public BoardReadRes getBoard(Long boardId) {
-        Board board = boardRepository.findBoardByIdWithThrow(boardId); // 조회만 하는 메서드이므로 읽기 전용 트랜잭션 적용
-        return new BoardReadRes(board.getId(), board.getLikeCount(), board.getTitle(), board.getContent(),board.getUser().getId());
+        // 게시글을 조회하면서 댓글(commentList)도 함께 가져옵니다 (JOIN FETCH로 N+1 문제 해결)
+        Board board = boardRepository.findBoardByIdWithThrow(boardId);
+
+        // 댓글 리스트를 CommentReadRes로 변환
+        List<CommentReadRes> commentReadResList = new ArrayList<>();
+        for (Comment content : board.getCommentList()) {
+            commentReadResList.add(new CommentReadRes(content));  // Comment 엔티티를 CommentReadRes DTO로 변환
+        }
+
+        // BoardReadRes DTO에 필요한 정보들로 변환하여 반환
+        return new BoardReadRes(
+                board.getId(),
+                board.getLikeCount(),
+                board.getTitle(),
+                board.getContent(),
+                board.getUser().getId(),
+                commentReadResList // 댓글 리스트도 함께 반환
+        );
     }
 
     // 모든 게시글 조회 (읽기 전용 트랜잭션 적용)
@@ -80,7 +94,7 @@ public class BoardService {
         if (!board.getUser().getId().equals(user.getId())&& !user.getRole().equals(UserRoleType.ADMIN)) { // 사용자 확인
             throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
         }
-        imageFileService.deleteImages(boardId,"board");
+        imageFileService.deleteImages(boardId,"board",user);
         boardRepository.delete(board); // 게시글 삭제
         return new BoardDeleteRes("게시글이 삭제 되었습니다.");
     }

@@ -1,6 +1,5 @@
 package com.hellduo.domain.pt.service;
 
-import com.hellduo.domain.imageFile.entity.ImageFile;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
@@ -11,16 +10,17 @@ import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
 import com.hellduo.domain.pt.repository.PTRepository;
+import com.hellduo.domain.review.entity.Review;
+import com.hellduo.domain.review.repository.ReviewRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.exception.PointErrorCode;
 import com.hellduo.domain.user.exception.PointException;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
-import com.hellduo.domain.user.repository.UserRepository;
-import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +36,8 @@ import java.util.List;
 public class PTService {
     private final PTRepository ptRepository;
     private final ImageFileService imageFileService;
+    private final ReviewRepository reviewRepository;
+    private RedissonClient redissonClient;
 
     @Transactional
     public PTCreateRes ptCreate(PTCreateReq req, User trainer) {
@@ -168,7 +170,7 @@ public class PTService {
             throw new PTException(PTErrorCode.NOT_OWN_TRAINER);
         }
 
-        imageFileService.deleteImages(ptId,"pt");
+        imageFileService.deleteImages(ptId,"pt",trainer);
         ptRepository.delete(pt);
 
         return new PTDeleteRes("삭제 완료");
@@ -176,20 +178,40 @@ public class PTService {
 
     @Transactional
     public PTReservRes ptReserv(Long ptId, User user) {
+        // 사용자 역할 확인
         if (!user.getRole().equals(UserRoleType.USER)) {
             throw new UserException(UserErrorCode.NOT_ROLE_USER);
         }
+
+        // PT 조회
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
+
+        // 사용자 포인트 확인
         if (user.getPoint() < pt.getPrice()) {
             throw new PointException(PointErrorCode.NOT_POINT);
         }
+
+        // PT 상태 확인
         if (pt.getStatus() != PTStatus.UNRESERVED) {
             throw new PTException(PTErrorCode.NOT_STATUS);
         }
-        user.minusPoint(pt.getPrice());
-        pt.updateUser(user);
-        pt.updateStatus(PTStatus.SCHEDULED);
-        return new PTReservRes("예약 완료 되었습니다.");
+
+        // 분산 잠금
+        RLock lock = redissonClient.getLock("ptReservLock:" + ptId);
+        try {
+            lock.lock(); // 잠금 획득
+
+            // 포인트 차감 및 상태 업데이트
+            user.minusPoint(pt.getPrice());
+            pt.updateUser(user);
+            pt.updateStatus(PTStatus.SCHEDULED);
+
+            // 예약 완료 응답
+            return new PTReservRes("예약 완료 되었습니다.");
+
+        } finally {
+            lock.unlock(); // 작업 후 잠금 해제
+        }
     }
 
     @Transactional(readOnly = true)
@@ -262,18 +284,21 @@ public class PTService {
         if (user.getRole() != UserRoleType.USER) {
             throw new UserException(UserErrorCode.NOT_ROLE_USER);
         }
-        List<PT> pts = ptRepository.findByUserIdAndStatusAndReviewIsNull(user.getId(), PTStatus.COMPLETED);
+        List<PT> pts = ptRepository.findByUserIdAndStatus(user.getId(), PTStatus.COMPLETED);
 
         List<PTsReadRes> PTsReadResList = new ArrayList<>();
-        for (PT pt : pts) {
-            PTsReadResList.add(new PTsReadRes(
-                    pt.getId(),
-                    pt.getTitle(),
-                    pt.getSpecialization().getName(),
-                    pt.getScheduledDate(),
-                    pt.getPrice(),
-                    pt.getStatus().getDescription()
-            ));
+        for(PT pt : pts) {
+            Review review = reviewRepository.findByPtId(pt.getId());
+            if(review==null){
+                PTsReadResList.add(new PTsReadRes(
+                        pt.getId(),
+                        pt.getTitle(),
+                        pt.getSpecialization().getName(),
+                        pt.getScheduledDate(),
+                        pt.getPrice(),
+                        pt.getStatus().getDescription()
+                ));
+            }
         }
         return PTsReadResList;
     }
