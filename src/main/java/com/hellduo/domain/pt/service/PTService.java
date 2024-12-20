@@ -1,6 +1,5 @@
 package com.hellduo.domain.pt.service;
 
-import com.hellduo.domain.imageFile.entity.ImageFile;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
@@ -11,16 +10,15 @@ import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
 import com.hellduo.domain.pt.exception.PTException;
 import com.hellduo.domain.pt.repository.PTRepository;
+import com.hellduo.domain.review.entity.Review;
+import com.hellduo.domain.review.repository.ReviewRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.exception.PointErrorCode;
 import com.hellduo.domain.user.exception.PointException;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
-import com.hellduo.domain.user.repository.UserRepository;
-import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +34,7 @@ import java.util.List;
 public class PTService {
     private final PTRepository ptRepository;
     private final ImageFileService imageFileService;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public PTCreateRes ptCreate(PTCreateReq req, User trainer) {
@@ -262,18 +261,21 @@ public class PTService {
         if (user.getRole() != UserRoleType.USER) {
             throw new UserException(UserErrorCode.NOT_ROLE_USER);
         }
-        List<PT> pts = ptRepository.findByUserIdAndStatusAndReviewIsNull(user.getId(), PTStatus.COMPLETED);
+        List<PT> pts = ptRepository.findByUserIdAndStatus(user.getId(), PTStatus.COMPLETED);
 
         List<PTsReadRes> PTsReadResList = new ArrayList<>();
-        for (PT pt : pts) {
-            PTsReadResList.add(new PTsReadRes(
-                    pt.getId(),
-                    pt.getTitle(),
-                    pt.getSpecialization().getName(),
-                    pt.getScheduledDate(),
-                    pt.getPrice(),
-                    pt.getStatus().getDescription()
-            ));
+        for(PT pt : pts) {
+            Review review = reviewRepository.findByPtId(pt.getId());
+            if(review==null){
+                PTsReadResList.add(new PTsReadRes(
+                        pt.getId(),
+                        pt.getTitle(),
+                        pt.getSpecialization().getName(),
+                        pt.getScheduledDate(),
+                        pt.getPrice(),
+                        pt.getStatus().getDescription()
+                ));
+            }
         }
         return PTsReadResList;
     }
