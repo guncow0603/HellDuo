@@ -1,26 +1,22 @@
 package com.hellduo.domain.imageFile.service;
 
-import com.hellduo.domain.imageFile.dto.response.*;
-import com.hellduo.domain.imageFile.entity.BannerImage;
-import com.hellduo.domain.imageFile.entity.PTImage;
+import com.hellduo.domain.imageFile.dto.response.GetImagesRes;
+import com.hellduo.domain.imageFile.dto.response.GetThumbnailRes;
+import com.hellduo.domain.imageFile.dto.response.ImageDeleteRes;
+import com.hellduo.domain.imageFile.dto.response.UploadImagesRes;
+import com.hellduo.domain.imageFile.entity.ImageFile;
 import com.hellduo.domain.imageFile.entity.enums.ImageType;
-import com.hellduo.domain.imageFile.entity.UserImage;
 import com.hellduo.domain.imageFile.exception.ImageErrorCode;
 import com.hellduo.domain.imageFile.exception.ImageException;
-import com.hellduo.domain.imageFile.repository.BannerRepository;
-import com.hellduo.domain.imageFile.repository.PTImageRepository;
-import com.hellduo.domain.imageFile.repository.UserImageRepository;
-import com.hellduo.domain.pt.entity.PT;
-import com.hellduo.domain.pt.repository.PTRepository;
+import com.hellduo.domain.imageFile.repository.ImageFileRepository;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
-import com.hellduo.domain.user.repository.UserRepository;
 import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,135 +30,222 @@ import java.util.List;
 @Slf4j
 public class ImageFileService {
 
+    private final ImageFileRepository imageFileRepository;
     private final S3Uploader s3Uploader;
-    private final UserRepository userRepository;
-    private final UserImageRepository userImageRepository;
-    private final PTImageRepository ptImageRepository;
-    private final BannerRepository bannerRepository;
-    private final PTRepository ptRepository;
 
     @Value("${s3.url}")
     private String s3Url;
 
-    public UserImageCreateRes updateUserProfileImage(Long userId, MultipartFile multipartFile) {
-        // 기존 프로필 이미지 조회 (있으면 삭제)
-        UserImage userImage = userImageRepository.findProfileByUserIdAndType(userId, ImageType.PROFILE_IMG)
-                .orElse(null);
+    public UploadImagesRes uploadImages(String category, Long targetId, User user, List<MultipartFile> multipartFiles) {
+        Long userId = user.getId();
 
-        // 기존 이미지가 있으면 S3에서 삭제하고 DB에서 삭제
-        if (userImage != null) {
-            String imageUrl = userImage.getUserImageUrl();
-            String s3Key = imageUrl.replace(s3Url, ""); // s3Url을 정확히 지정했는지 확인
-            s3Uploader.deleteS3(s3Key); // 기존 이미지 S3에서 삭제
-            userImageRepository.delete(userImage); // DB에서 삭제
+        if (category.equals("profile")) {
+            deleteImages(targetId , category, user);
+            // S3에 파일 업로드
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "profile/");
+
+            // 업로드된 파일의 정보로 ImageFile 엔티티 생성
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.PROFILE_IMG,user);
+
+            // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
+            imageFileRepository.save(imageFileList.get(0));
+
+            return new UploadImagesRes("프로필 이미지가 수정되었습니다.");
+
+        }else if(category.equals("certification")){
+            if(!user.getRole().equals(UserRoleType.TRAINER)){
+                throw  new UserException(UserErrorCode.NOT_ROLE_TRAINER);
+            }
+            // S3에 파일 업로드
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "certification/");
+
+            // 업로드된 파일의 정보로 ImageFile 엔티티 생성
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.CERTS_IMG,user);
+
+            // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
+            imageFileRepository.saveAll(imageFileList);
+
+            return new UploadImagesRes("자격증 이미지가 업로드되었습니다.");
+
+        }else if(category.equals("pt")){
+            if(!user.getRole().equals(UserRoleType.TRAINER)){
+                throw  new UserException(UserErrorCode.NOT_ROLE_TRAINER);
+            }
+            // S3에 파일 업로드
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "pt/");
+
+            // 업로드된 파일의 정보로 ImageFile 엔티티 생성
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.PT_IMG,user);
+
+            // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
+            imageFileRepository.saveAll(imageFileList);
+
+            return new UploadImagesRes("피티 이미지가 업로드되었습니다.");
+
+        }else if(category.equals("banner")){
+            if(!user.getRole().equals(UserRoleType.ADMIN)){
+                throw  new UserException(UserErrorCode.NOT_ROLE_ADMIN);
+            }
+            // S3에 파일 업로드
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "banner/");
+
+            // 업로드된 파일의 정보로 ImageFile 엔티티 생성
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.BANNER_IMG,user);
+
+            // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
+            imageFileRepository.saveAll(imageFileList);
+
+            return new UploadImagesRes("배너 이미지가 업로드되었습니다.");
+
+        }else if(category.equals("board")){
+            // S3에 파일 업로드
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "board/");
+
+            // 업로드된 파일의 정보로 ImageFile 엔티티 생성
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.BOARD_IMG,user);
+
+            // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
+            imageFileRepository.saveAll(imageFileList);
+
+            return new UploadImagesRes("게시판 이미지가 업로드되었습니다.");
+
+        }else if(category.equals("review")) {
+            if(!user.getRole().equals(UserRoleType.USER)){
+                throw  new UserException(UserErrorCode.NOT_ROLE_USER);
+            }
+            // S3에 파일 업로드
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "review/");
+
+            // 업로드된 파일의 정보로 ImageFile 엔티티 생성
+            List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.REVIEW_IMG,user);
+
+            // 첫 번째 이미지를 저장 (프로필 이미지 하나만 저장)
+            imageFileRepository.saveAll(imageFileList);
+
+            return new UploadImagesRes("리뷰 이미지가 업로드되었습니다.");
+        } else {
+            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
         }
 
-        // 새로운 이미지 파일을 S3에 업로드
-        String fileUrl = uploadFileToS3(multipartFile, userId, "users/profiles/");
-
-        User user = userRepository.findUserByIdWithThrow(userId);
-        // 새로운 프로필 이미지 저장
-        UserImage newUserImage = UserImage.builder()
-                .user(user)
-                .userImageUrl(s3Url + fileUrl) // s3Url과 fileUrl을 결합하여 완전한 URL 생성
-                .type(ImageType.PROFILE_IMG)   // 이미지 타입 설정
-                .build();
-
-        userImageRepository.save(newUserImage); // DB에 새로운 이미지 저장
-
-        // 수정 완료 응답
-        return new UserImageCreateRes("이미지 수정 완료");
     }
 
-    // 자격증 이미지 업로드
-    public UserImageCreateRes uploadUserCertificationImages(Long userId, List<MultipartFile> multipartFiles) {
-        User user = userRepository.findUserByIdWithThrow(userId);
-        List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "users/certifications/");
 
-        List<UserImage> userImageList = createUserImageList(fileUrlList, user);
-        userImageRepository.saveAll(userImageList);
-        return new UserImageCreateRes("자격증 이미지가 업로드되었습니다.");
-    }
+    public List<GetImagesRes> getImages(String category, Long targetId) {
+        //  category를 ImageType으로 변환
+        ImageType imageType = convertCategoryToImageType(category);
 
-    // 프로필 이미지 조회
-    public UserImageReadRes readUserProfileImage(Long userId) {
-        UserImage userImage = userImageRepository.findProfileByUserIdAndType(userId, ImageType.PROFILE_IMG)
-                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
-        return new UserImageReadRes(userImage.getId(),userImage.getUserImageUrl());
-    }
+        List<ImageFile> imageFiles;
 
-    // 자격증 이미지 조회
-    public List<UserCertsReadRes> readUserCertImages(Long trainerId) {
-        // 자격증 이미지들을 조회
-        List<UserImage> userImages = userImageRepository.findCertificationsByUserIdAndType(trainerId, ImageType.CERTS_IMG);
-
-        if (userImages.isEmpty()) {
-            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE); // 자격증 이미지가 없을 경우 예외 처리
+        if(imageType == ImageType.BANNER_IMG) {
+            imageFiles = imageFileRepository.findByType(imageType);
+        }else {
+            //  ImageFile 조회
+            imageFiles = imageFileRepository.findByTypeAndTargetId(imageType, targetId);
         }
 
-        // 결과를 담을 리스트
-        List<UserCertsReadRes> response = new ArrayList<>();
-
-        // UserImage 객체들을 UserCertsReadRes로 변환하여 리스트에 추가
-        for (UserImage userImage : userImages) {
-            response.add(new UserCertsReadRes(userImage.getId(),userImage.getUserImageUrl()));
+        //  DTO로 변환 =
+        List<GetImagesRes> getImagesRes = new ArrayList<>();
+        for (ImageFile imageFile : imageFiles) {
+            getImagesRes.add(new GetImagesRes(imageFile.getImageUrl(), imageFile.getId()));
         }
-
-        // 변환된 리스트 반환
-        return response;
+        return getImagesRes;
     }
 
 
+    public GetThumbnailRes getThumbnailImage(String category, Long targetId) {
+        // 1. category를 ImageType으로 변환
+        ImageType imageType = convertCategoryToImageType(category);
 
-    // 단일 자격증 이미지 삭제
-    public UserImageDeleteRes deleteUserCertificationImage(Long userId, Long imageId) {
-        // 사용자 확인
-        User user = userRepository.findUserByIdWithThrow(userId);
+        // 2. 썸네일 이미지 조회
+        // 썸네일 이미지는 특정 type에 맞는 이미지를 선택합니다.
+        ImageFile thumbnailImageFile = imageFileRepository.findTopByTypeAndTargetId(imageType, targetId);
 
+        // 3. 이미지가 존재하는지 확인
+        if (thumbnailImageFile != null) {
+            // 4. 썸네일 URL 반환
+            return new GetThumbnailRes(thumbnailImageFile.getImageUrl());
+        } else {
+            // 썸네일 이미지가 없다면, 기본 이미지를 반환하거나 null을 반환할 수 있습니다.
+            return new GetThumbnailRes(null); // 기본 URL
+        }
+    }
+
+    public ImageDeleteRes deleteImage(Long imageId, User user) {
         // 이미지 조회
-        UserImage userImage = userImageRepository.findByUserAndId(user, imageId)
+        ImageFile imageFile = imageFileRepository.findById(imageId)
                 .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_IMAGE));
 
-        // S3에서 이미지 삭제
-        String imageUrl = userImage.getUserImageUrl();
+        if(user.getId().equals(imageFile.getUser().getId())){
+            throw new ImageException(ImageErrorCode.IMAGE_CURRENT_USER);
+        }
+
+        String imageUrl = imageFile.getImageUrl();
         String s3Key = imageUrl.replace(s3Url, "");
         s3Uploader.deleteS3(s3Key);
 
-        // DB에서 이미지 삭제
-        userImageRepository.delete(userImage);
+        // 이미지 삭제
+        imageFileRepository.delete(imageFile);
 
-        return new UserImageDeleteRes("삭제 완료");
+        // 성공 응답 반환
+        return new ImageDeleteRes("이미지 삭제 완료");
     }
 
+    public void deleteImages(Long targetId, String category,User user) {
+        // category를 ImageType으로 변환
+        ImageType imageType = convertCategoryToImageType(category);
 
+        // targetId와 category에 해당하는 이미지 조회
+        List<ImageFile> imageFiles = imageFileRepository.findByTargetIdAndType(targetId, imageType);
 
-
-
-
-
-
-    // UserImage 객체 리스트 생성
-    private List<UserImage> createUserImageList(List<String> fileUrls, User user) {
-        List<UserImage> userImageList = new ArrayList<>();
-        for (String fileUrl : fileUrls) {
-            UserImage userImage = UserImage.builder()
-                    .user(user)
-                    .userImageUrl(s3Url+fileUrl)
-                    .type(ImageType.CERTS_IMG)
-                    .build();
-            userImageList.add(userImage);
+        if(user.getId().equals(imageFiles.get(0).getUser().getId())){
+            throw new ImageException(ImageErrorCode.IMAGE_CURRENT_USER);
         }
-        return userImageList;
+
+        // 조회된 이미지가 없으면 예외 처리
+        if (imageFiles.isEmpty()) {
+            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
+        }
+
+        for (ImageFile imageFile : imageFiles) {
+            String imageUrl = imageFile.getImageUrl();
+            String s3Key = imageUrl.replace(s3Url, "");
+            s3Uploader.deleteS3(s3Key);
+        }
+
+        // 이미지 삭제
+        imageFileRepository.deleteAll(imageFiles);
     }
 
-    // 단일 파일 S3 업로드
-    private String uploadFileToS3(MultipartFile multipartFile, Long userId, String filePath) {
-        // 업로드 경로 설정
-        String userImageUrl = filePath + userId;
-
-        // 파일을 업로드하고 URL 반환
-        return s3Uploader.uploadSingleFileToS3(multipartFile, userImageUrl);
+    private ImageType convertCategoryToImageType(String category) {
+        // category 문자열을 ImageType Enum으로 매핑
+        return switch (category.toLowerCase()) {
+            case "profile" -> ImageType.PROFILE_IMG;
+            case "certification" -> ImageType.CERTS_IMG;
+            case "pt" -> ImageType.PT_IMG;
+            case "banner" -> ImageType.BANNER_IMG;
+            case "review" -> ImageType.REVIEW_IMG;
+            case "board" -> ImageType.BOARD_IMG;
+            default -> throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
+        };
     }
+
+
+    private List<ImageFile> createImageFileList(List<String> fileUrls,Long targetId , ImageType imageType,User user) {
+        List<ImageFile> imageFileList = new ArrayList<>();
+
+        for (String fileUrl : fileUrls) {
+            ImageFile imageFile = ImageFile.builder()
+                    .targetId(targetId)
+                    .imageUrl(s3Url+fileUrl)
+                    .type(imageType)
+                    .user(user)
+                    .build();
+            imageFileList.add(imageFile);
+        }
+
+        return imageFileList;
+    }
+
 
     // 다수 파일 S3 업로드
     private List<String> uploadFilesToS3(List<MultipartFile> multipartFiles, Long userId, String filePath) {
@@ -176,126 +259,5 @@ public class ImageFileService {
         fileUrls.addAll(uploadedFileUrls);
 
         return fileUrls;
-    }
-
-    private List<PTImage> createImageList(PT pt,List<String> fileUrls, User user) {
-        List<PTImage> ptImageList = new ArrayList<>();
-
-        // 첫 번째 이미지를 썸네일로 설정, 나머지는 일반 이미지로 설정
-        for (int i = 0; i < fileUrls.size(); i++) {
-            String fileUrl = fileUrls.get(i);
-
-            // 첫 번째 이미지는 썸네일로, 그 외의 이미지는 일반 사진으로 설정
-            ImageType imageType = (i == 0) ? ImageType.THUMBNAIL : ImageType.REGULAR;
-
-            PTImage ptImage = PTImage.builder()
-                    .user(user)
-                    .pt(pt)
-                    .userImageUrl(s3Url + fileUrl)
-                    .type(imageType)  // 이미지 타입 설정
-                    .build();
-
-            ptImageList.add(ptImage);
-        }
-        return ptImageList;
-    }
-    public UserImageCreateRes ptUploadImages(Long ptId,User user, List<MultipartFile> multipartFiles) {
-        List<String> fileUrlList = uploadFilesToS3(multipartFiles, ptId, "ptImages/");
-        PT pt = ptRepository.findPTByIdWithThrow(ptId);
-        List<PTImage> ptImageList = createImageList(pt,fileUrlList, user);
-        ptImageRepository.saveAll(ptImageList);
-        return new UserImageCreateRes("이미지가 업로드되었습니다.");
-    }
-
-    public List<PTImageReadRes> readPTImages(Long ptId) {
-
-        List<PTImage> ptImages = ptImageRepository.findAllByPtId(ptId);
-
-        if (ptImages.isEmpty()) {
-            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
-        }
-
-        // 결과를 담을 리스트
-        List<PTImageReadRes> response = new ArrayList<>();
-
-        // PTImage 객체들을 UserCertsReadRes로 변환하여 리스트에 추가
-        for (PTImage ptImage : ptImages) {
-            response.add(new PTImageReadRes(ptImage.getId(),ptImage.getUserImageUrl()));
-        }
-
-        // 변환된 리스트 반환
-        return response;
-    }
-
-    public BannerImageCreateRes bannerUploadImages(User user, List<MultipartFile> multipartFiles) {
-        if(user.getRole()!= UserRoleType.ADMIN){
-            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
-        }
-        List<String> fileUrlList = uploadFilesToS3(multipartFiles, user.getId(), "banners/");
-
-        List<BannerImage> bannerImageList = createBannerImageList(fileUrlList, user);
-        bannerRepository.saveAll(bannerImageList);
-        return new BannerImageCreateRes("이미지가 업로드되었습니다.");
-    }
-
-    private List<BannerImage> createBannerImageList(List<String> fileUrls, User user) {
-        List<BannerImage> bannerImageList = new ArrayList<>();
-
-        // 첫 번째 이미지를 썸네일로 설정, 나머지는 일반 이미지로 설정
-        for (String fileUrl : fileUrls) {
-            BannerImage bannerImage = BannerImage.builder()
-                    .user(user)
-                    .userImageUrl(s3Url + fileUrl)
-                    .build();
-
-            bannerImageList.add(bannerImage);
-        }
-        return bannerImageList;
-    }
-
-    public List<BannerReadRes> readBannerImages() {
-        List<BannerImage> bannerImageList = bannerRepository.findAll();
-
-        if (bannerImageList.isEmpty()) {
-            throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
-        }
-        List<BannerReadRes> response = new ArrayList<>();
-
-        for (BannerImage bannerImage : bannerImageList) {
-            response.add(new BannerReadRes(bannerImage.getId(),bannerImage.getUserImageUrl()));
-        }
-
-        // 변환된 리스트 반환
-        return response;
-    }
-
-    public BannerImageDeleteRes deleteBannerImages(User user, Long bannerId) {
-        if(user.getRole()!= UserRoleType.ADMIN){
-            throw new UserException(UserErrorCode.NOT_ROLE_ADMIN);
-        }
-        BannerImage bannerImage = bannerRepository.findById(bannerId)
-                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_IMAGE));
-
-
-        // S3에서 이미지 삭제
-        String imageUrl = bannerImage.getUserImageUrl();
-        String s3Key = imageUrl.replace(s3Url, "");
-        s3Uploader.deleteS3(s3Key);
-
-        bannerRepository.delete(bannerImage);
-
-        return new BannerImageDeleteRes("삭제 완료");
-    }
-
-    public PTImageReadRes readThumbnailPTImage(Long ptId) {
-        PTImage ptImage=ptImageRepository.findFirstByPtIdAndType(ptId, ImageType.THUMBNAIL)
-                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
-        return new PTImageReadRes(ptImage.getId(),ptImage.getUserImageUrl());
-    }
-
-    public UserImageReadRes getUserProfileImage(Long trainerId) {
-        UserImage userImage = userImageRepository.findProfileByUserIdAndType(trainerId, ImageType.PROFILE_IMG)
-                .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_PROFILE));
-        return new UserImageReadRes(userImage.getId(),userImage.getUserImageUrl());
     }
 }

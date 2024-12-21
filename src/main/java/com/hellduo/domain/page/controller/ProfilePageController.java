@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProfilePageController {
     @GetMapping("/profile")
     public String profilePage() {
-        return "/profile/profile";
+        return "profile/profile";
     }
 
     @GetMapping("/profile-edit")
     public String profileEditPage() {
-        return "/profile/profile-edit";
+        return "profile/profile-edit";
     }
 
     @GetMapping("/trainer-profile/{trainerId}")
     public String trainerProfile(@PathVariable Long trainerId, Model model) {
         model.addAttribute("trainerId", trainerId);
-        return "/profile/trainer-profile";
+        return "profile/trainer-profile";
     }
 
     @GetMapping("/user-profile/{ptId}")
     public String userProfile(@PathVariable Long ptId, Model model) {
         model.addAttribute("ptId", ptId);
-        return "/profile/user-profile";
+        return "profile/user-profile";
     }
 }

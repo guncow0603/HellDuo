@@ -77,7 +77,7 @@ $(document).ready(function() {
             // PT 이미지 조회 API 호출
             if (ptId !== undefined) {
                 $.ajax({
-                    url: `/api/v1/userImage/pt/${ptId}`,  // 트레이너 ID에 맞춰서 API 호출
+                    url: `/api/v2/images/pt/${ptId}`,  // 트레이너 ID에 맞춰서 API 호출
                     method: 'GET',
                     success: function (response) {
                         const ptImages = response;  // PT 이미지 리스트 (response)

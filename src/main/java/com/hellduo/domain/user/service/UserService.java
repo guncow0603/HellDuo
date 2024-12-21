@@ -1,9 +1,8 @@
 package com.hellduo.domain.user.service;
 
-import com.hellduo.domain.user.entity.enums.UserStatus;
-import com.hellduo.domain.imageFile.entity.UserImage;
+import com.hellduo.domain.imageFile.entity.ImageFile;
 import com.hellduo.domain.imageFile.entity.enums.ImageType;
-import com.hellduo.domain.imageFile.repository.UserImageRepository;
+import com.hellduo.domain.imageFile.repository.ImageFileRepository;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.exception.PTErrorCode;
@@ -15,6 +14,7 @@ import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
+import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
@@ -25,28 +25,29 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
 @Slf4j
 public class UserService {
     private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final UserImageRepository userImageRepository;
     private final PTRepository ptRepository;
+    private final ImageFileRepository imageFileRepository;
     @Value("${admin_token}")
     private String ADMIN_TOKEN;
 
+    @Transactional
     public UserSignupRes signup(UserSignupReq req) {
         String email = req.email();
         String password = passwordEncoder.encode(req.password());
@@ -94,18 +95,21 @@ public class UserService {
                 .height(height)
                 .userStatus(UserStatus.ACTION)
                 .build();
-        UserImage userImage = UserImage.builder()
-                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
-                .type(ImageType.PROFILE_IMG)
-                .user(user)
-                .build();
-
 
         userRepository.save(user);
-        userImageRepository.save(userImage);
+
+        ImageFile userImage = ImageFile.builder()
+                .imageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+                .type(ImageType.PROFILE_IMG)
+                .user(user)
+                .targetId(user.getId())
+                .build();
+
+        imageFileRepository.save(userImage);
+
         return new UserSignupRes("회원 가입 완료");
     }
-
+    @Transactional
     public TrainerSignupRes trainerSignup(TrainerSignupReq req) {
         String email = req.email();
         String password = passwordEncoder.encode(req.password());
@@ -148,18 +152,21 @@ public class UserService {
                 .userStatus(UserStatus.ACTION)
                 .build();
 
-        UserImage userImage = UserImage.builder()
-                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+        userRepository.save(trainer);
+
+        ImageFile userImage = ImageFile.builder()
+                .imageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
                 .type(ImageType.PROFILE_IMG)
                 .user(trainer)
+                .targetId(trainer.getId())
                 .build();
 
-        userRepository.save(trainer);
-        userImageRepository.save(userImage);
+        imageFileRepository.save(userImage);
 
         return new TrainerSignupRes("회원 가입 완료");
     }
 
+    @Transactional
     public UserLoginRes login(UserLoginReq req, HttpServletResponse res) {
         String email = req.email();
         String password = req.password();
@@ -186,8 +193,10 @@ public class UserService {
         return new UserLoginRes("로그인 완료");
     }
 
+    @Transactional(readOnly = true)
     public UserOwnProfileGetRes getOwnProfile(User user) {
-        return new UserOwnProfileGetRes(user.getId(),
+        return new UserOwnProfileGetRes(
+                user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getGender().getDescription(),
@@ -198,9 +207,11 @@ public class UserService {
                 user.getHeight());
     }
 
+    @Transactional(readOnly = true)
     public TrainerOwnProfileGetRes getOwnTrainerProfile(User trainer) {
 
-        return new TrainerOwnProfileGetRes(trainer.getId(),
+        return new TrainerOwnProfileGetRes(
+                trainer.getId(),
                 trainer.getEmail(),
                 trainer.getName(),
                 trainer.getPhoneNumber(),
@@ -213,6 +224,7 @@ public class UserService {
                 trainer.getRating());
     }
 
+    @Transactional
     public UserProfileUpdateRes updateUserProfile(Long userId, UserProfileUpdateReq req) {
         User user= userRepository.findUserByIdWithThrow(userId);
 
@@ -238,6 +250,7 @@ public class UserService {
         return new UserProfileUpdateRes("수정 완료");
     }
 
+    @Transactional
     public TrainerProfileUpdateRes updateTrainerProfile(Long trainerId, TrainerProfileUpdateReq req) {
         User trainer = userRepository.findUserByIdWithThrow(trainerId);
 
@@ -261,6 +274,7 @@ public class UserService {
         return new TrainerProfileUpdateRes("수정 완료");
     }
 
+    @Transactional
     public UserWithdrawalRes withdrawal(UserWithdrawalReq req, Long userId, HttpServletResponse response) {
         String password = req.password();
 
@@ -296,11 +310,13 @@ public class UserService {
         response.addCookie(refreshTokenCookie);
     }
 
+    @Transactional
     public UserLogoutRes logout(HttpServletResponse response) {
         triggerLogout(response);
         return new UserLogoutRes("로그아웃 완료");
     }
 
+    @Transactional(readOnly = true)
     public TrainerOwnProfileGetRes getTrainerProfile(Long trainerId) {
         User trainer = userRepository.findUserByIdWithThrow(trainerId);
         return new TrainerOwnProfileGetRes(trainer.getId(),
@@ -316,47 +332,21 @@ public class UserService {
                 trainer.getRating());
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(value = "trainerBestRatingCache", key = "'bestRatingTrainer'", unless = "#result == null or #result.size() == 0", cacheManager = "redisCacheManager")
     public List<BestRatingTrainerRes> getBestRatingTrainer() {
-        // 전체 유저 중에서 트레이너 역할(UserRoleType이 TRAINER)인 사용자만 필터링
-        List<User> allUsers = userRepository.findAll();
-
-        List<User> trainers = new ArrayList<>();
-        for (User user : allUsers) {
-            if (user.getRole() == UserRoleType.TRAINER && !user.getUserStatus().equals(UserStatus.DELETED)) { // 트레이너이면서 탈퇴하지 않은 유저
-                trainers.add(user);
-            }
-        }
-
-        // 평점 순으로 정렬
-        for (int i = 0; i < trainers.size(); i++) {
-            for (int j = i + 1; j < trainers.size(); j++) {
-                if (trainers.get(i).getRating() < trainers.get(j).getRating()) {
-                    // swap
-                    User temp = trainers.get(i);
-                    trainers.set(i, trainers.get(j));
-                    trainers.set(j, temp);
-                }
-            }
-        }
-
-        // 상위 10명만 추출
-        List<User> top10Trainers = new ArrayList<>();
-        for (int i = 0; i < trainers.size() && i < 10; i++) {
-            top10Trainers.add(trainers.get(i));
-        }
+        List<User> top10Trainers = userRepository.findTop10ByRoleAndUserStatusNotOrderByRatingDesc(UserRoleType.TRAINER, UserStatus.DELETED);
 
         // DTO 변환
-        List<BestRatingTrainerRes> result = new ArrayList<>();
-        for (User trainer : top10Trainers) {
-            result.add(new BestRatingTrainerRes(trainer.getId(),
-                    trainer.getName(),
-                    trainer.getRating(),
-                    trainer.getSpecialization().getName()));
-        }
-
-        return result;
+        return top10Trainers.stream()
+                .map(trainer -> new BestRatingTrainerRes(trainer.getId(),
+                        trainer.getName(),
+                        trainer.getRating(),
+                        trainer.getSpecialization().getName()))
+                .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public UserOwnProfileGetRes getUserProfile(User trainer, Long ptId) {
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
         if(!pt.getTrainer().getId().equals(trainer.getId())){

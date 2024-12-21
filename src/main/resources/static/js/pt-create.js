@@ -81,7 +81,7 @@ $(document).ready(function () {
 
         // AJAX를 통해 서버로 파일 업로드
         $.ajax({
-            url: `/api/v1/userImage/pt/${ptId}`,
+            url: `/api/v2/images/pt/${ptId}`,
             method: 'POST',
             data: formData,
             processData: false,

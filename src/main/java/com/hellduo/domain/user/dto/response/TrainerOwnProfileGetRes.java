@@ -3,7 +3,7 @@ package com.hellduo.domain.user.dto.response;
 import com.hellduo.domain.user.entity.enums.Specialization;
 
 public record TrainerOwnProfileGetRes(
-        Long id,
+        Long trainerId,
         String email ,          // 이메일
         String name,        // 이름
         String phoneNumber, // 전화번호

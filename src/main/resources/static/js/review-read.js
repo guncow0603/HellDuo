@@ -35,7 +35,7 @@ function renderReviewDetails(review) {
 // 이미지 조회 함수 (AJAX 사용)
 function fetchReviewImages(reviewId) {
     $.ajax({
-        url: `/api/v1/reviews/${reviewId}/images`, // URL 일관성 유지
+        url: `/api/v2/images/review/${reviewId}`, // URL 일관성 유지
         method: 'GET',
         success: function (imageList) {
             renderImages(imageList);

@@ -12,44 +12,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminPageController {
     @GetMapping("/banner")
     public String bannerPage() {
-        return "/admin/banner-create";
+        return "admin/banner-create";
     }
 
     @GetMapping("/noticeList")
     public String noticeListPage() {
-        return "/admin/notice-list";
+        return "admin/notice-list";
     }
 
     @GetMapping("/notice/{noticeId}")
     public String noticePage(@PathVariable Long noticeId, Model model) {
         model.addAttribute("noticeId", noticeId);
-        return "/admin/notice-read";
+        return "admin/notice-read";
     }
 
     @GetMapping("/noticeCreate")
     public String noticeCreatePage() {
-        return "/admin/notice-create";
+        return "admin/notice-create";
     }
 
     @GetMapping("/noticeUpdate/{noticeId}")
     public String noticeUpdatePage(@PathVariable Long noticeId, Model model) {
         model.addAttribute("noticeId", noticeId);
-        return "/admin/notice-update";
+        return "admin/notice-update";
     }
 
     @GetMapping("/userList")
     public String userListPage(){
-        return "/admin/user-list";
+        return "admin/user-list";
     }
 
     @GetMapping("/reportCreate/{userId}")
     public String reportCreatePage(@PathVariable Long userId, Model model) {
         model.addAttribute("userId", userId);
-        return "/admin/report-create";
+        return "admin/report-create";
     }
 
     @GetMapping("/reportList")
     public String reportListPage() {
-        return "/admin/report-list";
+        return "admin/report-list";
     }
 }
