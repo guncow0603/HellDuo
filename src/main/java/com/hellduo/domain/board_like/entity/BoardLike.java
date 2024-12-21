@@ -4,20 +4,22 @@ import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Entity
+@Entity(name="tb_board_like")
+@Getter
 @RequiredArgsConstructor
 public class BoardLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -26,5 +28,4 @@ public class BoardLike {
         this.board = board;
         this.user = user;
     }
-
 }

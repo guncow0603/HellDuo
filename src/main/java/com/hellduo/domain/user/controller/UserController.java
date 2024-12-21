@@ -45,13 +45,13 @@ public class UserController {
     public ResponseEntity<UserOwnProfileGetRes> getOwnProfile(
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return  ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getOwnProfile(userDetails.getUser().getId()));
+                .body(userService.getOwnProfile(userDetails.getUser()));
     }
     @GetMapping("/trainer")
     public ResponseEntity<TrainerOwnProfileGetRes> getOwnTrainerProfile(
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return  ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getOwnTrainerProfile(userDetails.getUser().getId()));
+                .body(userService.getOwnTrainerProfile(userDetails.getUser()));
     }
 
     @PutMapping
@@ -94,6 +94,14 @@ public class UserController {
             @PathVariable Long trainerId){
         return  ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getTrainerProfile(trainerId));
+    }
+
+    @GetMapping("/pt/{ptId}")
+    public ResponseEntity<UserOwnProfileGetRes> getUserProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long ptId){
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUserProfile(userDetails.getUser(),ptId));
     }
 
     @GetMapping("/trainer/bestRating")

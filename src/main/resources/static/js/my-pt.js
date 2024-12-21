@@ -14,7 +14,6 @@ function loadPTs() {
         },
     });
 }
-
 // PT 항목들을 화면에 렌더링하는 함수
 function renderPTs(pts) {
     const ptListContainer = $('#pt-list');
@@ -40,6 +39,9 @@ function renderPTs(pts) {
         <div class="pt-price-status">
             <p class="pt-price">${pt.price.toLocaleString()}원</p>
             <p class="pt-status">${pt.ptStatus}</p>
+            ${pt.ptStatus === '완료됨' ? `
+            <button class="review-button" onclick="handleReviewButton(event, '${pt.ptId}')">리뷰 쓰기</button>
+            ` : ''}
         </div>
     </div>
 `);
@@ -47,9 +49,17 @@ function renderPTs(pts) {
         loadThumbnail(pt.ptId); // 이미지 로드
     });
 }
+
+// 리뷰 버튼 클릭 이벤트 핸들러
+function handleReviewButton(event, ptId) {
+    event.stopPropagation(); // 클릭 이벤트 전파를 막음
+    window.location.href = `/api/v1/page/reviewCreate/${ptId}`;
+}
+
+// 썸네일 이미지를 불러오는 함수
 function loadThumbnail(ptId) {
     $.ajax({
-        url: `/api/v1/userImage/pt/thumbnail/${ptId}`,
+        url: `/api/v2/images/pt/${ptId}/thumbnail`,
         type: "GET",
         success: function (response) {
             if (response.imageUrl) {
@@ -60,11 +70,9 @@ function loadThumbnail(ptId) {
         },
         error: function (xhr, status, error) {
             console.error(`썸네일 이미지를 가져오는 중 오류 발생 (PT ID: ${ptId}):`, error);
-            $(`#thumbnail-${ptId}`).attr("src", "/path/to/default-image.jpg");
         }
     });
 }
-
 
 // PT 상태를 변경하는 함수
 function changeStatus(status) {

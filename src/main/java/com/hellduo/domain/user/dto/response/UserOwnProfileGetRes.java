@@ -1,7 +1,7 @@
 package com.hellduo.domain.user.dto.response;
 
 public record UserOwnProfileGetRes(
-        Long id,
+        Long userId,
         String name,
         String email ,          // 이메일
         String gender,        // 성별

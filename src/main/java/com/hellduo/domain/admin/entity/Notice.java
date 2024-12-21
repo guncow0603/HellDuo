@@ -9,16 +9,20 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Getter
 @RequiredArgsConstructor
-@Table(name="TB_Notice")
+@Table(name="tb_notice")
 public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "adminId")
+    @JoinColumn(name = "admin_id")
     private User user;
 
     @Builder

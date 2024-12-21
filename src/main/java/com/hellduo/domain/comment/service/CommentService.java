@@ -27,17 +27,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class CommentService {
-    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
-    public CommentCreateRes commentCreate(CommentCreatReq req, Long userId) {
-
-        User user = userRepository.findUserByIdWithThrow(userId);
+    public CommentCreateRes commentCreate(CommentCreatReq req, User user) {
 
         Board board = boardRepository.findBoardByIdWithThrow(req.boardId());
 
-        if(req.content() == null) {
+        if (req.content() == null || req.content().trim().isEmpty()) {
             throw new CommentException(CommentErrorCode.NOT_FOUND_COMMENT);
         }
 
@@ -52,29 +49,11 @@ public class CommentService {
         return new CommentCreateRes("댓글 작성이 완료 되었습니다.");
     }
 
-    public List<CommentReadRes> commentRead(Long boardId) {
-
-        Board board = boardRepository.findBoardByIdWithThrow(boardId);
-
-        List<Comment> commentList = commentRepository.findAllByBoard(board);
-
-        List<CommentReadRes> commentReadResList = new ArrayList<>();
-
-        for(Comment comment : commentList){
-            commentReadResList.add(new CommentReadRes(
-                    comment.getContent(),
-                    comment.getUser().getNickname(),
-                    comment.getId()));
-        }
-
-        return commentReadResList;
-    }
-
     public CommentUpdateRes commentUpdate(CommentUpdateReq req, User user, Long commentId) {
         Comment comment = commentRepository.findCommentByIdWithThrow(commentId);
 
-        if(user.getId() != comment.getUser().getId()) {
-            throw new UserException(UserErrorCode.NOT_FOUND_USER);
+        if(!user.getId().equals(comment.getUser().getId())) {
+            throw new CommentException(CommentErrorCode.COMMENT_CURRENT_USER);
         }
 
         comment.updateContent(req.content());
@@ -85,9 +64,10 @@ public class CommentService {
     public CommentDeleteRes commentDelete(User user, Long commentId) {
         Comment comment = commentRepository.findCommentByIdWithThrow(commentId);
 
-        if(user.getId() != comment.getUser().getId()) {
-            throw new UserException(UserErrorCode.NOT_FOUND_USER);
+        if(!user.getId().equals(comment.getUser().getId())) {
+            throw new CommentException(CommentErrorCode.COMMENT_CURRENT_USER);
         }
+
         commentRepository.deleteById(commentId);
 
         return new CommentDeleteRes("삭제 완료.");

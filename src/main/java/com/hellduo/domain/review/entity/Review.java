@@ -3,11 +3,13 @@ package com.hellduo.domain.review.entity;
 import com.hellduo.domain.pt.entity.PT;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Entity
+@Entity(name ="tb_review")
 @RequiredArgsConstructor
 @Getter
 public class Review {
@@ -16,19 +18,20 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String title;
+    @Column(nullable = false, length = 100)
+    private String title; // 제목 (최대 100자)
 
-    @Column
-    private String content;
+    @Column(nullable = false, length = 1000)
+    private String content; // 내용 (최대 1000자)
 
-    @Column
+    @Column(nullable = false)
+    @Min(0)
+    @Max(5)
     private Double rating;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pt_id")
-    private PT pt;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pt_id", nullable = false)
+    private PT pt; // 해당 리뷰가 속한 PT 세션 (일대일 관계)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")

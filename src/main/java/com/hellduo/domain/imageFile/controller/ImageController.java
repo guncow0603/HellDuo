@@ -1,7 +1,9 @@
 package com.hellduo.domain.imageFile.controller;
 
-import com.hellduo.domain.imageFile.dto.response.*;
-import com.hellduo.domain.imageFile.entitiy.BannerImage;
+import com.hellduo.domain.imageFile.dto.response.GetImagesRes;
+import com.hellduo.domain.imageFile.dto.response.ImageDeleteRes;
+import com.hellduo.domain.imageFile.dto.response.UploadImagesRes;
+import com.hellduo.domain.imageFile.dto.response.GetThumbnailRes;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -15,102 +17,46 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/userImage")
+@RequestMapping("/api/v2/images")
 public class ImageController {
 
     private final ImageFileService imageFileService;
 
-    // 프로필 이미지 수정
-    @PostMapping("/profile")
-    public ResponseEntity<UserImageCreateRes> updateUserProfileImage(
+    // 공통 이미지 업로드
+    @PostMapping("/{category}/{targetId}")
+    public ResponseEntity<UploadImagesRes> uploadImages(
+            @PathVariable String category, // profile, certifications, pt, board, review
+            @PathVariable Long targetId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(imageFileService.updateUserProfileImage(userDetails.getUser().getId(), multipartFile));
+                .body(imageFileService.uploadImages(category, targetId, userDetails.getUser(), multipartFiles));
     }
 
-    // 자격증 이미지 업로드
-    @PostMapping("/certifications")
-    public ResponseEntity<UserImageCreateRes> uploadUserCertificationImages(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.uploadUserCertificationImages(userDetails.getUser().getId(), multipartFiles));
+    // 공통 이미지 조회
+    @GetMapping("/{category}/{targetId}")
+    public ResponseEntity<List<GetImagesRes>> getImages(
+            @PathVariable String category,
+            @PathVariable Long targetId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(imageFileService.getImages(category, targetId));
     }
 
-    // PT 이미지 업로드
-    @PostMapping("/pt/{ptId}")
-    public ResponseEntity<UserImageCreateRes> ptUploadImages(
-            @PathVariable Long ptId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.ptUploadImages(ptId,userDetails.getUser(), multipartFiles));
+    // 썸네일 이미지 조회
+    @GetMapping("/{category}/{targetId}/thumbnail")
+    public ResponseEntity<GetThumbnailRes> getThumbnailImage(
+            @PathVariable String category,
+            @PathVariable Long targetId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(imageFileService.getThumbnailImage(category, targetId));
     }
 
-    // PT 이미지 조회
-    @GetMapping("/pt/{ptId}")
-    public ResponseEntity<List<PTImageReadRes>> readPTImages(@PathVariable Long ptId) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readPTImages(ptId));
-    }
-
-    // PT 썸네일 이미지 조회
-    @GetMapping("/pt/thumbnail/{ptId}")
-    public ResponseEntity<PTImageReadRes> readThumbnailPTImage(@PathVariable Long ptId) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readThumbnailPTImage(ptId));
-    }
-
-    // 프로필 이미지 조회
-    @GetMapping("/profile")
-    public ResponseEntity<UserImageReadRes> readUserProfileImage(
+    // 단일 이미지 삭제
+    @DeleteMapping("/{imageId}")
+    public ResponseEntity<ImageDeleteRes> deleteImage(
+            @PathVariable Long imageId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readUserProfileImage(userDetails.getUser().getId()));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(imageFileService.deleteImage( imageId, userDetails.getUser()));
     }
-
-    // 프로필 이미지 조회
-    @GetMapping("/profile/{trainerId}")
-    public ResponseEntity<UserImageReadRes> getUserProfileImage(
-            @PathVariable Long trainerId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.getUserProfileImage(trainerId));
-    }
-
-    // 자격증 이미지 조회
-    @GetMapping("/certifications/{trainerId}")
-    public ResponseEntity<List<UserCertsReadRes>> readUserCertImages(@PathVariable Long trainerId) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readUserCertImages(trainerId));
-    }
-
-    // 자격증 이미지 삭제
-    @DeleteMapping("/certifications/{certId}")
-    public ResponseEntity<UserImageDeleteRes> deleteUserCertificationImage(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long certId) {
-
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteUserCertificationImage(userDetails.getUser().getId(), certId));
-    }
-
-    // 배너 이미지 업로드
-    @PostMapping("/banner")
-    public ResponseEntity<BannerImageCreateRes> bannerUploadImages(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "banners", required = false) List<MultipartFile> multipartFiles) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageFileService.bannerUploadImages(userDetails.getUser(), multipartFiles));
-    }
-
-    // 배너 이미지 조회
-    @GetMapping("/banner")
-    public ResponseEntity<List<BannerReadRes>> readBannerImages(
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.readBannerImages());
-    }
-
-    // 배너 이미지 조회
-    @DeleteMapping("/banner/{bannerId}")
-    public ResponseEntity<BannerImageDeleteRes> readBannerImages(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long bannerId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageFileService.deleteBannerImages(userDetails.getUser(),bannerId));
-    }
-
-
 }

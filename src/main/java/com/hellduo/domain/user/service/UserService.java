@@ -1,14 +1,20 @@
 package com.hellduo.domain.user.service;
 
-import com.hellduo.domain.imageFile.entitiy.enums.ImageType;
-import com.hellduo.domain.imageFile.entitiy.UserImage;
-import com.hellduo.domain.imageFile.repository.UserImageRepository;
+import com.hellduo.domain.imageFile.entity.ImageFile;
+import com.hellduo.domain.imageFile.entity.enums.ImageType;
+import com.hellduo.domain.imageFile.repository.ImageFileRepository;
+import com.hellduo.domain.pt.entity.PT;
+import com.hellduo.domain.pt.entity.enums.PTStatus;
+import com.hellduo.domain.pt.exception.PTErrorCode;
+import com.hellduo.domain.pt.exception.PTException;
+import com.hellduo.domain.pt.repository.PTRepository;
 import com.hellduo.domain.user.dto.request.*;
 import com.hellduo.domain.user.dto.response.*;
+import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.Gender;
 import com.hellduo.domain.user.entity.enums.Specialization;
-import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
+import com.hellduo.domain.user.entity.enums.UserStatus;
 import com.hellduo.domain.user.exception.UserErrorCode;
 import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.domain.user.repository.UserRepository;
@@ -19,27 +25,29 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
 @Slf4j
 public class UserService {
     private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final UserImageRepository userImageRepository;
-    @Value("${admin-token}")
+    private final PTRepository ptRepository;
+    private final ImageFileRepository imageFileRepository;
+    @Value("${admin_token}")
     private String ADMIN_TOKEN;
 
+    @Transactional
     public UserSignupRes signup(UserSignupReq req) {
         String email = req.email();
         String password = passwordEncoder.encode(req.password());
@@ -85,19 +93,23 @@ public class UserService {
                 .phoneNumber(phoneNumber)
                 .weight(weight)
                 .height(height)
+                .userStatus(UserStatus.ACTION)
                 .build();
-        UserImage userImage = UserImage.builder()
-                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
-                .type(ImageType.PROFILE_IMG)
-                .user(user)
-                .build();
-
 
         userRepository.save(user);
-        userImageRepository.save(userImage);
+
+        ImageFile userImage = ImageFile.builder()
+                .imageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+                .type(ImageType.PROFILE_IMG)
+                .user(user)
+                .targetId(user.getId())
+                .build();
+
+        imageFileRepository.save(userImage);
+
         return new UserSignupRes("회원 가입 완료");
     }
-
+    @Transactional
     public TrainerSignupRes trainerSignup(TrainerSignupReq req) {
         String email = req.email();
         String password = passwordEncoder.encode(req.password());
@@ -137,20 +149,24 @@ public class UserService {
                 .certifications(certifications)
                 .bio(bio)
                 .nickname(name)
-                .build();
-
-        UserImage userImage = UserImage.builder()
-                .userImageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
-                .type(ImageType.PROFILE_IMG)
-                .user(trainer)
+                .userStatus(UserStatus.ACTION)
                 .build();
 
         userRepository.save(trainer);
-        userImageRepository.save(userImage);
+
+        ImageFile userImage = ImageFile.builder()
+                .imageUrl("https://i.ibb.co/7gD22Tg/2024-11-22-10-01-08.png")
+                .type(ImageType.PROFILE_IMG)
+                .user(trainer)
+                .targetId(trainer.getId())
+                .build();
+
+        imageFileRepository.save(userImage);
 
         return new TrainerSignupRes("회원 가입 완료");
     }
 
+    @Transactional
     public UserLoginRes login(UserLoginReq req, HttpServletResponse res) {
         String email = req.email();
         String password = req.password();
@@ -163,7 +179,7 @@ public class UserService {
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new UserException(UserErrorCode.BAD_LOGIN);
             }
-            if(user.isDeleted()){
+            if(user.getUserStatus().equals(UserStatus.DELETED)){
                 throw new UserException(UserErrorCode.DELETED_USER);
             }
 
@@ -177,111 +193,88 @@ public class UserService {
         return new UserLoginRes("로그인 완료");
     }
 
-    public UserOwnProfileGetRes getOwnProfile(Long userId) {
-        User user = userRepository.findUserByIdWithThrow(userId);
-
-        String name = user.getName();            //이름
-        String email = user.getEmail();          // 이메일
-        Gender gender = user.getGender();        // 성별
-        Integer age = user.getAge();             // 나이
-        String phoneNumber = user.getPhoneNumber(); // 전화번호
-        String nickname = user.getNickname();    // 닉네임
-        Double weight = user.getWeight();        // 체중
-        Double height = user.getHeight();        // 키
-        return new UserOwnProfileGetRes(user.getId(),
-                name,
-                email,
-                gender.getDescription(),
-                age,
-                phoneNumber,
-                nickname,
-                weight,
-                height);
+    @Transactional(readOnly = true)
+    public UserOwnProfileGetRes getOwnProfile(User user) {
+        return new UserOwnProfileGetRes(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getGender().getDescription(),
+                user.getAge(),
+                user.getPhoneNumber(),
+                user.getNickname(),
+                user.getWeight(),
+                user.getHeight());
     }
 
-    public TrainerOwnProfileGetRes getOwnTrainerProfile(Long userId) {
-        User trainer = userRepository.findUserByIdWithThrow(userId);
+    @Transactional(readOnly = true)
+    public TrainerOwnProfileGetRes getOwnTrainerProfile(User trainer) {
 
-        String email = trainer.getEmail();          // 이메일
-        String name = trainer.getName();        // 성별          // 나이
-        String phoneNumber = trainer.getPhoneNumber(); // 전화번호
-        Gender gender = trainer.getGender();    // 닉네임
-        String specialization = trainer.getSpecialization().getName();        // 체중
-        Integer experience = trainer.getExperience();        // 키
-        String certifications = trainer.getCertifications();
-        String bio = trainer.getBio();
-        Integer age = trainer.getAge(); // 나이
-        return new TrainerOwnProfileGetRes(trainer.getId(),
-                email,
-                name,
-                phoneNumber,
-                gender.getDescription(),
-                age,
-                specialization,
-                experience,
-                certifications,
-                bio,
-                trainer.getRating()
-        );
+        return new TrainerOwnProfileGetRes(
+                trainer.getId(),
+                trainer.getEmail(),
+                trainer.getName(),
+                trainer.getPhoneNumber(),
+                trainer.getGender().getDescription(),
+                trainer.getAge(),
+                trainer.getSpecialization().getName(),
+                trainer.getExperience(),
+                trainer.getCertifications(),
+                trainer.getBio(),
+                trainer.getRating());
     }
 
+    @Transactional
     public UserProfileUpdateRes updateUserProfile(Long userId, UserProfileUpdateReq req) {
-        User user = userRepository.findUserByIdWithThrow(userId);
-        String phoneNumber = req.phoneNumber(); // 전화번호
-        Integer age = req.age();             // 나이
-        String nickname = req.nickname();    // 닉네임
-        Double weight = req.weight();        // 체중
-        Double height = req.height();        // 키
+        User user= userRepository.findUserByIdWithThrow(userId);
 
-        if (userRepository.findByPhoneNumber(phoneNumber).isPresent()) {
+        if (userRepository.findByPhoneNumber(req.phoneNumber()).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_PHONE_NUMBER);
         }
-        if (userRepository.findByNickname(nickname).isPresent()) {
+
+        if (userRepository.findByNickname(req.nickname()).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_NICKNAME);
         }
+
         // 전화번호 업데이트
-        if (phoneNumber != null && !phoneNumber.isEmpty()) { user.updatePhoneNumber(req.phoneNumber()); }
+        if (req.phoneNumber() != null && !req.phoneNumber().isEmpty()) { user.updatePhoneNumber(req.phoneNumber()); }
         // 나이 업데이트
-        if (age != null) { user.updateAge(age); }
+        if (req.age() != null) { user.updateAge(req.age()); }
         // 닉네임 업데이트
-        if (nickname != null && !nickname.isEmpty()) { user.updateNickName(nickname); }
+        if (req.nickname() != null && !req.nickname().isEmpty()) { user.updateNickName(req.nickname()); }
         // 체중 업데이트
-        if (weight != null) { user.updateWeight(weight); }
+        if (req.weight() != null) { user.updateWeight(req.weight()); }
         // 키 업데이트
-        if (height != null) { user.updateHeight(height); }
+        if (req.height() != null) { user.updateHeight(req.height()); }
 
         return new UserProfileUpdateRes("수정 완료");
     }
 
-    public TrainerProfileUpdateRes updateTrainerProfile(Long userId, TrainerProfileUpdateReq req) {
-        User trainer = userRepository.findUserByIdWithThrow(userId);
+    @Transactional
+    public TrainerProfileUpdateRes updateTrainerProfile(Long trainerId, TrainerProfileUpdateReq req) {
+        User trainer = userRepository.findUserByIdWithThrow(trainerId);
 
-        String phoneNumber = req.phoneNumber(); // 전화번호
-        Specialization specialization = req.specialization(); // 전문 분야
-        Integer experience = req.experience();  // 경력 연수
-        String certifications = req.certifications(); // 자격증 정보
-        String bio = req.bio();                 // 자기소개
-
-        if (userRepository.findByPhoneNumber(phoneNumber).isPresent()) {
+        if (userRepository.findByPhoneNumber(req.phoneNumber()).isPresent()) {
             throw new UserException(UserErrorCode.ALREADY_EXIST_PHONE_NUMBER);
         }
 
         // 전화번호 업데이트
-        if (phoneNumber != null && !phoneNumber.isEmpty()) { trainer.updatePhoneNumber(phoneNumber); }
+        if (req.phoneNumber() != null && !req.phoneNumber().isEmpty()) { trainer.updatePhoneNumber(req.phoneNumber()); }
         // 전문 분야 업데이트
-        if (specialization != null) { trainer.updateSpecialization(specialization); }
+        if (req.specialization() != null) { trainer.updateSpecialization(req.specialization()); }
         // 경력 연수 업데이트
-        if (experience != null) { trainer.updateExperience(experience); }
+        if (req.experience() != null) { trainer.updateExperience(req.experience()); }
         // 자격증 정보 업데이트
-        if (certifications != null && !certifications.isEmpty()) {
-            trainer.updateCertifications(certifications);
+        if (req.certifications() != null && !req.certifications().isEmpty()) {
+            trainer.updateCertifications(req.certifications());
         }
         // 자기소개 업데이트
-        if (bio != null && !bio.isEmpty()) { trainer.updateBio(bio); }
+        if (req.bio() != null && !req.bio().isEmpty()) { trainer.updateBio(req.bio()); }
 
         return new TrainerProfileUpdateRes("수정 완료");
     }
 
+    @Transactional
     public UserWithdrawalRes withdrawal(UserWithdrawalReq req, Long userId, HttpServletResponse response) {
         String password = req.password();
 
@@ -294,7 +287,7 @@ public class UserService {
         }
 
         // 탈퇴 처리
-        user.withdrawal();
+        user.updateUserStatus(UserStatus.DELETED);
 
         // 로그아웃 직접 처리
         triggerLogout(response);
@@ -317,75 +310,63 @@ public class UserService {
         response.addCookie(refreshTokenCookie);
     }
 
+    @Transactional
     public UserLogoutRes logout(HttpServletResponse response) {
         triggerLogout(response);
         return new UserLogoutRes("로그아웃 완료");
     }
 
+    @Transactional(readOnly = true)
     public TrainerOwnProfileGetRes getTrainerProfile(Long trainerId) {
         User trainer = userRepository.findUserByIdWithThrow(trainerId);
-
-        String email = trainer.getEmail();          // 이메일
-        String name = trainer.getName();        // 성별          // 나이
-        String phoneNumber = trainer.getPhoneNumber(); // 전화번호
-        Gender gender = trainer.getGender();    // 닉네임
-        String specialization = trainer.getSpecialization().getName();        // 체중
-        Integer experience = trainer.getExperience();        // 키
-        String certifications = trainer.getCertifications();
-        String bio = trainer.getBio();
-        Integer age = trainer.getAge(); // 나이
         return new TrainerOwnProfileGetRes(trainer.getId(),
-                email,
-                name,
-                phoneNumber,
-                gender.getDescription(),
-                age,
-                specialization,
-                experience,
-                certifications,
-                bio,
-                trainer.getRating()
-        );
+                trainer.getEmail(),
+                trainer.getName(),
+                trainer.getPhoneNumber(),
+                trainer.getGender().getDescription(),
+                trainer.getAge(),
+                trainer.getSpecialization().getName(),
+                trainer.getExperience(),
+                trainer.getCertifications(),
+                trainer.getBio(),
+                trainer.getRating());
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(value = "trainerBestRatingCache", key = "'bestRatingTrainer'", unless = "#result == null or #result.size() == 0", cacheManager = "redisCacheManager")
     public List<BestRatingTrainerRes> getBestRatingTrainer() {
-        // 전체 유저 중에서 트레이너 역할(UserRoleType이 TRAINER)인 사용자만 필터링
-        List<User> allUsers = userRepository.findAll();
-
-        List<User> trainers = new ArrayList<>();
-        for (User user : allUsers) {
-            if (user.getRole() == UserRoleType.TRAINER && !user.isDeleted()) { // 트레이너이면서 탈퇴하지 않은 유저
-                trainers.add(user);
-            }
-        }
-
-        // 평점 순으로 정렬
-        for (int i = 0; i < trainers.size(); i++) {
-            for (int j = i + 1; j < trainers.size(); j++) {
-                if (trainers.get(i).getRating() < trainers.get(j).getRating()) {
-                    // swap
-                    User temp = trainers.get(i);
-                    trainers.set(i, trainers.get(j));
-                    trainers.set(j, temp);
-                }
-            }
-        }
-
-        // 상위 10명만 추출
-        List<User> top10Trainers = new ArrayList<>();
-        for (int i = 0; i < trainers.size() && i < 10; i++) {
-            top10Trainers.add(trainers.get(i));
-        }
+        List<User> top10Trainers = userRepository.findTop10ByRoleAndUserStatusNotOrderByRatingDesc(UserRoleType.TRAINER, UserStatus.DELETED);
 
         // DTO 변환
-        List<BestRatingTrainerRes> result = new ArrayList<>();
-        for (User trainer : top10Trainers) {
-            result.add(new BestRatingTrainerRes(trainer.getId(),
-                    trainer.getName(),
-                    trainer.getRating(),
-                    trainer.getSpecialization().getName()));
+        return top10Trainers.stream()
+                .map(trainer -> new BestRatingTrainerRes(trainer.getId(),
+                        trainer.getName(),
+                        trainer.getRating(),
+                        trainer.getSpecialization().getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public UserOwnProfileGetRes getUserProfile(User trainer, Long ptId) {
+        PT pt = ptRepository.findPTByIdWithThrow(ptId);
+        if(!pt.getTrainer().getId().equals(trainer.getId())){
+            throw new PTException(PTErrorCode.TRAINER_ID_MISMATCH);
+        }
+        if(pt.getStatus().equals(PTStatus.UNRESERVED)){
+            throw new PTException(PTErrorCode.PT_UNRESERVED);
         }
 
-        return result;
+        User user = pt.getUser();
+        return new UserOwnProfileGetRes(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getGender().getDescription(),
+                user.getAge(),
+                user.getPhoneNumber(),
+                user.getNickname(),
+                user.getWeight(),
+                user.getHeight()
+        );
     }
 }

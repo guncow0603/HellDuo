@@ -15,13 +15,13 @@ public class ChatMsgController {
         @PathVariable Long roomId, Model model) {
         model.addAttribute("roomId", roomId);
         model.addAttribute("username", userDetails.getUser().getNickname());
-        return "chat";
+        return "/chat/chat";
     }
 
     @GetMapping("/api/v1/chats/rooms/list")
     public String chatRoomList(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         model.addAttribute("userId", userDetails.getUser().getId());
-        return "room-list";
+        return "/chat/room-list";
     };
 
 }

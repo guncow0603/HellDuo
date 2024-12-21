@@ -8,17 +8,51 @@ $(document).ready(function () {
         $('#my-page').hide();
         $('#header-chat-list').hide();
         $('#banner').hide();
+
+        $('#update-delete-button').hide();
+        $('#notice-delete-button').hide();
+        $('#board-create-button').hide();
+        $('#my-pt').hide();
+        $('#review-create-button').hide();
+        $('#chat-user').hide();
+        $('#pt-button').hide();
+        $('#update-btn').hide();
+        $('#delete-btn').hide();
+        $('#complete-pt-btn').hide();
+        $('#pt-create-button').hide();
+        loadUserHeader();
     } else { // 토큰이 존재 즉 로그인 중일 때
         const role = getUserRole();
         $('#logout-button').show();
         $('#login-button').hide();
-        $('#my-page').show();
         $('#header-chat-list').show();
 
-        if (role === 'ADMIN') {
-            $('#banner').show();
-        } else {
-            $('#banner').hide();
+        if(role === 'USER') {
+            $('#view-user-profile-btn').hide();
+            $('#update-delete-button').hide();
+            $('#notice-delete-button').hide();
+            $('#board-create-button').show();
+            $('#my-pt').show();
+            $('#review-create-button').show();
+            $('#chat-user').show();
+            $('#update-btn').hide();
+            $('#delete-btn').hide();
+            $('#complete-pt-btn').hide();
+            $('#pt-create-button').hide();
+            loadUserHeader();
+        }else if(role === 'TRAINER'){
+
+            $('#update-delete-button').hide();
+            $('#notice-delete-button').hide();
+            $('#board-create-button').show();
+            $('#my-pt').show();
+            $('#review-create-button').hide();
+            $('#chat-user').show();
+            $('#reserve-btn').hide();
+            $('#update-btn').show();
+            $('#delete-btn').show();
+            $('#pt-create-button').show();
+            loadUserHeader();
         }
 
         // 알림 이벤트 수신
@@ -32,7 +66,6 @@ $(document).ready(function () {
             alertBadge();
         });
     }
-
     // 로그아웃 버튼 클릭 이벤트
     $('#logout-button').click(function () {
         $.ajax({
@@ -50,17 +83,6 @@ $(document).ready(function () {
                 window.location.href = '/api/v1/page/index';
             });
     });
-
-    // 헤더 로드
-    if (!$("#header").hasClass("loaded")) {
-        $("#header").load("/header.html", function (response, status, xhr) {
-            if (status === "error") {
-                console.error("헤더 로드 실패:", xhr.status, xhr.statusText);
-            } else {
-                $("#header").addClass("loaded");
-            }
-        });
-    }
 });
 
 // 토큰 가져오기
@@ -85,6 +107,19 @@ function getUserRole() {
         }
     });
     return role;
+}
+
+// 일반 사용자용 헤더 로드
+function loadUserHeader() {
+    if (!$("#header").hasClass("loaded")) {
+        $("#header").load("/header.html", function (response, status, xhr) {
+            if (status === "error") {
+                console.error("헤더 로드 실패:", xhr.status, xhr.statusText);
+            } else {
+                $("#header").addClass("loaded");
+            }
+        });
+    }
 }
 
 // 알림 뱃지 표시

@@ -11,28 +11,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PtPageController {
     @GetMapping("/ptCreate")
     public String ptCreatePage() {
-        return "pt-create";
+        return "/pt/pt-create";
     }
 
     @GetMapping("/ptList")
     public String ptListPage() {
-        return "pt-list";
+        return "/pt/pt-list";
     }
 
     @GetMapping("/ptRead/{ptId}")
     public String ptReadPage(@PathVariable Long ptId, Model model) {
         model.addAttribute("ptId", ptId);
-        return "pt-read"; // pt-read.html 페이지로 이동
+        return "/pt/pt-read"; // pt-read.html 페이지로 이동
     }
 
     @GetMapping("/ptUpdate/{ptId}")
     public String ptUpdatePage(@PathVariable Long ptId, Model model) {
         model.addAttribute("ptId", ptId);
-        return "pt-update";
+        return "/pt/pt-update";
     }
 
     @GetMapping("/myPt")
     public String myPtPage() {
-        return "my-pt";
+        return "/pt/my-pt";
     }
 }

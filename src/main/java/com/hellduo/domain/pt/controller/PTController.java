@@ -3,8 +3,8 @@ package com.hellduo.domain.pt.controller;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
 import com.hellduo.domain.pt.dto.response.*;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
-import com.hellduo.domain.pt.entity.PTSpecialization;
-import com.hellduo.domain.pt.entity.PTStatus;
+import com.hellduo.domain.pt.entity.enums.PTSpecialization;
+import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.service.PTService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class PTController {
     @PostMapping
     public ResponseEntity<PTCreateRes> ptCreate(@RequestBody PTCreateReq req,
                                                 @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.CREATED).body(ptService.ptCreate(req, userDetails.getUser().getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ptService.ptCreate(req, userDetails.getUser()));
 
     }
 
@@ -43,19 +43,19 @@ public class PTController {
     public ResponseEntity<PTUpdateRes> ptUpdate (@PathVariable Long ptId,
                                                   @RequestBody PTUpdateReq req,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptUpdate(ptId,req,userDetails.getUser().getId()));
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptUpdate(ptId,req,userDetails.getUser()));
     }
 
     @DeleteMapping("/{ptId}")
     public ResponseEntity<PTDeleteRes> ptDelete (@PathVariable Long ptId,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptDelete(ptId,userDetails.getUser().getId()));
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptDelete(ptId,userDetails.getUser()));
     }
 
     @PatchMapping("/{ptId}")
     public ResponseEntity<PTReservRes> ptReserv (@PathVariable Long ptId,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptReserv(ptId,userDetails.getUser().getId()));
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptReserv(ptId,userDetails.getUser()));
     }
 
     @GetMapping("/search")
@@ -80,6 +80,13 @@ public class PTController {
     public ResponseEntity<PTCompletedRes> ptCompleted (
             @PathVariable Long ptId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptCompleted(ptId,userDetails.getUser().getId()));
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.ptCompleted(ptId,userDetails.getUser()));
+    }
+
+    @GetMapping("/completedPTs")
+    public ResponseEntity<List<PTsReadRes>> getCompletedPTs(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(ptService.getCompletedPTs(userDetails.getUser()));
     }
 }

@@ -5,11 +5,12 @@ import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 
-@Entity
-@Data
+@Entity(name="TB_COMMENT")
+@Getter
 @RequiredArgsConstructor
 public class Comment {
     @Id
@@ -20,11 +21,11 @@ public class Comment {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder

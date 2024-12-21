@@ -1,6 +1,9 @@
 package com.hellduo.domain.pt.entity;
 
 import com.hellduo.domain.common.BaseEntity;
+import com.hellduo.domain.pt.entity.enums.PTSpecialization;
+import com.hellduo.domain.pt.entity.enums.PTStatus;
+import com.hellduo.domain.review.entity.Review;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -47,7 +50,6 @@ public class PT extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user; // 트레이너 정보 (다대일 관계)
-
 
     @Enumerated(EnumType.STRING)
     @Column( length = 20)
