@@ -332,9 +332,9 @@ public class UserService {
                 trainer.getRating());
     }
 
-    @Cacheable(value = "trainerBestRatingCache", key = "'trainer_best_rating'", unless = "#result == null or #result.size() == 0")
+    @Transactional(readOnly = true)
+    @Cacheable(value = "trainerBestRatingCache", key = "'bestRatingTrainer'", unless = "#result == null or #result.size() == 0", cacheManager = "redisCacheManager")
     public List<BestRatingTrainerRes> getBestRatingTrainer() {
-        // 트레이너 역할을 가진 사용자만 조회 (탈퇴하지 않은 트레이너)
         List<User> top10Trainers = userRepository.findTop10ByRoleAndUserStatusNotOrderByRatingDesc(UserRoleType.TRAINER, UserStatus.DELETED);
 
         // DTO 변환
