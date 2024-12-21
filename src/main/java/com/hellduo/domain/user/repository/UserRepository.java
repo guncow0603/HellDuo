@@ -17,13 +17,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByPhoneNumber(String phoneNumber);
     List<User> findTop10ByRoleAndUserStatusNotOrderByRatingDesc(UserRoleType role, UserStatus status);
 
-    @Cacheable(value = "user", key = "#email")
     default User findUserByEmailWithThrow(String email) {
         return findByEmail(email).orElseThrow(() ->
                 new UserException(UserErrorCode.NOT_FOUND_USER));
     }
-
-    @Cacheable(value = "user", key = "#userId")
     default User findUserByIdWithThrow(Long userId) {
         return findById(userId).orElseThrow(() ->
                 new UserException(UserErrorCode.NOT_FOUND_USER));

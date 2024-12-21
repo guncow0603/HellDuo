@@ -101,7 +101,7 @@ public class BoardService {
     }
 
     // 좋아요가 많은 게시글 조회 (읽기 전용 트랜잭션 적용)
-    @Cacheable(value = "bestLikeBoardCache", key = "'best_like_board'", unless = "#result == null or #result.size() == 0")
+    @Cacheable(value = "bestLikeBoardCache", key = "'best_like_board'", unless = "#result == null or #result.size() == 0", cacheManager = "redisCacheManager")
     @Transactional(readOnly = true)
     public List<BestLikeBoardRes> getBestLikeBoard() {
         List<Board> top10Boards = boardRepository.findTop10ByOrderByLikeCountDesc(); // DB 조회
