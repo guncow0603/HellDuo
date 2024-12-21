@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthPageController {
     @GetMapping("/signup")
     public String signupPage() {
-        return "/auth/signup";
+        return "auth/signup";
     }
 
     @GetMapping("/trainer-signup")
     public String trainerSignupPage() {
-        return "/auth/trainer-signup";
+        return "auth/trainer-signup";
     }
 
     @GetMapping("/login")
     public String loginPage() {
-        return "/auth/login";
+        return "auth/login";
     }
 
     @GetMapping("/index")

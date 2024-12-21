@@ -11,24 +11,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class BoardPageController {
     @GetMapping("/boardList")
     public String boardPage() {
-        return "/board/board-list";
+        return "board/board-list";
     }
 
     @GetMapping("/boardUpdate/{boardId}")
     public String boardUpdatePage(@PathVariable Long boardId, Model model) {
         model.addAttribute("boardId", boardId);
-        return "/board/board-update";
+        return "board/board-update";
     }
 
     @GetMapping("/boardCreate")
     public String boardCreatePage() {
-        return "/board/board-create";
+        return "board/board-create";
     }
 
     @GetMapping("/boardRead/{boardId}")
     public String boardReadPage(@PathVariable Long boardId, Model model) {
         model.addAttribute("boardId", boardId);
-        return "/board/board-read";
+        return "board/board-read";
     }
 
 

@@ -9,22 +9,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PointPageController {
     @GetMapping("/point-charge")
     public String pointChargePage() {
-        return "/payment/point-charge";
+        return "payment/point-charge";
     }
 
     @GetMapping("/success")
     public String successPage() {
-        return "/payment/success";
+        return "payment/success";
     }
 
     @GetMapping("/fail")
     public String failPage() {
-        return "/payment/fail";
+        return "payment/fail";
     }
 
     @GetMapping("/point-charge-list")
     public String pointChargeListPage() {
-        return "/payment/point-charge-list";
+        return "payment/point-charge-list";
     }
 
 }
