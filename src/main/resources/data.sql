@@ -1,4 +1,4 @@
-INSERT INTO TB_USER (
+INSERT INTO tb_user (
     email, password, gender, age, phone_number, nickname, weight, height, role, name, specialization, experience, certifications, bio, point, rating, created_at, modified_at, user_status
 ) VALUES
       ('admin@email.com', '$2a$10$8vTpnPCx8BJn9I3Bei0st.ZT4lUbBxGwjctNY/lrEthUo8WC8yuPG', 'MAN', 32, '010-1111-1112', '관리자', 80.0, 185.0, 'ADMIN', '김철수', 'PILATES', 5, 'PT Level 1', '피트니스 전문가입니다.', 300, 4.8, NOW(), NOW(), 'ACTION'),
@@ -199,7 +199,7 @@ INSERT INTO tb_image_file (image_url, type, target_id,user_id) VALUES
 
 
 
-INSERT INTO TB_Board (title, content, like_count, user_id) VALUES
+INSERT INTO tb_board (title, content, like_count, user_id) VALUES
                                                                ('헬스 첫 시작', '헬스장에서 첫 운동을 시작하며 경험한 것들에 대해 공유합니다. 운동을 처음 시작하신 분들을 위한 팁과 조언이 포함되어 있습니다.', 5, 1),
                                                                ('주 3회 운동으로 몸 변화', '주 3회 운동을 통해 몸에 어떤 변화가 일어났는지 기록해 봅니다. 꾸준히 운동을 하면서 느낀 점들을 공유합니다.', 6, 2),
                                                                ('PT와의 첫 만남', '퍼스널 트레이너(PT)와의 첫 만남에서 어떤 운동을 했고, 어떤 목표를 설정했는지 공유합니다.', 4, 3),
@@ -242,7 +242,7 @@ INSERT INTO tb_board_like (board_id, user_id) VALUES
 
 
 
-INSERT INTO TB_PT (title, description, scheduled_date, price, latitude, longitude, address, trainer_id, user_id, status, specialization, created_at, modified_at)
+INSERT INTO tb_pt (title, description, scheduled_date, price, latitude, longitude, address, trainer_id, user_id, status, specialization, created_at, modified_at)
 VALUES
     ('전신 체력 강화', '전신 체력을 강화하기 위한 훈련 세션입니다.', '2025-01-01 10:00:00', 50000, 37.5890, 127.0010, '서울특별시 강남구 테헤란로 123, 3층', 4, 1, 'SCHEDULED', 'FITNESS', NOW(), NOW()),
     ('요가 기초', '기본적인 요가 동작을 배우는 세션입니다.', '2025-01-02 11:00:00', 30000, 37.5900, 127.0020, '서울특별시 마포구 홍익로 45, 2층', 5, 2, 'SCHEDULED', 'YOGA', NOW(), NOW()),
@@ -259,7 +259,7 @@ VALUES
     ('필라테스 고급', '고급 필라테스 훈련을 배우는 세션입니다.', '2025-01-13 13:00:00', 55000, 37.6010, 127.0130, '서울특별시 서대문구 연세로 90, 13층', 4, 3, 'SCHEDULED', 'PILATES', NOW(), NOW()),
     ('영양학 및 체중 관리', '영양학에 기반한 체중 관리 세션입니다.', '2025-01-14 14:00:00', 47000, 37.6020, 127.0140, '서울특별시 동대문구 휘경로 25, 14층', 5, 2, 'SCHEDULED', 'NUTRITION', NOW(), NOW());
 
-INSERT INTO TB_PT (title, description, scheduled_date, price, latitude, longitude, address, trainer_id, user_id, status, specialization, created_at, modified_at)
+INSERT INTO tb_pt (title, description, scheduled_date, price, latitude, longitude, address, trainer_id, user_id, status, specialization, created_at, modified_at)
 VALUES
     ('전신 체력 강화', '전신 체력을 강화하기 위한 훈련 세션입니다.', '2025-01-01 10:00:00', 50000, 37.5890, 127.0010, '서울특별시 강남구 테헤란로 123, 3층', 4, 1, 'COMPLETED', 'FITNESS', NOW(), NOW()),
     ('요가 기초', '기본적인 요가 동작을 배우는 세션입니다.', '2025-01-02 11:00:00', 30000, 37.5900, 127.0020, '서울특별시 마포구 홍익로 45, 2층', 5, 2, 'COMPLETED', 'YOGA', NOW(), NOW()),
@@ -276,7 +276,7 @@ VALUES
     ('필라테스 고급', '고급 필라테스 훈련을 배우는 세션입니다.', '2025-01-13 13:00:00', 55000, 37.6010, 127.0130, '서울특별시 서대문구 연세로 90, 13층', 4, 3, 'COMPLETED', 'PILATES', NOW(), NOW()),
     ('영양학 및 체중 관리', '영양학에 기반한 체중 관리 세션입니다.', '2025-01-14 14:00:00', 47000, 37.6020, 127.0140, '서울특별시 동대문구 휘경로 25, 14층', 5, 2, 'COMPLETED', 'NUTRITION', NOW(), NOW());
 
-INSERT INTO TB_PT (title, description, scheduled_date, price, latitude, longitude, address, trainer_id, user_id, status, specialization, created_at, modified_at)
+INSERT INTO tb_pt (title, description, scheduled_date, price, latitude, longitude, address, trainer_id, user_id, status, specialization, created_at, modified_at)
 VALUES
     ('전신 체력 강화', '전신 체력을 강화하기 위한 훈련 세션입니다.', '2025-01-01 10:00:00', 50000, 37.5890, 127.0010, '서울특별시 강남구 테헤란로 123, 3층', 4, 1, 'UNRESERVED', 'FITNESS', NOW(), NOW()),
     ('요가 기초', '기본적인 요가 동작을 배우는 세션입니다.', '2025-01-02 11:00:00', 30000, 37.5900, 127.0020, '서울특별시 마포구 홍익로 45, 2층', 5, 2, 'UNRESERVED', 'YOGA', NOW(), NOW()),
