@@ -33,7 +33,7 @@ public class ImageFileService {
     private final ImageFileRepository imageFileRepository;
     private final S3Uploader s3Uploader;
 
-    @Value("${s3.url}")
+    @Value("${S3_URL}")
     private String s3Url;
 
     public UploadImagesRes uploadImages(String category, Long targetId, User user, List<MultipartFile> multipartFiles) {
