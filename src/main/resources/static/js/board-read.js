@@ -3,7 +3,7 @@ var userId;
 // 게시글 조회
 async function getBoardById(boardId) {
     try {
-        const response = await fetch(`/api/v1/board/${boardId}`);
+        const response = await fetch(`/api/v2/board/${boardId}`);
         if (response.ok) {
             const board = await response.json(); // BoardReadRes 객체
             renderBoardDetails(board);

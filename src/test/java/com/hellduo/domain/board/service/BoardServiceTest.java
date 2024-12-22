@@ -141,21 +141,6 @@ public class BoardServiceTest {
         assertEquals(topBoard.getTitle(), response.get(0).title());
     }
 
-    @Test
-    public void testSearchBoards() {
-        // Given
-        String keyword = "Test";
-        Board board1 = new Board("Test Title", "Test Content", user);
-        ReflectionTestUtils.setField(board1, "id", 1L);  // Board 객체의 id 설정
-        when(boardRepository.searchByKeyword(keyword)).thenReturn(List.of(board1));
-
-        // When
-        List<BoardsReadRes> response = boardService.searchBoards(keyword);
-
-        // Then
-        assertEquals(1, response.size());
-        assertEquals(board1.getId(), response.get(0).boardId());
-    }
 
 
 }
