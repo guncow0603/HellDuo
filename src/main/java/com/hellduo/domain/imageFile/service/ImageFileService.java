@@ -33,8 +33,7 @@ public class ImageFileService {
     private final ImageFileRepository imageFileRepository;
     private final S3Uploader s3Uploader;
 
-    @Value("${S3_URL}")
-    private String s3Url;
+    private String s3Url="https://hellduo.s3.ap-northeast-2.amazonaws.com/";
 
     public UploadImagesRes uploadImages(String category, Long targetId, User user, List<MultipartFile> multipartFiles) {
         Long userId = user.getId();
@@ -42,7 +41,7 @@ public class ImageFileService {
         if (category.equals("profile")) {
             deleteImages(targetId , category, user);
             // S3에 파일 업로드
-            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "profile/");
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "profile/",category);
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
             List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.PROFILE_IMG,user);
@@ -57,7 +56,7 @@ public class ImageFileService {
                 throw  new UserException(UserErrorCode.NOT_ROLE_TRAINER);
             }
             // S3에 파일 업로드
-            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "certification/");
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "certification/",category);
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
             List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.CERTS_IMG,user);
@@ -72,7 +71,7 @@ public class ImageFileService {
                 throw  new UserException(UserErrorCode.NOT_ROLE_TRAINER);
             }
             // S3에 파일 업로드
-            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "pt/");
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "pt/",category);
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
             List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.PT_IMG,user);
@@ -87,7 +86,7 @@ public class ImageFileService {
                 throw  new UserException(UserErrorCode.NOT_ROLE_ADMIN);
             }
             // S3에 파일 업로드
-            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "banner/");
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "banner/",category);
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
             List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.BANNER_IMG,user);
@@ -99,7 +98,7 @@ public class ImageFileService {
 
         }else if(category.equals("board")){
             // S3에 파일 업로드
-            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "board/");
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "board/",category);
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
             List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.BOARD_IMG,user);
@@ -114,7 +113,7 @@ public class ImageFileService {
                 throw  new UserException(UserErrorCode.NOT_ROLE_USER);
             }
             // S3에 파일 업로드
-            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "review/");
+            List<String> fileUrlList = uploadFilesToS3(multipartFiles, userId, "review/",category);
 
             // 업로드된 파일의 정보로 ImageFile 엔티티 생성
             List<ImageFile> imageFileList = createImageFileList(fileUrlList , targetId, ImageType.REVIEW_IMG,user);
@@ -248,14 +247,48 @@ public class ImageFileService {
 
 
     // 다수 파일 S3 업로드
-    private List<String> uploadFilesToS3(List<MultipartFile> multipartFiles, Long userId, String filePath) {
+    private List<String> uploadFilesToS3(List<MultipartFile> multipartFiles, Long userId, String filePath, String imageType) {
         List<String> fileUrls = new ArrayList<>();
 
         // 업로드 경로 설정
         String userImageUrl = filePath + userId;
 
+        // 파일 리사이즈 크기 설정
+        int targetWidth = 0;
+        int targetHeight = 0;
+
+        // 이미지 타입에 따른 크기 설정
+        switch (imageType) {
+            case "profile":
+                targetWidth = 210;
+                targetHeight = 230;
+                break;
+            case "certification":
+                targetWidth = 230;
+                targetHeight = 300;
+                break;
+            case "pt":
+                targetWidth = 800;
+                targetHeight = 800;
+                break;
+            case "banner":
+                targetWidth = 1200;
+                targetHeight = 400;
+                break;
+            case "review":
+                targetWidth = 800;
+                targetHeight = 800;
+                break;
+            case "board":
+                targetWidth = 800;
+                targetHeight = 800;
+                break;
+            default:
+                throw new ImageException(ImageErrorCode.NOT_FOUND_IMAGE);
+        }
+
         // 파일을 업로드하고 URL 목록 반환
-        List<String> uploadedFileUrls = s3Uploader.uploadFileToS3(multipartFiles, userImageUrl);
+        List<String> uploadedFileUrls = s3Uploader.uploadFileToS3(multipartFiles, userImageUrl, targetWidth, targetHeight);
         fileUrls.addAll(uploadedFileUrls);
 
         return fileUrls;

@@ -30,13 +30,13 @@ function onSignup() {
     // AJAX 요청
     $.ajax({
         type: "POST",
-        url: `/api/v1/users/trainerSignup`,
+        url: `/api/v2/users/trainerSignup`,
         contentType: "application/json",
         data: JSON.stringify(data),
     })
         .done(function (res) {
             alert(res.msg);
-            window.location.href = '/api/v1/page/login'; // 로그인 페이지로 리디렉션
+            window.location.href = '/api/v2/page/login'; // 로그인 페이지로 리디렉션
         })
         .fail(function (res) {
             const jsonObject = JSON.parse(res.responseText);

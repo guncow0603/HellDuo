@@ -20,6 +20,29 @@
 
     <!-- CSS 스타일 -->
     <style>
+
+        /* 페이지네이션 스타일 */
+        .pagination {
+            justify-content: center;
+        }
+
+        .pagination .page-item .page-link {
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin: 0 5px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .pagination .page-item:hover .page-link {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
         body {
             background-color: #f8f9fa !important;
         }
@@ -155,9 +178,17 @@
     <h2>피티 목록</h2>
     <div id="pt-list" class="pt-list"></div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <ul id="pagination" class="pagination">
+                <!-- 페이지네이션 버튼이 여기에 추가됩니다. -->
+            </ul>
+        </div>
+    </div>
+
     <!-- PT 생성 버튼 -->
     <div class="left-menu" id="pt-create-button">
-        <a href="/api/v1/page/ptCreate">피티 생성</a>
+        <a href="/api/v2/page/ptCreate">피티 생성</a>
     </div>
 </div>
 

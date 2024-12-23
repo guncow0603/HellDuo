@@ -9,7 +9,7 @@ $(document).ready(function () {
 
         // 서버로 비동기 요청 전송
         $.ajax({
-            url: `/api/v1/review/${ptId}`,  // 요청 URL
+            url: `/api/v2/review/${ptId}`,  // 요청 URL
             type: 'POST',          // HTTP 메서드
             contentType: 'application/json', // 전송 데이터 타입
             data: JSON.stringify({
@@ -23,7 +23,7 @@ $(document).ready(function () {
                 if ($('#files')[0].files.length > 0) {
                     uploadReviewImages(res.reviewId); // 이미지 업로드 함수 호출
                 } else {
-                    window.location.href = '/api/v1/page/reviewList'; // 파일 없으면 바로 리다이렉트
+                    window.location.href = '/api/v2/page/reviewList'; // 파일 없으면 바로 리다이렉트
                 }
             })
             .fail(function (res) {
@@ -53,7 +53,7 @@ function uploadReviewImages(reviewId) {
         processData: false, // 파일 전송 시 필수 설정
         contentType: false, // 파일 전송 시 필수 설정
         success: function (response) {
-            window.location.href = "/api/v1/page/reviewList"; // 성공 시 리다이렉트 경로
+            window.location.href = "/api/v2/page/reviewList"; // 성공 시 리다이렉트 경로
         },
         error: function (error) {
             console.error("Error:", error);

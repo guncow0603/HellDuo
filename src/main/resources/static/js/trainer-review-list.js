@@ -4,7 +4,7 @@ const trainerId = window.location.pathname.split("/").filter(Boolean).pop(); // 
 
 function loadReviews() {
     $.ajax({
-        url: `/api/v1/review/trainer/${trainerId}`,
+        url: `/api/v2/review/trainer/${trainerId}`,
         type: "GET",
         success: function (response) {
             renderReviews(response);
@@ -27,7 +27,7 @@ function renderReviews(reviews) {
 
     reviews.forEach(review => {
         const reviewItem = $(`
-            <div class="review-item" style="cursor: pointer;" onclick="window.location.href='/api/v1/page/reviewRead/${review.reviewId}'">
+            <div class="review-item" style="cursor: pointer;" onclick="window.location.href='/api/v2/page/reviewRead/${review.reviewId}'">
                 <img alt="썸네일 이미지" id="thumbnail-${review.reviewId}" 
                     style="width: 150px; height: 150px; border-radius: 5px; margin-right: 20px;">
                 

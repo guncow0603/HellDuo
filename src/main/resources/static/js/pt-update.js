@@ -16,7 +16,7 @@ $(document).ready(function() {
 
         // PUT 요청을 통해 서버에 데이터 전송
         $.ajax({
-            url: `/api/v1/pt/${ptId}`,
+            url: `/api/v2/pt/${ptId}`,
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -31,7 +31,7 @@ $(document).ready(function() {
         })
             .done(function (res) {
                 alert(res.msg);
-                window.location.replace(`/api/v1/page/ptRead/${ptId}`);
+                window.location.replace(`/api/v2/page/ptRead/${ptId}`);
             })
             .fail(function (res) {
                 const jsonObject = JSON.parse(res.responseText);

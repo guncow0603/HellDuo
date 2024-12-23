@@ -1,5 +1,7 @@
 package com.hellduo.domain.pt.controller;
 
+import com.hellduo.domain.board.dto.response.BoardsReadRes;
+import com.hellduo.domain.board.dto.response.PageBoardsRes;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
 import com.hellduo.domain.pt.dto.response.*;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
@@ -8,6 +10,7 @@ import com.hellduo.domain.pt.entity.enums.PTStatus;
 import com.hellduo.domain.pt.service.PTService;
 import com.hellduo.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/pt")
+@RequestMapping("/api/v2/pt")
 public class PTController {
     private final PTService ptService;
     @PostMapping
@@ -59,14 +62,29 @@ public class PTController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<PTsReadRes>> searchPTs(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) PTSpecialization category,
+    public ResponseEntity<PagePTsRes> searchPTs(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
             @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
-            @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc)
+            @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) PTSpecialization category)
     {
-        return ResponseEntity.status(HttpStatus.OK).body(ptService.searchPTs(keyword, category,sortBy,isAsc));
+        Page<PTsReadRes> pageResult = ptService.searchPTs(page - 1, size, sortBy, isAsc, keyword, category);
+        List<PTsReadRes> pts = pageResult.getContent();  // 실제 데이터 추출
+
+        // PagedPTsRes 객체 생성하여 반환
+        PagePTsRes pagePTsRes = new PagePTsRes(
+                pts,
+                pageResult.getTotalPages(),  // 전체 페이지 수
+                pageResult.getNumber()    // 현재 페이지 번호 (1부터 시작하도록 +1)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(pagePTsRes);
+
     }
+
+    
 
     @GetMapping("/myPt")
     public ResponseEntity<List<PTsReadRes>> getMyPTs(

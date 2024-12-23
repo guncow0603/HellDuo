@@ -22,7 +22,7 @@ import java.util.Optional;
 public class BoardLikeService {
     private final BoardRepository boardRepository;
     private final BoardLikeRepository boardLikeRepository;
-    private RedissonClient redissonClient; // Redisson 클라이언트
+    private final RedissonClient redissonClient; // Redisson 클라이언트
 
     public LikeResponse boardLikeToggle(Long boardId, User user) {
         // 레디스 락을 위한 키

@@ -14,6 +14,10 @@ import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -119,12 +123,10 @@ public class BoardService {
 
     // 게시글 검색 (읽기 전용 트랜잭션 적용)
     @Transactional(readOnly = true)
-    public List<BoardsReadRes> searchBoards(String keyword) {
-        List<Board> boards = boardRepository.searchByKeyword(keyword); // 검색어로 게시글 검색
-        List<BoardsReadRes> boardsReadResList = new ArrayList<>();
-        for (Board board : boards) {
-            boardsReadResList.add(new BoardsReadRes(board.getId(), board.getTitle(), board.getLikeCount()));
-        }
-        return boardsReadResList;
+    public Page<BoardsReadRes> searchBoards(int page, int size, String sortBy, boolean isAsc, String keyword) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return boardRepository.searchBoards(pageable, keyword);
     }
 }

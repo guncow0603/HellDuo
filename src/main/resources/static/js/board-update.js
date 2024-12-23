@@ -21,14 +21,14 @@ $(document).ready(function () {
 
         // AJAX를 사용하여 PUT 요청 보내기
         $.ajax({
-            url: `/api/v1/board/${boardId}`,
+            url: `/api/v2/board/${boardId}`,
             method: "PUT",
             contentType: "application/json",
             data: JSON.stringify(requestData) // 데이터를 JSON 형식으로 변환
         })
             .done(function (res) {
                 alert(res.msg); // 성공 메시지 출력
-                window.location.href = `/api/v1/page/boardRead/${boardId}`; // 수정 후 해당 게시글 페이지로 이동
+                window.location.href = `/api/v2/page/boardRead/${boardId}`; // 수정 후 해당 게시글 페이지로 이동
             })
             .fail(function (res) {
                     const jsonObject = JSON.parse(res.responseText);
@@ -42,7 +42,7 @@ $(document).ready(function () {
     const boardId = window.location.pathname.split("/").pop(); // boardId 추출
 
     $.ajax({
-        url: `/api/v1/board/${boardId}`,
+        url: `/api/v2/board/${boardId}`,
         method: "GET"
     })
         .done(function (board) {

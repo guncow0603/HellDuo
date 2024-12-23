@@ -4,7 +4,7 @@ let selectedStatus = "SCHEDULED"; // 기본 상태를 SCHEDULED로 설정
 // PT 데이터를 서버에서 가져오는 함수
 function loadPTs() {
     $.ajax({
-        url: `/api/v1/pt/myPt?status=${selectedStatus}`, // 선택한 상태를 쿼리 매개변수로 전달
+        url: `/api/v2/pt/myPt?status=${selectedStatus}`, // 선택한 상태를 쿼리 매개변수로 전달
         type: "GET",
         success: function (response) {
             renderPTs(response); // 서버에서 받은 데이터를 화면에 표시
@@ -26,7 +26,7 @@ function renderPTs(pts) {
 
     pts.forEach(pt => {
         const ptItem = $(`
-    <div class="pt-item" style="cursor: pointer;" onclick="window.location.href='/api/v1/page/ptRead/${pt.ptId}'">
+    <div class="pt-item" style="cursor: pointer;" onclick="window.location.href='/api/v2/page/ptRead/${pt.ptId}'">
         <img alt="썸네일 이미지" id="thumbnail-${pt.ptId}" 
              style="width: 150px; height: 150px; border-radius: 5px; margin-right: 20px;">
         
@@ -53,7 +53,7 @@ function renderPTs(pts) {
 // 리뷰 버튼 클릭 이벤트 핸들러
 function handleReviewButton(event, ptId) {
     event.stopPropagation(); // 클릭 이벤트 전파를 막음
-    window.location.href = `/api/v1/page/reviewCreate/${ptId}`;
+    window.location.href = `/api/v2/page/reviewCreate/${ptId}`;
 }
 
 // 썸네일 이미지를 불러오는 함수

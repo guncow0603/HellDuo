@@ -3,7 +3,7 @@ $(document).ready(function () {
     // 공지사항 목록 가져오기
     function getNoticeList() {
         $.ajax({
-            url: '/api/v1/admin/notice',  // GET 요청
+            url: '/api/v2/admin/notice',  // GET 요청
             type: 'GET',
             success: function (response) {
                 const noticeList = response || [];
@@ -33,7 +33,7 @@ $(document).ready(function () {
     // 공지사항 클릭 시 해당 페이지로 이동
     $(document).on('click', '.notice-item', function () {
         const noticeId = $(this).data('id');
-        window.location.href = `/api/v1/page/notice/${noticeId}`;  // 실제 페이지 경로로 수정
+        window.location.href = `/api/v2/page/notice/${noticeId}`;  // 실제 페이지 경로로 수정
     });
 
     // 페이지 로드 시 공지사항 목록을 불러오기
