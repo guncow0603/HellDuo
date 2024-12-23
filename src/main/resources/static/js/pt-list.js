@@ -1,16 +1,43 @@
-function loadPTs(keyword = '', category = '', sortBy = 'createdAt', isAsc = false) {
+function loadPTs(keyword = '', page = 1, size = 10, sortBy = 'createdAt', isAsc = false, category = '') {
     $.ajax({
-        url: `/api/v1/pt/search?keyword=${keyword}&category=${category}&sortBy=${sortBy}&isAsc=${isAsc}`,
+        url: `/api/v2/pt/search?keyword=${keyword}&page=${page}&size=${size}&sortBy=${sortBy}&isAsc=${isAsc}&category=${category}`,
         type: "GET",
         success: function (response) {
-            renderPTs(response);
+            renderPTs(response.content, response.totalPages, response.number + 1); // 응답에서 content, totalPages, number 가져옴
         },
         error: function (xhr, status, error) {
             console.error("PT 데이터를 가져오는 중 오류 발생:", xhr.responseText || error);
         },
     });
 }
-function renderPTs(pts) {
+
+function renderPagination(totalPages, currentPage) {
+    const paginationContainer = $('#pagination');
+    paginationContainer.empty();
+
+    if (totalPages <= 1) return; // 페이지가 하나 이하일 경우 페이지네이션 숨김
+
+    // 이전 페이지 버튼
+    if (currentPage > 1) {
+        paginationContainer.append(`<li class="page-item"><a class="page-link" href="#" onclick="loadPTs('', ${currentPage - 1})">‹</a></li>`);
+    }
+
+    // 페이지 번호들
+    for (let i = 1; i <= totalPages; i++) {
+        paginationContainer.append(`
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="loadPTs('', ${i})">${i}</a>
+            </li>
+        `);
+    }
+
+    // 다음 페이지 버튼
+    if (currentPage < totalPages) {
+        paginationContainer.append(`<li class="page-item"><a class="page-link" href="#" onclick="loadPTs('', ${currentPage + 1})">›</a></li>`);
+    }
+}
+
+function renderPTs(pts, totalPages, currentPage) {
     const ptListContainer = $('#pt-list');
     ptListContainer.empty();
 
@@ -41,6 +68,8 @@ function renderPTs(pts) {
         ptListContainer.append(ptItem);
         loadThumbnail(pt.ptId); // 이미지 로드
     });
+
+    renderPagination(totalPages, currentPage); // 페이지네이션 처리
 }
 
 function loadThumbnail(ptId) {
@@ -64,9 +93,10 @@ function loadThumbnail(ptId) {
 // 검색 버튼 클릭 이벤트 핸들러
 $(document).on("click", "#search-btn", function () {
     const keyword = $("#search-keyword").val();
-    const category = $("#search-category").val();
-    loadPTs(keyword, category); // 검색 조건을 기반으로 PT 데이터를 로드
+    const category = $("#search-category").val(); // 카테고리 값 추가
+    loadPTs(keyword, 1, 10, 'createdAt', false, category); // 검색 조건을 기반으로 PT 데이터를 로드
 });
+
 // 페이지 로드 시 초기 데이터 로드
 $(document).ready(function () {
     loadPTs(); // 초기에는 검색 조건 없이 전체 데이터 로드
