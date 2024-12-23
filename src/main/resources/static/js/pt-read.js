@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     // PT 정보 가져오기
     $.ajax({
-        url: `/api/v1/pt/${ptId}`, // PT ID를 URL에 포함
+        url: `/api/v2/pt/${ptId}`, // PT ID를 URL에 포함
         method: 'GET',
         success: function(res) {
             // 서버에서 받아온 데이터를 HTML 요소에 동적으로 삽입

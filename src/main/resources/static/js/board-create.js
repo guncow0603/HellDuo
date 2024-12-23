@@ -7,7 +7,7 @@ $(document).ready(function () {
 
         // 서버로 비동기 요청 전송
         $.ajax({
-            url: '/api/v1/board',  // 요청 URL
+            url: '/api/v2/board',  // 요청 URL
             type: 'POST',          // HTTP 메서드
             contentType: 'application/json', // 전송 데이터 타입
             data: JSON.stringify({
