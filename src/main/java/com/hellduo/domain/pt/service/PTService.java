@@ -1,6 +1,5 @@
 package com.hellduo.domain.pt.service;
 
-import com.hellduo.domain.board.dto.response.BoardsReadRes;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
@@ -22,6 +21,7 @@ import com.hellduo.domain.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,8 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,30 +93,15 @@ public class PTService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "ptsCache", key = "'pts'", unless = "#result == null or #result.size() == 0", cacheManager = "redisCacheManager")
     public List<getPTsRes> ptsRead(Double userLatitude, Double userLongitude) {
-        List<PT> pts = ptRepository.findByStatus(PTStatus.UNRESERVED);
-        pts.sort(Comparator.comparingDouble(pt -> calculateDistance(userLatitude, userLongitude, pt.getLatitude(), pt.getLongitude())));
+        // DB에서 거리 계산 후 상위 10개의 PT 목록 가져오기
+        List<PT> pts = ptRepository.findPTsByStatusOrderedByDistance(PTStatus.UNRESERVED, userLatitude, userLongitude);
 
-        List<getPTsRes> getPTsResList = new ArrayList<>();
-        for (PT pt : pts) {
-            getPTsResList.add(new getPTsRes(
-                    pt.getId(),
-                    pt.getTitle(),
-                    pt.getAddress()
-            ));
-        }
-        return getPTsResList;
-    }
-    // 두 지점 간의 거리를 계산하는 Haversine Formula
-    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        final int R = 6371; // 지구 반지름 (단위: km)
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // 거리 (단위: km)
+        // PT를 getPTsRes로 변환하여 반환
+        return pts.stream()
+                .map(pt -> new getPTsRes(pt.getId(), pt.getTitle(), pt.getAddress()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
