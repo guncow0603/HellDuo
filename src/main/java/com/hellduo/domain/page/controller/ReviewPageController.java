@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api/v1/page")
+@RequestMapping("/api/v2/page")
 public class ReviewPageController {
     @GetMapping("/reviewList/{trainerId}")
     public String reviewListPage(@PathVariable Long trainerId, Model model) {

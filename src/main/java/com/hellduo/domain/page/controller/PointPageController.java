@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api/v1/page")
+@RequestMapping("/api/v2/page")
 public class PointPageController {
     @GetMapping("/point-charge")
     public String pointChargePage() {

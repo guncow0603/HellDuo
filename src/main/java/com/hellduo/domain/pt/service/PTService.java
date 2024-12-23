@@ -41,7 +41,7 @@ public class PTService {
     private final PTRepository ptRepository;
     private final ImageFileService imageFileService;
     private final ReviewRepository reviewRepository;
-    private RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
     @Transactional
     public PTCreateRes ptCreate(PTCreateReq req, User trainer) {

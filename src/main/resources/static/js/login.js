@@ -16,18 +16,18 @@ function onLogin() {
 
     $.ajax({
         type: "POST",
-        url: `/api/v1/users/login`,
+        url: `/api/v2/users/login`,
         contentType: "application/json",
         data: JSON.stringify({email: email, password: password}),
     })
         .done(function (res) {
             alert(res.msg);
-            window.location.href = host + '/api/v1/page/index';
+            window.location.href = host + '';
         })
         .fail(function (res) {
             const jsonObject = JSON.parse(res.responseText);
             const messages = jsonObject.messages;
             alert(messages);
-            window.location.href = host + '/api/v1/page/login';
+            window.location.href = host + '';
         });
 }

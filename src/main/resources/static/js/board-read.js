@@ -112,7 +112,7 @@ function editComment(commentId, currentContent) {
     const newContent = prompt('댓글을 수정하세요:', currentContent);
     if (newContent && newContent !== currentContent) {
         $.ajax({
-            url: `/api/v1/comment/${commentId}`,
+            url: `/api/v2/comment/${commentId}`,
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify({ content: newContent })
@@ -133,7 +133,7 @@ function editComment(commentId, currentContent) {
 function deleteComment(commentId) {
     if (confirm('정말 삭제하시겠습니까?')) {
         $.ajax({
-            url: `/api/v1/comment/${commentId}`,
+            url: `/api/v2/comment/${commentId}`,
             type: 'DELETE'
         })
             .done(function (res) {
@@ -151,7 +151,7 @@ function deleteComment(commentId) {
 // 게시글 좋아요
 function likeBoard() {
     $.ajax({
-        url: `/api/v1/boardLike/${boardId}`,
+        url: `/api/v2/boardLike/${boardId}`,
         method: 'POST',
         success: function () {
             getBoardById(boardId); // 게시글 재조회
@@ -175,7 +175,7 @@ $(document).ready(function () {
         const content = $('#comment-input').val().trim();
         if (content) {
             $.ajax({
-                url: '/api/v1/comment',
+                url: '/api/v2/comment',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ content, boardId }),
@@ -198,11 +198,11 @@ $(document).ready(function () {
         e.preventDefault();
         if (confirm("게시글을 삭제하시겠습니까?")) {
             $.ajax({
-                url: `/api/v1/board/${boardId}`,
+                url: `/api/v2/board/${boardId}`,
                 type: 'DELETE',
                 success: function (res) {
                     alert(res.msg);
-                    window.location.href = '/api/v1/page/boardList';
+                    window.location.href = '/api/v2/page/boardList';
                 },
                 error: function (res) {
                     const messages = JSON.parse(res.responseText).messages || "삭제 실패";
@@ -214,9 +214,9 @@ $(document).ready(function () {
 
     // 게시글 수정 페이지로 이동
     $('#update-board-button').click(() => {
-        window.location.href = `/api/v1/page/boardUpdate/${boardId}`;
+        window.location.href = `/api/v2/page/boardUpdate/${boardId}`;
     });
     document.getElementById('report').addEventListener('click', () => {
-        window.location.href = `/api/v1/page/reportCreate/${userId}`;
+        window.location.href = `/api/v2/page/reportCreate/${userId}`;
     });
 });

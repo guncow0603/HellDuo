@@ -4,7 +4,7 @@ const reviewId = window.location.pathname.split("/").pop();
 // 리뷰 조회 함수
 async function getReviewById(reviewId) {
     try {
-        const response = await fetch(`/api/v1/review/${reviewId}`);
+        const response = await fetch(`/api/v2/review/${reviewId}`);
         if (!response.ok) {
             throw new Error('리뷰를 불러오는 데 실패했습니다.');
         }

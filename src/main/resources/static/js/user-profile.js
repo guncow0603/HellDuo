@@ -18,7 +18,7 @@ function getProfileImage(userId) {
 }
 
 async function fetchUserProfile() {
-    const profileApi = `/api/v1/users/pt/${ptId}`;
+    const profileApi = `/api/v2/users/pt/${ptId}`;
     try {
         const response = await fetch(profileApi);
         if (!response.ok) {

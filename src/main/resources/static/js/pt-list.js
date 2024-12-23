@@ -48,7 +48,7 @@ function renderPTs(pts, totalPages, currentPage) {
 
     pts.forEach(pt => {
         const ptItem = $(`
-    <div class="pt-item" style="cursor: pointer;" onclick="window.location.href='/api/v1/page/ptRead/${pt.ptId}'">
+    <div class="pt-item" style="cursor: pointer;" onclick="window.location.href='/api/v2/page/ptRead/${pt.ptId}'">
         <img alt="썸네일 이미지" id="thumbnail-${pt.ptId}" 
              style="width: 150px; height: 150px; border-radius: 5px; margin-right: 20px;">
         

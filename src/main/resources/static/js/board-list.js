@@ -10,7 +10,7 @@ function renderBoards(boards) {
     // Board 항목 렌더링
     boards.content.forEach(board => {
         const boardItem = $(`
-            <div class="board-item" style="cursor: pointer;" onclick="window.location.href='/api/v1/page/boardRead/${board.boardId}'">
+            <div class="board-item" style="cursor: pointer;" onclick="window.location.href='/api/v2/page/boardRead/${board.boardId}'">
                 <img alt="썸네일 이미지" id="thumbnail-${board.boardId}" 
                      style="width: 150px; height: 150px; border-radius: 5px; margin-right: 20px;">
                 <div class="board-details">

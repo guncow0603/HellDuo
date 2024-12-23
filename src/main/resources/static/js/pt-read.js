@@ -107,18 +107,18 @@ $(document).ready(function() {
 
     // 수정 버튼 클릭 시 PT 수정 페이지로 이동
     $('#update-btn').on('click', function() {
-        window.location.href = `/api/v1/page/ptUpdate/${ptId}`;
+        window.location.href = `/api/v2/page/ptUpdate/${ptId}`;
     });
 
     // 삭제 버튼 클릭 시 PT 삭제 요청
     $('#delete-btn').on('click', function() {
         if (confirm('정말로 PT를 삭제하시겠습니까?')) {
             $.ajax({
-                url: `/api/v1/pt/${ptId}`, // DELETE 요청
+                url: `/api/v2/pt/${ptId}`, // DELETE 요청
                 method: 'DELETE',
                 success: function(res) {
                     alert(res.msg);
-                    window.location.href = '/api/v1/page/ptList';
+                    window.location.href = '/api/v2/page/ptList';
                 },
                 error: function() {
                     alert('PT 삭제에 실패했습니다.');
@@ -137,33 +137,33 @@ $(document).ready(function() {
     // 예약 버튼 클릭 시 PT 예약 요청
     $('#reserve-btn').on('click', function() {
         $.ajax({
-            url: `/api/v1/pt/${ptId}`,  // 요청할 URL
+            url: `/api/v2/pt/${ptId}`,  // 요청할 URL
             type: 'PATCH',               // HTTP 메서드
             contentType: 'application/json'  // 요청 본문 타입
         })
             .done(function (res) {
                 alert(res.msg);
-                window.location.href = `/api/v1/page/ptList`;
+                window.location.href = `/api/v2/page/ptList`;
             })
             .fail(handleError);  // 오류 처리 함수 호출
     });
 
     // 트레이너 프로필 보기 버튼 클릭
     document.getElementById('view-trainer-profile-btn').addEventListener('click', () => {
-        window.location.href = `/api/v1/page/trainer-profile/${trainerId}`;
+        window.location.href = `/api/v2/page/trainer-profile/${trainerId}`;
     });
 
     document.getElementById('view-user-profile-btn').addEventListener('click', () => {
-        window.location.href = `/api/v1/page/user-profile/${ptId}`;
+        window.location.href = `/api/v2/page/user-profile/${ptId}`;
     });
 
     document.getElementById('report').addEventListener('click', () => {
-        window.location.href = `/api/v1/page/reportCreate/${trainerId}`;
+        window.location.href = `/api/v2/page/reportCreate/${trainerId}`;
     });
 
     // PT 완료 버튼 클릭
     $('#complete-pt-btn').click(function () {
-        fetch(`/api/v1/pt/completed/${ptId}`, {
+        fetch(`/api/v2/pt/completed/${ptId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -178,7 +178,7 @@ $(document).ready(function() {
             .then(data => {
                 alert(data.message || "PT가 완료 처리되었습니다.");
                 $('#pt-status').text("상태: 완료됨");
-                window.location.href = '/api/v1/page/ptList';
+                window.location.href = '/api/v2/page/ptList';
             })
             .catch(error => {
                 console.error(error);
@@ -232,13 +232,13 @@ function chatTry(userId) {
     };
     $.ajax({
         type: "POST",
-        url: `/api/v1/chats/rooms`,
+        url: `/api/v2/chats/rooms`,
         contentType: "application/json",
         data: JSON.stringify(data),
     })
         .done(function (res) {
             console.log(res.id);
-            window.location.href = '/api/v1/chats/rooms/' + res.id + '/front';
+            window.location.href = '/api/v2/chats/rooms/' + res.id + '/front';
         })
         .fail(handleError);  // 오류 처리 함수 호출
 }

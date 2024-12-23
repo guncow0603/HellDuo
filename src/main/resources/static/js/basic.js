@@ -57,7 +57,7 @@ $(document).ready(function () {
 
         // 알림 이벤트 수신
         let eventSource = new EventSource(
-            `${window.location.protocol}//${window.location.host}/api/v1/notifications/subscribe`
+            `${window.location.protocol}//${window.location.host}/api/v2/notifications/subscribe`
         );
         console.log('EventSource 연결 확인');
 
@@ -70,17 +70,17 @@ $(document).ready(function () {
     $('#logout-button').click(function () {
         $.ajax({
             type: 'POST',
-            url: '/api/v1/users/logout',
+            url: '/api/v2/users/logout',
         })
             .done(function (res) {
                 alert(res.msg);
-                window.location.href = '/api/v1/page/index';
+                window.location.href = '';
             })
             .fail(function (res) {
                 const jsonObject = JSON.parse(res.responseText);
                 const messages = jsonObject.messages;
                 alert(messages);
-                window.location.href = '/api/v1/page/index';
+                window.location.href = '';
             });
     });
 });
@@ -95,7 +95,7 @@ function getToken() {
 function getUserRole() {
     let role;
     $.ajax({
-        url: '/api/v1/users/role',
+        url: '/api/v2/users/role',
         method: 'GET',
         dataType: 'json',
         async: false,

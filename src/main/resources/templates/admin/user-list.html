@@ -116,7 +116,7 @@
     // 사용자 목록 불러오기 AJAX
     $("#loadUserList").click(function () {
         $.ajax({
-            url: "/api/v1/admin/userList",  // 사용자 목록 API URL
+            url: "/api/v2/admin/userList",  // 사용자 목록 API URL
             type: "GET",
             success: function (response) {
                 let html = "<h3>사용자 목록</h3><ul class='list-group'>";
@@ -147,7 +147,7 @@
 
                     // 상태 업데이트 요청
                     $.ajax({
-                        url: "/api/v1/admin/userUpdate",
+                        url: "/api/v2/admin/userUpdate",
                         type: "PUT",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -174,7 +174,7 @@
     // 트레이너 목록 불러오기 AJAX
     $("#loadTrainerList").click(function () {
         $.ajax({
-            url: "/api/v1/admin/trainerList",  // 트레이너 목록 API URL
+            url: "/api/v2/admin/trainerList",  // 트레이너 목록 API URL
             type: "GET",
             success: function (response) {
                 let html = "<h3>트레이너 목록</h3><table class='table table-bordered table-striped'>";
@@ -214,7 +214,7 @@
 
                     // 상태 업데이트 요청
                     $.ajax({
-                        url: "/api/v1/admin/userUpdate",
+                        url: "/api/v2/admin/userUpdate",
                         type: "PUT",
                         contentType: "application/json",
                         data: JSON.stringify({

@@ -1,7 +1,7 @@
 const trainerId = window.location.pathname.split("/").pop();
 
 async function fetchTrainerProfile() {
-    const profileApi = `/api/v1/users/trainer/${trainerId}`;
+    const profileApi = `/api/v2/users/trainer/${trainerId}`;
     try {
         const response = await fetch(profileApi);
         if (!response.ok) {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 버튼 클릭 이벤트 추가
     reviewButton.addEventListener('click', () => {
-        const reviewPageUrl = `/api/v1/page/reviewList/${trainerId}`;
+        const reviewPageUrl = `/api/v2/page/reviewList/${trainerId}`;
         window.location.href = reviewPageUrl; // 후기 페이지로 이동
     });
 });

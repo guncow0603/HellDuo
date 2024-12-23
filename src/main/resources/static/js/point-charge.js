@@ -22,7 +22,7 @@ let key;
 let tossPayments;
 
 $.ajax({
-    url: `/api/v1/payments/getKey`,
+    url: `/api/v2/payments/getKey`,
     type: "GET",
     success: function (data) {
         if (!data) {
@@ -51,7 +51,7 @@ function getRequest(callback) {
     }
 
     $.ajax({
-        url: `/api/v1/payments`,
+        url: `/api/v2/payments`,
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({

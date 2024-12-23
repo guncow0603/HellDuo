@@ -19,7 +19,7 @@ function onSignup() {
 
     $.ajax({
         type: "POST",
-        url: `/api/v1/users/signup`,
+        url: `/api/v2/users/signup`,
         contentType: "application/json",
         data: JSON.stringify({
             email: email,
@@ -38,7 +38,7 @@ function onSignup() {
     })
         .done(function (res) {
             alert(res.msg);
-            window.location.href = '/api/v1/page/login';
+            window.location.href = '/api/v2/page/login';
         })
         .fail(function (res) {
             const jsonObject = JSON.parse(res.responseText);

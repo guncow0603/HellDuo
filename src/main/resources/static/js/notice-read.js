@@ -6,7 +6,7 @@ $(document).ready(function () {
     // 공지사항 상세 내용 가져오기
     function getNoticeDetail() {
         $.ajax({
-            url: `/api/v1/admin/notice/${noticeId}`,  // GET 요청
+            url: `/api/v2/admin/notice/${noticeId}`,  // GET 요청
             type: 'GET',
             success: function (response) {
                 const notice = response || {};
@@ -30,12 +30,12 @@ $(document).ready(function () {
     // 공지사항 삭제 요청
     function deleteNotice() {
         $.ajax({
-            url: `/api/v1/admin/notice/${noticeId}`,  // DELETE 요청
+            url: `/api/v2/admin/notice/${noticeId}`,  // DELETE 요청
             type: 'DELETE',
         })
             .done(function (res) {
                 alert(res.msg);
-                window.location.href = '/api/v1/page/noticeList';  // 삭제 후 목록 페이지로 이동
+                window.location.href = '/api/v2/page/noticeList';  // 삭제 후 목록 페이지로 이동
             })
             .fail(function (res) {
                 const jsonObject = JSON.parse(res.responseText);
@@ -47,7 +47,7 @@ $(document).ready(function () {
 
     // 공지사항 수정 페이지로 이동
     function goToUpdatePage() {
-        window.location.href = `/api/v1/page/noticeUpdate/${noticeId}`;  // 공지사항 수정 페이지로 이동
+        window.location.href = `/api/v2/page/noticeUpdate/${noticeId}`;  // 공지사항 수정 페이지로 이동
     }
 
     // 삭제 버튼 클릭 이벤트

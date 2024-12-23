@@ -29,7 +29,7 @@ $(document).ready(function() {
     // 사용자 역할에 따른 프로필 정보 요청
     if (role === "USER") {
         $.ajax({
-            url: "/api/v1/users",  // 사용자 정보 API
+            url: "/api/v2/users",  // 사용자 정보 API
             method: "GET",
             success: function(res) {
                 userId = res.userId;
@@ -53,7 +53,7 @@ $(document).ready(function() {
     } else if (role === "TRAINER") {
         // 트레이너의 프로필 정보 가져오기
         $.ajax({
-            url: "/api/v1/users/trainer",  // 트레이너 정보 API
+            url: "/api/v2/users/trainer",  // 트레이너 정보 API
             method: "GET",
             success: function(res) {
                 userId = res.trainerId;  // 트레이너 ID 설정
@@ -159,7 +159,7 @@ $(document).ready(function() {
             })
                 .done(function(res) {
                     alert(res.msg);
-                    window.location.href = '/api/v1/page/profile'; // 성공 시 리디렉션
+                    window.location.href = '/api/v2/page/profile'; // 성공 시 리디렉션
                 })
                 .fail(function(res) {
                     const jsonObject = JSON.parse(res.responseText);
@@ -192,7 +192,7 @@ $(document).ready(function() {
                 contentType: false,  // 컨텐츠 타입을 자동으로 설정하지 않음
                 success: function(res) {
                     alert(res.msg);
-                    window.location.href = '/api/v1/page/profile'; // 성공 시 리디렉션
+                    window.location.href = '/api/v2/page/profile'; // 성공 시 리디렉션
                     // 업로드 후 필요한 추가 작업을 이곳에서 처리할 수 있습니다.
                 },
                 error: function(xhr, status, error) {
@@ -223,7 +223,7 @@ $(document).ready(function() {
     $(document).ready(function () {
         // 포인트 조회 API 호출
         $.ajax({
-            url: '/api/v1/point',
+            url: '/api/v2/point',
             method: 'GET',
             success: function (res) {
                 // 성공적으로 데이터를 가져오면 화면에 표시
@@ -248,7 +248,7 @@ function submitPassword() {
     const password = document.getElementById('passwordInput').value;
     if (password) {
         $.ajax({
-            url: '/api/v1/users/withdrawal',
+            url: '/api/v2/users/withdrawal',
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -256,7 +256,7 @@ function submitPassword() {
             }),
             success: function(res) {
                 alert(res.msg); // 성공 메시지 표시
-                window.location.href = '/api/v1/page/index'; // 성공 시 리디렉션
+                window.location.href = ''; // 성공 시 리디렉션
             },
             error: function(res) {
                 const jsonObject = JSON.parse(res.responseText);
