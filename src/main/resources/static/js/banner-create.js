@@ -1,7 +1,7 @@
 // 배너 이미지 조회 함수
 function fetchBannerImages() {
     $.ajax({
-        url: '/api/v2/userImage/banner',
+        url: `/api/v2/images/banner/1`,
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -11,7 +11,7 @@ function fetchBannerImages() {
                 const bannerDiv = $('<div></div>').addClass('banner-item');
                 bannerDiv.html(`
                     <img src="${banner.imageUrl}" alt="배너 이미지" class="img-fluid" style="max-width: 200px;">
-                    <button class="btn btn-danger mt-2" onclick="deleteBanner(${banner.id})">삭제</button>
+                    <button class="btn btn-danger mt-2" onclick="deleteBanner(${banner.imageId})">삭제</button>
                 `);
                 bannerListDiv.append(bannerDiv);
             });
@@ -26,7 +26,7 @@ function fetchBannerImages() {
 function deleteBanner(bannerId) {
     if (confirm('정말로 이 배너 이미지를 삭제하시겠습니까?')) {
         $.ajax({
-            url: `/api/v2/userImage/banner/${bannerId}`,
+            url: `/api/v2/images/${bannerId}`,
             method: 'DELETE',
             dataType: 'json',
             success: function (data) {
@@ -56,12 +56,13 @@ $(document).ready(function () {
             }
 
             const formData = new FormData();
-            for (const file of files) {
-                formData.append('banners', file);
-            }
+            Array.from(files).forEach(file => formData.append('files', file)); // 'files'로 추가
+
+            uploadBtn.prop('disabled', true); // 버튼 비활성화
+            $('#upload-result').html('<p class="text-info">업로드 중...</p>');
 
             $.ajax({
-                url: '/api/v2/userImage/banner',
+                url: `/api/v2/images/banner/1`,
                 method: 'POST',
                 processData: false,
                 contentType: false,
@@ -71,8 +72,11 @@ $(document).ready(function () {
                     fetchBannerImages(); // 업로드 후 배너 이미지 목록 갱신
                 },
                 error: function (xhr) {
-                    const errorMessage = xhr.responseJSON?.message || '이미지 업로드 실패';
+                    const errorMessage = xhr.responseJSON?.message || `HTTP ${xhr.status}: ${xhr.statusText}`;
                     $('#upload-result').html(`<p class="text-danger">업로드 실패: ${errorMessage}</p>`);
+                },
+                complete: function () {
+                    uploadBtn.prop('disabled', false); // 버튼 활성화
                 }
             });
         });

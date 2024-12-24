@@ -96,8 +96,10 @@ public class BoardService {
     @Transactional
     public BoardDeleteRes deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findBoardByIdWithThrow(boardId); // 게시글 조회
-        if (!board.getUser().getId().equals(user.getId())&& !user.getRole().equals(UserRoleType.ADMIN)) { // 사용자 확인
-            throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
+        if (!board.getUser().getId().equals(user.getId())) { // 사용자
+            if (!user.getRole().equals(UserRoleType.ADMIN)) {
+                throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
+            }
         }
         imageFileService.deleteImages(boardId,"board",user);
         boardRepository.delete(board); // 게시글 삭제

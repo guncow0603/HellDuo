@@ -39,6 +39,7 @@ $(document).ready(function () {
             $('#delete-btn').hide();
             $('#complete-pt-btn').hide();
             $('#pt-create-button').hide();
+            $('#reserve-btn').show();
             loadUserHeader();
         }else if(role === 'TRAINER'){
 

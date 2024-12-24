@@ -49,11 +49,6 @@ INSERT INTO tb_image_file (image_url, type, target_id,user_id) VALUES
                                                             ('https://hellduo.s3.ap-northeast-2.amazonaws.com/boards/board13.png', 'BOARD_IMG', 13, 13),
                                                             ('https://hellduo.s3.ap-northeast-2.amazonaws.com/boards/board14.png', 'BOARD_IMG', 14, 14),
                                                             ('https://hellduo.s3.ap-northeast-2.amazonaws.com/boards/board15.png', 'BOARD_IMG', 15, 15),
-                                                            ('https://hellduo.s3.ap-northeast-2.amazonaws.com/boards/board16.png', 'BOARD_IMG', 16, 1),
-                                                            ('https://hellduo.s3.ap-northeast-2.amazonaws.com/boards/board17.png', 'BOARD_IMG', 17, 2),
-                                                            ('https://hellduo.s3.ap-northeast-2.amazonaws.com/boards/board18.png', 'BOARD_IMG', 18, 3),
-                                                            ('https://hellduo.s3.ap-northeast-2.amazonaws.com/boards/board19.png', 'BOARD_IMG', 19, 4),
-                                                            ('https://hellduo.s3.ap-northeast-2.amazonaws.com/boards/board20.png', 'BOARD_IMG', 20, 5),
                                                            ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt1.png', 'PT_IMG', 1, 1),
                                                            ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt2.png', 'PT_IMG', 2, 2),
                                                            ('https://hellduo.s3.ap-northeast-2.amazonaws.com/ptImages/pt3.png', 'PT_IMG', 3, 3),
@@ -261,9 +256,9 @@ VALUES
 
 INSERT INTO tb_pt (title, description, scheduled_date, price, latitude, longitude, address, trainer_id, user_id, status, specialization, created_at, modified_at)
 VALUES
-    ('전신 체력 강화', '전신 체력을 강화하기 위한 훈련 세션입니다.', '2025-01-01 10:00:00', 50000, 37.5890, 127.0010, '서울특별시 강남구 테헤란로 123, 3층', 4, 1, 'COMPLETED', 'FITNESS', NOW(), NOW()),
+    ('전신 체력 강화', '전신 체력을 강화하기 위한 훈련 세션입니다.', '2025-01-01 10:00:00', 50000, 37.5890, 127.0010, '서울특별시 강남구 테헤란로 123, 3층', 4, 2, 'COMPLETED', 'FITNESS', NOW(), NOW()),
     ('요가 기초', '기본적인 요가 동작을 배우는 세션입니다.', '2025-01-02 11:00:00', 30000, 37.5900, 127.0020, '서울특별시 마포구 홍익로 45, 2층', 5, 2, 'COMPLETED', 'YOGA', NOW(), NOW()),
-    ('필라테스 전환', '필라테스를 배우기 위한 기초적인 세션입니다.', '2025-01-03 12:00:00', 35000, 37.5910, 127.0030, '서울특별시 송파구 가락로 99, 1층', 6, 3, 'COMPLETED', 'PILATES', NOW(), NOW()),
+    ('필라테스 전환', '필라테스를 배우기 위한 기초적인 세션입니다.', '2025-01-03 12:00:00', 35000, 37.5910, 127.0030, '서울특별시 송파구 가락로 99, 1층', 6, 2, 'COMPLETED', 'PILATES', NOW(), NOW()),
     ('하체 근육 강화 훈련', '하체 근육을 강화하기 위한 훈련 세션입니다.', '2025-01-04 13:00:00', 52000, 37.5920, 127.0040, '서울특별시 강서구 공항대로 229, 4층', 7, 1, 'COMPLETED', 'FITNESS', NOW(), NOW()),
     ('기능성 훈련을 통한 부상 예방', '부상 예방을 위한 기능성 훈련 세션입니다.', '2025-01-05 14:00:00', 53000, 37.5930, 127.0050, '서울특별시 종로구 종로 45, 5층', 8, 2, 'COMPLETED', 'REHABILITATION', NOW(), NOW()),
     ('몸매 교정을 위한 운동 세션', '몸매를 교정하고 균형을 맞추기 위한 운동 프로그램입니다.', '2025-01-06 15:00:00', 54000, 37.5940, 127.0060, '서울특별시 서초구 반포대로 100, 6층', 9, 3, 'COMPLETED', 'REHABILITATION', NOW(), NOW()),
@@ -272,7 +267,7 @@ VALUES
     ('지구력 훈련 세션', '심폐지구력을 향상시키기 위한 유산소 훈련 세션입니다.', '2025-01-09 18:00:00', 50000, 37.5970, 127.0090, '서울특별시 용산구 이태원로 99, 9층', 12, 3, 'COMPLETED', 'FITNESS', NOW(), NOW()),
     ('피트니스 고급', '고급 피트니스 운동을 배우는 세션입니다.', '2025-01-10 10:00:00', 60000, 37.5980, 127.0100, '서울특별시 강동구 천호대로 45, 10층', 13, 1, 'COMPLETED', 'FITNESS', NOW(), NOW()),
     ('크로스핏 기본', '기본적인 크로스핏 훈련을 배우는 세션입니다.', '2025-01-11 11:00:00', 58000, 37.5990, 127.0110, '서울특별시 중랑구 용마산로 123, 11층', 14, 2, 'COMPLETED', 'CROSSFIT', NOW(), NOW()),
-    ('피트니스 체형 관리', '체형을 관리하기 위한 피트니스 세션입니다.', '2025-01-12 12:00:00', 49000, 37.6000, 127.0120, '서울특별시 마포구 연남로 56, 12층', 15, 1, 'COMPLETED', 'FITNESS', NOW(), NOW()),
+    ('피트니스 체형 관리', '체형을 관리하기 위한 피트니스 세션입니다.', '2025-01-12 12:00:00', 49000, 37.6000, 127.0120, '서울특별시 마포구 연남로 56, 12층', 15, 2,'COMPLETED', 'FITNESS', NOW(), NOW()),
     ('필라테스 고급', '고급 필라테스 훈련을 배우는 세션입니다.', '2025-01-13 13:00:00', 55000, 37.6010, 127.0130, '서울특별시 서대문구 연세로 90, 13층', 4, 3, 'COMPLETED', 'PILATES', NOW(), NOW()),
     ('영양학 및 체중 관리', '영양학에 기반한 체중 관리 세션입니다.', '2025-01-14 14:00:00', 47000, 37.6020, 127.0140, '서울특별시 동대문구 휘경로 25, 14층', 5, 2, 'COMPLETED', 'NUTRITION', NOW(), NOW());
 
@@ -428,36 +423,22 @@ INSERT INTO tb_review (title, content, rating, pt_id, trainer_id) VALUES
                                                                        'PT 프로그램 덕분에 복부와 하체의 체형 변화가 확실히 느껴졌습니다. 트레이너님의 프로그램이 아주 효과적이었어요.',
                                                                        4.6,
                                                                        23,  -- pt_id (PT 프로그램 23)
-                                                                       12),  -- trainer_id (트레이너 12)
-
-                                                                      ('꾸준히 운동할 수 있도록 도와주셨어요',
-                                                                       '트레이너님의 격려 덕분에 운동을 꾸준히 할 수 있었고, 목표를 달성했습니다. 더 좋은 결과를 위해 계속할 예정입니다.',
-                                                                       4.9,
-                                                                       24,  -- pt_id (PT 프로그램 24)
-                                                                       13),  -- trainer_id (트레이너 13)
-
-                                                                      ('체력이 많이 늘었어요',
-                                                                       '체력도 늘고, 운동을 시작한 지 1개월 만에 확실한 변화를 느꼈습니다. 매우 만족하고 있습니다.',
-                                                                       4.7,
-                                                                       25,  -- pt_id (PT 프로그램 25)
-                                                                       14),  -- trainer_id (트레이너 14)
-
-                                                                      ('근육량 증가',
-                                                                       '근육량을 늘리는 데 큰 도움이 되었습니다. 트레이너님이 체계적으로 운동을 지도해주셔서 효과를 봤습니다.',
-                                                                       5.0,
-                                                                       26,  -- pt_id (PT 프로그램 26)
-                                                                       4),  -- trainer_id (트레이너 4)
-
-                                                                      ('더 나은 결과를 위해 노력하고 있습니다',
-                                                                       '트레이너님이 제공하는 맞춤형 운동 프로그램 덕분에 점차 나아지는 결과를 느끼고 있습니다.',
-                                                                       4.3,
-                                                                       27,  -- pt_id (PT 프로그램 27)
-                                                                       5),  -- trainer_id (트레이너 5)
-
-                                                                      ('목표를 달성했어요',
-                                                                       '목표 체중을 달성할 수 있었고, 몸이 가벼워지는 기분이 들었습니다. 트레이너님 덕분이에요.',
-                                                                       4.8,
-                                                                       28,  -- pt_id (PT 프로그램 28)
-                                                                       6);  -- trainer_id (트레이너 6)
+                                                                       12); -- trainer_id (트레이너 12)
 
 
+INSERT INTO tb_report (reported_user_id, reporter_user_id, report_reason, content)
+VALUES
+    (1, 2, 'INAPPROPRIATE_CONTENT', '이 사용자는 스팸 메시지를 보냅니다'),
+    (2, 3, 'INAPPROPRIATE_CONTENT', '이 사용자는 다른 사람을 괴롭히고 있습니다'),
+    (3, 4, 'INAPPROPRIATE_CONTENT', '이 사용자는 부적절한 내용을 공유했습니다'),
+    (4, 5, 'INAPPROPRIATE_CONTENT', '이 사용자는 가짜 계정을 사용하고 있습니다'),
+    (5, 6, 'INAPPROPRIATE_CONTENT', '이 사용자는 사기 행위를 하고 있습니다'),
+    (6, 7, 'ABUSE', '이 사용자는 혐오 발언을 하고 있습니다'),
+    (7, 8, 'ABUSE', '이 사용자는 개인정보를 유출했습니다'),
+    (8, 9, 'ABUSE', '이 사용자는 광고성 메시지를 보내고 있습니다'),
+    (9, 10, 'ABUSE', '이 사용자는 지속적으로 괴롭히고 있습니다'),
+    (10, 11, 'ABUSE', '이 사용자는 불쾌한 이미지를 올렸습니다'),
+    (11, 12, 'FRAUD', '이 사용자는 가짜 프로필 사진을 사용하고 있습니다'),
+    (12, 13, 'FRAUD', '이 사용자는 사기 사이트로 유도하고 있습니다'),
+    (13, 14, 'FRAUD', '이 사용자는 다른 사람을 차별하고 있습니다'),
+    (14, 15, 'FRAUD', '이 사용자는 내 개인 정보를 공개했습니다');

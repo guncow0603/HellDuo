@@ -1,6 +1,10 @@
 package com.hellduo.domain.pt.service;
 
 import com.hellduo.domain.board.dto.response.BoardsReadRes;
+import com.hellduo.domain.board.exception.BoardErrorCode;
+import com.hellduo.domain.board.exception.BoardException;
+import com.hellduo.domain.imageFile.exception.ImageErrorCode;
+import com.hellduo.domain.imageFile.exception.ImageException;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
@@ -170,8 +174,11 @@ public class PTService {
     public PTDeleteRes ptDelete(Long ptId, User trainer) {
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
 
-        if (!pt.getTrainer().getId().equals(trainer.getId())&& !trainer.getRole().equals(UserRoleType.ADMIN)) {
-            throw new PTException(PTErrorCode.NOT_OWN_TRAINER);
+        if (!pt.getTrainer().getId().equals(trainer.getId())) {
+            if (!trainer.getRole().equals(UserRoleType.ADMIN)) {
+                throw new PTException(PTErrorCode.NOT_OWN_TRAINER);
+            }
+
         }
 
         imageFileService.deleteImages(ptId,"pt",trainer);
