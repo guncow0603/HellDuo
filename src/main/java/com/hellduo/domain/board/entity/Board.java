@@ -2,6 +2,7 @@ package com.hellduo.domain.board.entity;
 
 import com.hellduo.domain.board_like.entity.BoardLike;
 import com.hellduo.domain.comment.entity.Comment;
+import com.hellduo.domain.common.BaseEntity;
 import com.hellduo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.util.List;
 @Data
 @Table(name = "TB_Board")
 @RequiredArgsConstructor
-public class Board {
+public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +27,6 @@ public class Board {
     private String content;
 
     @Column(name = "likeCount", nullable = false)
-    @ColumnDefault("0")
     private Long likeCount = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)

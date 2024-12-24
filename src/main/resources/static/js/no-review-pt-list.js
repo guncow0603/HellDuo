@@ -1,7 +1,7 @@
 // PT 데이터를 가져오는 함수
 function loadPTs() {
     $.ajax({
-        url: `/api/v1/pt/completedPTs`,
+        url: `/api/v2/pt/completedPTs`,
         type: "GET",
         success: function (response) {
             renderPTs(response);
@@ -15,7 +15,7 @@ function loadPTs() {
 // 리뷰 버튼 클릭 이벤트 핸들러
 function handleReviewButton(event, ptId) {
     event.stopPropagation(); // 클릭 이벤트 전파를 막음
-    window.location.href = `/api/v1/page/reviewCreate/${ptId}`;
+    window.location.href = `/api/v2/page/reviewCreate/${ptId}`;
 }
 // PT 데이터를 HTML에 표시하는 함수
 function renderPTs(pts) {
@@ -29,7 +29,7 @@ function renderPTs(pts) {
 
     pts.forEach(pt => {
         const ptItem = $(`
-                    <div class="pt-item" onclick="window.location.href='/api/v1/page/ptRead/${pt.ptId}'">
+                    <div class="pt-item" onclick="window.location.href='/api/v2/page/ptRead/${pt.ptId}'">
                         <img alt="썸네일 이미지" id="thumbnail-${pt.ptId}">
                         <div class="pt-details">
                             <h5>${pt.title}</h5>

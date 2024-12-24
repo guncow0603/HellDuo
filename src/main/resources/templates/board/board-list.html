@@ -20,6 +20,28 @@
 
     <!-- CSS 스타일 -->
     <style>
+
+        /* 페이지네이션 스타일 */
+        .pagination {
+            justify-content: center;
+        }
+
+        .pagination .page-item .page-link {
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin: 0 5px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .pagination .page-item:hover .page-link {
+            background-color: #0056b3;
+            color: #fff;
+        }
         body {
             background-color: #f8f9fa !important;
         }
@@ -122,7 +144,14 @@
     <div id="board-list" class="board-list"></div>
 
     <div class="left-menu" id="board-create-button">
-        <a href="/api/v1/page/boardCreate">게시글 작성</a>
+        <a href="/api/v2/page/boardCreate">게시글 작성</a>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul id="pagination" class="pagination">
+                <!-- 페이지네이션 버튼이 여기에 추가됩니다. -->
+            </ul>
+        </div>
     </div>
 </div>
 

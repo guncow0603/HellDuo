@@ -1,7 +1,7 @@
 // 배너 이미지 조회 함수
 function fetchBannerImages() {
     $.ajax({
-        url: '/api/v1/userImage/banner',
+        url: '/api/v2/userImage/banner',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -26,7 +26,7 @@ function fetchBannerImages() {
 function deleteBanner(bannerId) {
     if (confirm('정말로 이 배너 이미지를 삭제하시겠습니까?')) {
         $.ajax({
-            url: `/api/v1/userImage/banner/${bannerId}`,
+            url: `/api/v2/userImage/banner/${bannerId}`,
             method: 'DELETE',
             dataType: 'json',
             success: function (data) {
@@ -61,7 +61,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                url: '/api/v1/userImage/banner',
+                url: '/api/v2/userImage/banner',
                 method: 'POST',
                 processData: false,
                 contentType: false,

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api/v1/page")
+@RequestMapping("/api/v2/page")
 public class PtPageController {
     @GetMapping("/ptCreate")
     public String ptCreatePage() {

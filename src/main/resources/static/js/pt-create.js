@@ -31,7 +31,7 @@ $(document).ready(function () {
 
         // AJAX 요청
         $.ajax({
-            url: '/api/v1/pt',
+            url: '/api/v2/pt',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
@@ -40,7 +40,7 @@ $(document).ready(function () {
                 uploadPTImages(res.ptId, function (uploadSuccess) {
                     if (uploadSuccess) {
                         alert("PT 생성 성공!");
-                        window.location.href = '/api/v1/page/ptList';
+                        window.location.href = '/api/v2/page/ptList';
                     } else {
                         // 이미지 업로드 실패 시 PT 생성 취소 요청
                         cancelPTCreation(res.ptId);
@@ -99,7 +99,7 @@ $(document).ready(function () {
     // PT 생성 취소 요청
     function cancelPTCreation(ptId) {
         $.ajax({
-            url: `/api/v1/pt/${ptId}`,
+            url: `/api/v2/pt/${ptId}`,
             method: 'DELETE',
             success: function () {
                 alert('이미지 업로드 실패로 인해 PT 생성이 취소되었습니다.');

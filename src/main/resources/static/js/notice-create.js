@@ -16,14 +16,14 @@ $(document).ready(function () {
 
         // AJAX 요청
         $.ajax({
-            url: '/api/v1/admin/notice',  // 서버의 /notice 엔드포인트
+            url: '/api/v2/admin/notice',  // 서버의 /notice 엔드포인트
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(noticeData)
         })
             .done(function (res) {
                 alert(res.msg);
-                window.location.href = '/api/v1/page/noticeList';
+                window.location.href = '/api/v2/page/noticeList';
             })
             .fail(function (res) {
                 const jsonObject = JSON.parse(res.responseText);

@@ -1,5 +1,6 @@
 package com.hellduo.domain.pt.service;
 
+import com.hellduo.domain.board.dto.response.BoardsReadRes;
 import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.pt.dto.request.PTCreateReq;
 import com.hellduo.domain.pt.dto.request.PTUpdateReq;
@@ -21,6 +22,9 @@ import com.hellduo.domain.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +41,7 @@ public class PTService {
     private final PTRepository ptRepository;
     private final ImageFileService imageFileService;
     private final ReviewRepository reviewRepository;
-    private RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
     @Transactional
     public PTCreateRes ptCreate(PTCreateReq req, User trainer) {
@@ -215,22 +219,12 @@ public class PTService {
     }
 
     @Transactional(readOnly = true)
-    public List<PTsReadRes> searchPTs(String keyword, PTSpecialization category, String sortBy, boolean isAsc) {
-        Sort sort = Sort.by(isAsc ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        List<PT> entities = ptRepository.searchByKeywordAndCategoryAndStatus(PTStatus.UNRESERVED, keyword, category, sort);
-
-        List<PTsReadRes> result = new ArrayList<>();
-        for (PT entity : entities) {
-            result.add(new PTsReadRes(
-                    entity.getId(),
-                    entity.getTitle(),
-                    entity.getSpecialization().getName(),
-                    entity.getScheduledDate(),
-                    entity.getPrice(),
-                    entity.getStatus().getDescription()
-            ));
-        }
-        return result;
+    public Page<PTsReadRes> searchPTs(int page, int size, String sortBy, boolean isAsc, String keyword, PTSpecialization category) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        // ptRepository의 searchPTs 메서드를 호출하여 동적 쿼리를 처리합니다.
+        return ptRepository.searchPTs(pageable, keyword, category);
     }
 
     @Transactional(readOnly = true)

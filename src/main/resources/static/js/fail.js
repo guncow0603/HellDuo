@@ -17,6 +17,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 3초 후 프로필 페이지로 리디렉션
     setTimeout(() => {
-        window.location.replace("/api/v1/page/profile");
+        window.location.replace("/api/v2/page/profile");
     }, 3000);
 });
