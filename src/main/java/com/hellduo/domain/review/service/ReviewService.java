@@ -9,7 +9,7 @@ import com.hellduo.domain.review.dto.request.ReviewCreateReq;
 import com.hellduo.domain.review.dto.response.GetReviewRes;
 import com.hellduo.domain.review.dto.response.GetReviewsRes;
 import com.hellduo.domain.review.dto.response.ReviewCreateRes;
-import com.hellduo.domain.review.dto.entity.Review;
+import com.hellduo.domain.review.entity.Review;
 import com.hellduo.domain.review.exception.ReviewErrorCode;
 import com.hellduo.domain.review.exception.ReviewException;
 import com.hellduo.domain.review.repository.ReviewRepository;
@@ -35,6 +35,7 @@ public class ReviewService {
     private final PTRepository ptRepository;
 
     public ReviewCreateRes reviewCreate(@Valid ReviewCreateReq req, User user, Long ptId) {
+        Review review = reviewRepository.findByPtId(ptId);
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
 
         if (pt.getStatus() != PTStatus.COMPLETED) {
@@ -45,13 +46,13 @@ public class ReviewService {
             throw new UserException(UserErrorCode.NOT_ROLE_USER);
         }
 
-        if(pt.getReview()!=null) {
+        if(review!=null) {
             throw new ReviewException(ReviewErrorCode.PT_REVIEW_ALREADY_WRITTEN);
         }
 
         User trainer = pt.getTrainer();
 
-        Review review = Review.builder().
+        review = Review.builder().
                 title(req.title()).
                 content(req.content()).
                 pt(pt).
@@ -59,8 +60,6 @@ public class ReviewService {
                 rating(req.rating()).
                 build();
         reviewRepository.save(review);
-
-        pt.updateReviewWritten(review);
 
         updateTrainerRating(trainer);
 

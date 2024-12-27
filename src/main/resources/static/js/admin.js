@@ -28,17 +28,17 @@ $(document).ready(function () {
     $('#logout-button').click(function () {
         $.ajax({
             type: 'POST',
-            url: '/api/v1/users/logout',
+            url: '/api/v2/users/logout',
         })
             .done(function (res) {
                 alert(res.msg);
-                window.location.href = '/api/v1/page/index';
+                window.location.href = '';
             })
             .fail(function (res) {
                 const jsonObject = JSON.parse(res.responseText);
                 const messages = jsonObject.messages;
                 alert(messages);
-                window.location.href = '/api/v1/page/index';
+                window.location.href = '';
             });
     });
 });
@@ -53,7 +53,7 @@ function getToken() {
 function getUserRole() {
     let role;
     $.ajax({
-        url: '/api/v1/users/role',
+        url: '/api/v2/users/role',
         method: 'GET',
         dataType: 'json',
         async: false,

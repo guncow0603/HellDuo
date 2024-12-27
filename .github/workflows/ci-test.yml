@@ -28,17 +28,9 @@ jobs:
 
       - name: Print environment variables
         run: |
-          echo "ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}"
           echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
           echo "AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          echo "DB_DATABASE_NAME: ${{ secrets.DB_DATABASE_NAME }}"
-          echo "DB_USERNAME: ${{ secrets.DB_USERNAME }}"
-          echo "DB_PASSWORD: ${{ secrets.DB_PASSWORD }}"
-          echo "DB_PORT: ${{ secrets.DB_PORT }}"
           echo "FAIL_URL: ${{ secrets.FAIL_URL }}"
-          echo "JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}"
-          echo "S3_BUCKET_NAME: ${{ secrets.s3_bucket_name }}"
-          echo "S3_URL: ${{ secrets.S3_URL }}"
           echo "SUCCESS_URL: ${{ secrets.SUCCESS_URL }}"
           echo "TOSS_CLIENT_KEY: ${{ secrets.TOSS_CLIENT_KEY }}"
           echo "TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}"
@@ -56,25 +48,25 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Disable Gradle cache and test
+      - name: Test with Gradle
         env:
-            ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            DB_DATABASE_NAME: ${{ secrets.DB_DATABASE_NAME }}
-            DB_USERNAME: ${{ secrets.DB_USERNAME }}
-            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-            DB_PORT: ${{ secrets.DB_PORT }}
-            FAIL_URL: ${{ secrets.FAIL_URL }}
-            JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-            S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-            S3_URL: ${{ secrets.S3_URL }}
-            SUCCESS_URL: ${{ secrets.SUCCESS_URL }}
-            TOSS_CLIENT_KEY: ${{ secrets.TOSS_CLIENT_KEY }}
-            TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
-            REDIS_HOST: redis   # Redis 호스트
-            REDIS_PORT: 6379    # Redis 포트
-        run: ./gradlew clean --no-build-cache --refresh-dependencies test --info --stacktrace
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          DB_DATABASE_NAME: ${{ secrets.DB_DATABASE_NAME }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          FAIL_URL: ${{ secrets.FAIL_URL }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+          S3_URL: ${{ secrets.S3_URL }}
+          SUCCESS_URL: ${{ secrets.SUCCESS_URL }}
+          TOSS_CLIENT_KEY: ${{ secrets.TOSS_CLIENT_KEY }}
+          TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
+          REDIS_HOST: redis   # Redis 호스트
+          REDIS_PORT: 6379    # Redis 포트
+        run: ./gradlew test -Dspring.profiles.active=test
 
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v2

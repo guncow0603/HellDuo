@@ -4,7 +4,7 @@ const reviewId = window.location.pathname.split("/").pop();
 // 리뷰 조회 함수
 async function getReviewById(reviewId) {
     try {
-        const response = await fetch(`/api/v1/review/${reviewId}`);
+        const response = await fetch(`/api/v2/review/${reviewId}`);
         if (!response.ok) {
             throw new Error('리뷰를 불러오는 데 실패했습니다.');
         }
@@ -35,7 +35,7 @@ function renderReviewDetails(review) {
 // 이미지 조회 함수 (AJAX 사용)
 function fetchReviewImages(reviewId) {
     $.ajax({
-        url: `/api/v1/reviews/${reviewId}/images`, // URL 일관성 유지
+        url: `/api/v2/images/review/${reviewId}`, // URL 일관성 유지
         method: 'GET',
         success: function (imageList) {
             renderImages(imageList);

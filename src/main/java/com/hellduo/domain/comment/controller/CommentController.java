@@ -18,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/comment")
+@RequestMapping("/api/v2/comment")
 public class CommentController {
 
     private final CommentService commentService;
@@ -29,13 +29,6 @@ public class CommentController {
                 @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.commentCreate(req,userDetails.getUser()));
-    }
-
-    @GetMapping("/{boardId}")
-    public ResponseEntity<List<CommentReadRes>> commentRead(
-            @PathVariable Long boardId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.commentRead(boardId));
     }
 
     @PutMapping("/{commentId}")

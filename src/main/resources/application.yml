@@ -56,7 +56,6 @@ cloud: # S3
       access-key: ${AWS_ACCESS_KEY_ID}
       secret-key: ${AWS_SECRET_ACCESS_KEY}
     s3:
-      url: ${S3_URL}
       bucket: ${S3_BUCKET_NAME}
     region:
       static: ap-northeast-2
@@ -69,3 +68,5 @@ payment:
     secret-key: ${TOSS_SECRET_KEY}
     success-url: ${SUCCESS_URL}
     fail-url: ${FAIL_URL}
+
+admin_token: ${ADMIN_TOKEN}

@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/point")
+@RequestMapping("/api/v2/point")
 public class PointController {
     private final PointService pointService;
     @GetMapping("/charge")

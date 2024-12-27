@@ -61,7 +61,7 @@
         // 신고 목록을 가져오는 함수
         function loadReportList() {
             $.ajax({
-                url: "/api/v1/report/admin", // 백엔드 엔드포인트
+                url: "/api/v2/report/admin", // 백엔드 엔드포인트
                 type: "GET",
                 contentType: "application/json",
                 success: function (response) {
@@ -110,7 +110,7 @@
 
             // 상태 업데이트 요청
             $.ajax({
-                url: "/api/v1/admin/userUpdate",
+                url: "/api/v2/admin/userUpdate",
                 type: "PUT",
                 contentType: "application/json",
                 data: JSON.stringify({

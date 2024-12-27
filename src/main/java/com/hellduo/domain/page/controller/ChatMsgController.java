@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ChatMsgController {
 
-    @GetMapping("/api/v1/chats/rooms/{roomId}/front")
+    @GetMapping("/api/v2/chats/rooms/{roomId}/front")
     public String chatPage(@AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long roomId, Model model) {
         model.addAttribute("roomId", roomId);
         model.addAttribute("username", userDetails.getUser().getNickname());
-        return "/chat/chat";
+        return "chat/chat";
     }
 
-    @GetMapping("/api/v1/chats/rooms/list")
+    @GetMapping("/api/v2/chats/rooms/list")
     public String chatRoomList(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         model.addAttribute("userId", userDetails.getUser().getId());
-        return "/chat/room-list";
+        return "chat/room-list";
     };
 
 }

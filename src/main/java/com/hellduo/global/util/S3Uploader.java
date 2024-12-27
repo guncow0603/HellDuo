@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 
 @Slf4j // final 멤버변수가 있으면 생성자 항목에 포함시킴
@@ -35,21 +39,31 @@ public class S3Uploader {
         return filename != null && filename.contains(".") ? filename.substring(filename.lastIndexOf(".")) : "";
     }
 
+    // 이미지 리사이징
+    private BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+        BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+        outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
+        return outputImage;
+    }
+
     /**
      * 로컬 경로에 여러 파일 업로드
      */
-    public List<String> uploadFileToS3(List<MultipartFile> multipartFile, String filePath) {
+    public List<String> uploadFileToS3(List<MultipartFile> multipartFile, String filePath, int targetWidth, int targetHeight) {
         List<File> uploadFileList = new ArrayList<>();
         try {
+            // 여러 파일을 변환하고 리사이즈 후 저장
             for (MultipartFile file : multipartFile) {
-                uploadFileList.add(convert(file).orElseThrow(()
-                        -> new IllegalArgumentException("[error]: MultipartFile -> 파일 변환 실패")));
+                uploadFileList.add(convertAndResize(file, targetWidth, targetHeight).orElseThrow(()
+                        -> new IllegalArgumentException("[error]: MultipartFile -> 파일 변환 및 리사이징 실패")));
             }
         } catch (IOException e) {
-            throw new RuntimeException("파일 변환 오류", e);
+            throw new RuntimeException("파일 변환 및 리사이징 오류", e);
         }
 
         List<String> uploadImageUrl = new ArrayList<>();
+        // 리사이즈된 파일을 S3에 업로드
         for (File file : uploadFileList) {
             String fileName = filePath + "/" + UUID.randomUUID() + getFileExtension(multipartFile.get(0));
             uploadImageUrl.add(putS3ToKey(file, fileName));
@@ -59,24 +73,6 @@ public class S3Uploader {
         return uploadImageUrl;
     }
 
-    /**
-     * 로컬 경로에 단일 파일 업로드
-     */
-    public String uploadSingleFileToS3(MultipartFile multipartFile, String filePath) {
-        File uploadFile;
-        try {
-            uploadFile = convert(multipartFile).orElseThrow(()
-                    -> new IllegalArgumentException("[error]: MultipartFile -> 파일 변환 실패"));
-        } catch (IOException e) {
-            throw new RuntimeException("파일 변환 오류", e);
-        }
-
-        String fileName = filePath + "/" + UUID.randomUUID() + getFileExtension(multipartFile);
-        String uploadImageUrl = putS3ToKey(uploadFile, fileName);
-        removeNewFile(uploadFile);
-
-        return uploadImageUrl;
-    }
 
     /**
      * S3로 업로드
@@ -131,17 +127,39 @@ public class S3Uploader {
      * 로컬에 파일 업로드 및 변환
      * @param file : 업로드할 파일
      */
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        // 로컬에서 저장할 파일 경로 : user.dir => 현재 디렉토리 기준
+    // 리사이징 후 화질 설정을 포함한 이미지 저장 예시
+    private Optional<File> convertAndResize(MultipartFile file, int targetWidth, int targetHeight) throws IOException {
         String dirPath = System.getProperty("user.dir") + "/" + file.getOriginalFilename();
-        File convertFile = new File(dirPath);
-        if (convertFile.createNewFile()) {
-            // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
+        File convertedFile = new File(dirPath);
+
+        if (convertedFile.createNewFile()) {
+            BufferedImage originalImage = ImageIO.read(file.getInputStream());
+            BufferedImage resizedImage = resizeImage(originalImage, targetWidth, targetHeight);
+
+            // 화질을 설정하기 위한 ImageWriter 사용
+            try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+                String extension = getFileExtension(file).substring(1).toLowerCase();
+                if ("jpg".equals(extension) || "jpeg".equals(extension)) {
+                    // JPEG 형식일 경우 화질을 조정하여 저장
+                    Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
+                    if (writers.hasNext()) {
+                        ImageWriter writer = writers.next();
+                        ImageWriteParam param = writer.getDefaultWriteParam();
+                        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+                        param.setCompressionQuality(0.8f); // 0.0 (최저) ~ 1.0 (최고)
+                        writer.setOutput(ImageIO.createImageOutputStream(fos));
+                        writer.write(null, new IIOImage(resizedImage, null, null), param);
+                        writer.dispose();
+                    }
+                } else {
+                    // JPEG이 아닐 경우, 기본적으로 ImageIO.write를 사용
+                    ImageIO.write(resizedImage, extension, fos);
+                }
             }
-            return Optional.of(convertFile);
+
+            return Optional.of(convertedFile);
         }
+
         return Optional.empty();
     }
 }

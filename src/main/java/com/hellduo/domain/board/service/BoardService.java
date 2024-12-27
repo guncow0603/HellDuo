@@ -7,27 +7,28 @@ import com.hellduo.domain.board.entity.Board;
 import com.hellduo.domain.board.exception.BoardErrorCode;
 import com.hellduo.domain.board.exception.BoardException;
 import com.hellduo.domain.board.repository.BoardRepository;
-import com.hellduo.domain.imageFile.entity.BoardImage;
-import com.hellduo.domain.imageFile.repository.BoardImageRepository;
+import com.hellduo.domain.comment.dto.response.CommentReadRes;
+import com.hellduo.domain.comment.entity.Comment;
+import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.user.entity.User;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
-import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
+    private final ImageFileService imageFileService;
     private final BoardRepository boardRepository;
-    private final BoardImageRepository boardImageRepository;
-    private final S3Uploader s3Uploader;
-
-    @Value("${s3.url}")
-    private String s3Url;
 
     // 게시글 작성 (트랜잭션 적용)
     @Transactional
@@ -41,11 +42,26 @@ public class BoardService {
         return new BoardCreateRes(board.getId(),"글 작성 완료");
     }
 
-    // 게시글 조회 (읽기 전용 트랜잭션 적용)
     @Transactional(readOnly = true)
     public BoardReadRes getBoard(Long boardId) {
-        Board board = boardRepository.findBoardByIdWithThrow(boardId); // 조회만 하는 메서드이므로 읽기 전용 트랜잭션 적용
-        return new BoardReadRes(board.getId(), board.getLikeCount(), board.getTitle(), board.getContent(),board.getUser().getId());
+        // 게시글을 조회하면서 댓글(commentList)도 함께 가져옵니다 (JOIN FETCH로 N+1 문제 해결)
+        Board board = boardRepository.findBoardByIdWithThrow(boardId);
+
+        // 댓글 리스트를 CommentReadRes로 변환
+        List<CommentReadRes> commentReadResList = new ArrayList<>();
+        for (Comment content : board.getCommentList()) {
+            commentReadResList.add(new CommentReadRes(content));  // Comment 엔티티를 CommentReadRes DTO로 변환
+        }
+
+        // BoardReadRes DTO에 필요한 정보들로 변환하여 반환
+        return new BoardReadRes(
+                board.getId(),
+                board.getLikeCount(),
+                board.getTitle(),
+                board.getContent(),
+                board.getUser().getId(),
+                commentReadResList // 댓글 리스트도 함께 반환
+        );
     }
 
     // 모든 게시글 조회 (읽기 전용 트랜잭션 적용)
@@ -80,30 +96,28 @@ public class BoardService {
     @Transactional
     public BoardDeleteRes deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findBoardByIdWithThrow(boardId); // 게시글 조회
-        if (!board.getUser().getId().equals(user.getId())&& !user.getRole().equals(UserRoleType.ADMIN)) { // 사용자 확인
-            throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
+        if (!board.getUser().getId().equals(user.getId())) { // 사용자
+            if (!user.getRole().equals(UserRoleType.ADMIN)) {
+                throw new BoardException(BoardErrorCode.BOARD_CURRENT_USER);
+            }
         }
-        List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
-        for (BoardImage boardImage : boardImages) {
-            String imageUrl = boardImage.getBoardImageUrl();
-            String s3Key = imageUrl.replace(s3Url, "");
-            s3Uploader.deleteS3(s3Key);
-        }
+        imageFileService.deleteImages(boardId,"board",user);
         boardRepository.delete(board); // 게시글 삭제
         return new BoardDeleteRes("게시글이 삭제 되었습니다.");
     }
 
     // 좋아요가 많은 게시글 조회 (읽기 전용 트랜잭션 적용)
+    @Cacheable(value = "bestLikeBoardCache", key = "'best_like_board'", unless = "#result == null or #result.size() == 0", cacheManager = "redisCacheManager")
     @Transactional(readOnly = true)
     public List<BestLikeBoardRes> getBestLikeBoard() {
-        List<Board> top10Boards = boardRepository.findTop10ByOrderByLikeCountDesc(); // 좋아요 순으로 상위 10개 게시글 조회
+        List<Board> top10Boards = boardRepository.findTop10ByOrderByLikeCountDesc(); // DB 조회
         List<BestLikeBoardRes> result = new ArrayList<>();
         for (Board board : top10Boards) {
             BestLikeBoardRes dto = new BestLikeBoardRes(
                     board.getId(),
                     board.getLikeCount(),
                     board.getTitle(),
-                    board.getContent()); // 엔티티를 DTO로 변환
+                    board.getContent()); // DTO 변환
             result.add(dto);
         }
         return result;
@@ -111,12 +125,10 @@ public class BoardService {
 
     // 게시글 검색 (읽기 전용 트랜잭션 적용)
     @Transactional(readOnly = true)
-    public List<BoardsReadRes> searchBoards(String keyword) {
-        List<Board> boards = boardRepository.searchByKeyword(keyword); // 검색어로 게시글 검색
-        List<BoardsReadRes> boardsReadResList = new ArrayList<>();
-        for (Board board : boards) {
-            boardsReadResList.add(new BoardsReadRes(board.getId(), board.getTitle(), board.getLikeCount()));
-        }
-        return boardsReadResList;
+    public Page<BoardsReadRes> searchBoards(int page, int size, String sortBy, boolean isAsc, String keyword) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return boardRepository.searchBoards(pageable, keyword);
     }
 }

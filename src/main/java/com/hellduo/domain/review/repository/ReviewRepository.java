@@ -1,6 +1,6 @@
 package com.hellduo.domain.review.repository;
 
-import com.hellduo.domain.review.dto.entity.Review;
+import com.hellduo.domain.review.entity.Review;
 import com.hellduo.domain.review.exception.ReviewErrorCode;
 import com.hellduo.domain.review.exception.ReviewException;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +18,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         return findById(id).orElseThrow(()->
                 new ReviewException(ReviewErrorCode.NOT_FOUND_REVIEW));
     };
+
+    Review findByPtId(Long ptId);
 }
 

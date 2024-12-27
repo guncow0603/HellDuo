@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Entity
+@Entity(name = "TB_REPORT")
 @RequiredArgsConstructor
 @Getter
 public class Report {

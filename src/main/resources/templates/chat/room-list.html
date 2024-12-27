@@ -78,7 +78,7 @@
     <div class="card chat-room-card">
       <div class="card-body">
         <h5 class="card-title">채팅방 1</h5>
-        <a href="/api/v1/chats/room/1" class="btn btn-primary">
+        <a href="/api/v2/chats/room/1" class="btn btn-primary">
           <i class="fas fa-comments"></i> 채팅방 입장
           <i class="fasout fa-comments"></i> 채팅방 종료
         </a>
@@ -101,7 +101,7 @@
 
         $.ajax({
           type: 'GET',
-          url: `/api/v1/chats/rooms`,
+          url: `/api/v2/chats/rooms`,
         })
         .done(function (res) {
           $('#chatRoomList').empty();
@@ -149,7 +149,7 @@
 
 // 채팅방 입장 버튼 생성
       const enterButton = document.createElement('a');
-      enterButton.href = '/api/v1/chats/rooms/' + chatRoom.id + '/front';
+      enterButton.href = '/api/v2/chats/rooms/' + chatRoom.id + '/front';
       enterButton.className = 'btn btn-primary';
       enterButton.innerHTML = '<i class="fas fa-comments"></i> 채팅방 입장';
 
@@ -181,11 +181,11 @@
 
     $.ajax({
       type: "DELETE",
-      url: `/api/v1/chats/rooms/` + id,
+      url: `/api/v2/chats/rooms/` + id,
     })
     .done(function (res) {
       console.log("채팅방을 종료하였습니다..");
-      window.location.href = host + '/api/v1/page/index';
+      window.location.href = host + '/';
     })
     .fail(function (res) {
       alert('전송실패');

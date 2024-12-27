@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {
     NOT_ROLE_USER(HttpStatus.BAD_REQUEST, "일반 유저가 아닙니다."),
+    NOT_ROLE_TRAINER(HttpStatus.BAD_REQUEST, "트레이너가 아닙니다."),
     NOT_ROLE_ADMIN(HttpStatus.BAD_REQUEST, "관리자가 아닙니다."),
     DELETED_USER(HttpStatus.BAD_REQUEST, "탈퇴된 회원입니다."),
     NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "해당 리프레시 토큰을 찾을 수 없습니다."),

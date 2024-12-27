@@ -8,7 +8,7 @@ import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
-@Table(name = "PT_Payments")
+@Table(name = "TB_PAYMENTS")
 @RequiredArgsConstructor
 public class Payment extends BaseEntity {
 

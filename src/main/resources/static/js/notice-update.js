@@ -6,7 +6,7 @@ $(document).ready(function () {
     // 공지사항 상세 내용 가져오기
     function getNoticeDetail() {
         $.ajax({
-            url: `/api/v1/admin/notice/${noticeId}`,  // GET 요청
+            url: `/api/v2/admin/notice/${noticeId}`,  // GET 요청
             type: 'GET',
             success: function (response) {
                 const notice = response || {};
@@ -26,14 +26,14 @@ $(document).ready(function () {
     // 공지사항 수정 요청
     function updateNotice(req) {
         $.ajax({
-            url: `/api/v1/admin/notice/${noticeId}`,  // PUT 요청
+            url: `/api/v2/admin/notice/${noticeId}`,  // PUT 요청
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(req),
         })
             .done(function (res) {
                 alert(res.msg);
-                window.location.href = `/api/v1/page/notice/${noticeId}`;  // 수정 후 상세 페이지로 이동
+                window.location.href = `/api/v2/page/notice/${noticeId}`;  // 수정 후 상세 페이지로 이동
             })
             .fail(function (res) {
                 const jsonObject = JSON.parse(res.responseText);

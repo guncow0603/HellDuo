@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 public enum ImageType {
     PROFILE_IMG("프로필"),
     CERTS_IMG("자격증"),
-    THUMBNAIL("썸네일"),
-    REGULAR("일반");
+    PT_IMG("PT"),
+    BANNER_IMG("배너"),
+    BOARD_IMG("게시판"),
+    REVIEW_IMG("리뷰");
+
     private final String type;
 }

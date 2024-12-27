@@ -42,7 +42,7 @@
     <!-- 헤더 -->
     <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
         <!-- 로고 -->
-        <a href="/api/v1/page/index" class="col-md-3 mb-2 mb-md-0 d-inline-flex text-decoration-none">
+        <a href="/" class="col-md-3 mb-2 mb-md-0 d-inline-flex text-decoration-none">
             <span class="fs-4">HellDuo</span>
         </a>
 
@@ -50,19 +50,19 @@
         <nav class="col-md-6 text-center">
             <ul class="nav justify-content-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="/api/v1/page/ptList" id="pt-list-page">피티 조회</a>
+                    <a class="nav-link" href="/api/v2/page/ptList" id="pt-list-page">피티 조회</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/api/v1/page/boardList" id="board">게시판</a>
+                    <a class="nav-link" href="/api/v2/page/boardList" id="board">게시판</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/api/v1/page/myPt" id="my-pt">내 PT</a>
+                    <a class="nav-link" href="/api/v2/page/myPt" id="my-pt">내 PT</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/api/v1/page/reviewList" id="review-list">리뷰 조회</a>
+                    <a class="nav-link" href="/api/v2/page/reviewList" id="review-list">리뷰 조회</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/api/v1/page/profile" id="my-page">마이페이지</a>
+                    <a class="nav-link" href="/api/v2/page/profile" id="my-page">마이페이지</a>
                 </li>
                 <li class="nav-item">
                     <button type="button" class="btn btn-outline-primary position-relative"
@@ -76,7 +76,7 @@
 
         <!-- 로그인/로그아웃 버튼 -->
         <div class="text-md-end">
-            <a href="/api/v1/page/login" class="btn btn-outline-primary" id="login-button">Login</a>
+            <a href="/api/v2/page/login" class="btn btn-outline-primary" id="login-button">Login</a>
             <a class="btn btn-outline-primary" id="logout-button">Logout</a>
         </div>
     </header>
@@ -89,7 +89,7 @@
             alert('로그인 후 이용 가능합니다.');
         } else {
             // 현재 URL을 기준으로 채팅방 URL로 이동
-            window.location.href = '/api/v1/chats/rooms/list';
+            window.location.href = '/api/v2/chats/rooms/list';
         }
     }
 </script>

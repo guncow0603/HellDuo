@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     // API 호출 URL
-    const apiUrl = "/api/v1/point/charge";
+    const apiUrl = "/api/v2/point/charge";
 
     // HTML 요소
     const tableBody = document.getElementById("charge-point-table-body");
