@@ -4,30 +4,32 @@ import com.hellduo.domain.board.dto.request.BoardCreateReq;
 import com.hellduo.domain.board.dto.request.BoardUpdateReq;
 import com.hellduo.domain.board.dto.response.*;
 import com.hellduo.domain.board.entity.Board;
+import com.hellduo.domain.board.exception.BoardErrorCode;
+import com.hellduo.domain.board.exception.BoardException;
 import com.hellduo.domain.board.repository.BoardRepository;
+import com.hellduo.domain.comment.entity.Comment;
+import com.hellduo.domain.imageFile.service.ImageFileService;
 import com.hellduo.domain.user.entity.User;
-import com.hellduo.domain.user.entity.enums.Gender;
-import com.hellduo.domain.user.entity.enums.Specialization;
 import com.hellduo.domain.user.entity.enums.UserRoleType;
-import com.hellduo.domain.user.entity.enums.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ActiveProfiles("test")
-public class BoardServiceTest {
+class BoardServiceTest {
 
     @InjectMocks
     private BoardService boardService;
@@ -36,81 +38,84 @@ public class BoardServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
-    private User user;
+    private ImageFileService imageFileService;
 
-    @Mock
-    private Board board;
     @BeforeEach
-    public void setUp() {
-        // User 객체 생성
-        user = User.builder()
-                .email("test@example.com")
-                .password("password123")
-                .role(UserRoleType.USER)  // 적절한 role 설정
-                .nickname("testUser")
-                .gender(Gender.MAN)  // 적절한 gender 설정
-                .age(30)
-                .weight(70.0)
-                .height(175.0)
-                .phoneNumber("010-1234-5678")
-                .name("Test User")
-                .specialization(Specialization.CROSSFIT)  // 적절한 specialization 설정
-                .experience(5)
-                .certifications("Certification A")
-                .bio("Test Bio")
-                .userStatus(UserStatus.ACTION)  // 적절한 상태 설정
-                .build();
-        // 테스트용 게시글 객체 설정
-        board = Board.builder()
-                .title("Test Title")
-                .content( "Test Content")
-                .user(user)
-                .build();
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
+    private User createUser(Long id, String email, UserRoleType role) {
+        User user = User.builder()
+                .email(email)
+                .role(role)
+                .build();
+        ReflectionTestUtils.setField(user, "id", id);
+        return user;
+    }
 
-
+    private Board createBoard(Long id, String title, String content, User user) {
+        Board board = Board.builder()
+                .title(title)
+                .content(content)
+                .user(user)
+                .build();
+        ReflectionTestUtils.setField(board, "id", id);
+        return board;
+    }
 
     @Test
-    public void testCreateBoard() {
-        board = new Board("Test Title", "Test Content", user);
-        ReflectionTestUtils.setField(board, "id", 1L);  // Board 객체의 id 설정
+    void createBoard_shouldCreateBoardSuccessfully() {
         // Given
-        BoardCreateReq req = new BoardCreateReq("Test Title", "Test Content");
+        User user = createUser(1L, "user@example.com", UserRoleType.USER);
+        BoardCreateReq req = new BoardCreateReq("Title", "Content");
+        Board board = createBoard(1L, req.title(), req.content(), user);
+
         when(boardRepository.save(any(Board.class))).thenReturn(board);
 
         // When
         BoardCreateRes response = boardService.createBoard(req, user);
 
-        response= new BoardCreateRes(board.getId(), "글 작성 완료");
         // Then
-        assertNotNull(response);
         assertEquals("글 작성 완료", response.msg());
-        assertEquals(1L, response.boardId());
+        verify(boardRepository, times(1)).save(any(Board.class));
     }
 
     @Test
-    public void testGetBoard() {
+    void getBoard_shouldReturnBoardDetails() {
         // Given
+        User user = createUser(1L, "user@example.com", UserRoleType.USER);
+        Board board = createBoard(1L, "Title", "Content", user);
+
+        // Comment에 User를 설정
+        Comment comment = Comment.builder()
+                .content("Comment 1")
+                .board(board)
+                .user(user) // User를 설정
+                .build();
+        board.setCommentList(Collections.singletonList(comment));
+
         when(boardRepository.findBoardByIdWithThrow(1L)).thenReturn(board);
-        ReflectionTestUtils.setField(board, "id", 1L);  // Board 객체의 id 설정
 
         // When
         BoardReadRes response = boardService.getBoard(1L);
 
         // Then
-        assertNotNull(response);
-        assertEquals(board.getId(), response.boardId());
-        assertEquals(board.getTitle(), response.title());
-        assertEquals(board.getContent(), response.content());
+        assertEquals(1L, response.boardId());
+        assertEquals("Title", response.title());
+        assertEquals("Content", response.content());
+        assertEquals(1, response.commentList().size());
+        verify(boardRepository, times(1)).findBoardByIdWithThrow(1L);
     }
 
+
     @Test
-    public void testUpdateBoard() {
+    void updateBoard_shouldUpdateBoardSuccessfully() {
         // Given
-        BoardUpdateReq req = new BoardUpdateReq("Updated Title", "Updated Content");
-        ReflectionTestUtils.setField(board, "id", 1L);  // Board 객체의 id 설정
-        ReflectionTestUtils.setField(user, "id", 1L);   // User 객체의 id 설정
+        User user = createUser(1L, "user@example.com", UserRoleType.USER);
+        Board board = createBoard(1L, "Old Title", "Old Content", user);
+        BoardUpdateReq req = new BoardUpdateReq("New Title", "New Content");
+
         when(boardRepository.findBoardByIdWithThrow(1L)).thenReturn(board);
 
         // When
@@ -118,29 +123,70 @@ public class BoardServiceTest {
 
         // Then
         assertEquals("수정 완료 되었습니다.", response.msg());
-        assertEquals("Updated Title", board.getTitle());
-        assertEquals("Updated Content", board.getContent());
+        assertEquals("New Title", board.getTitle());
+        assertEquals("New Content", board.getContent());
+        verify(boardRepository, times(1)).findBoardByIdWithThrow(1L);
     }
 
+    @Test
+    void deleteBoard_shouldDeleteBoardSuccessfully() {
+        // Given
+        User user = createUser(1L, "user@example.com", UserRoleType.USER);
+        Board board = createBoard(1L, "Title", "Content", user);
+
+        when(boardRepository.findBoardByIdWithThrow(1L)).thenReturn(board);
+
+        // When
+        BoardDeleteRes response = boardService.deleteBoard(1L, user);
+
+        // Then
+        assertEquals("게시글이 삭제 되었습니다.", response.msg());
+        verify(boardRepository, times(1)).delete(board);
+        verify(imageFileService, times(1)).deleteImages(1L, "board", user);
+    }
 
     @Test
-    public void testGetBestLikeBoard() {
+    void getBestLikeBoard_shouldReturnTop10LikedBoards() {
         // Given
-        Board topBoard = new Board("Best Title", "Best Content", user);
-        ReflectionTestUtils.setField(topBoard, "id", 2L);  // Board 객체의 id 설정
-        ReflectionTestUtils.setField(topBoard, "likeCount", 100L);  // Board 객체의 likeCount 설정
-        when(boardRepository.findTop10ByOrderByLikeCountDesc()).thenReturn(List.of(topBoard));
+        List<Board> boards = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            boards.add(createBoard((long) i, "Title" + i, "Content" + i, null));
+        }
+        when(boardRepository.findTop10ByOrderByLikeCountDesc()).thenReturn(boards);
 
         // When
         List<BestLikeBoardRes> response = boardService.getBestLikeBoard();
 
         // Then
-        assertEquals(1, response.size());
-        assertEquals(topBoard.getId(), response.get(0).boardId());
-        assertEquals(topBoard.getLikeCount(), response.get(0).boardLikeCount());
-        assertEquals(topBoard.getTitle(), response.get(0).title());
+        assertEquals(10, response.size());
+        assertEquals("Title1", response.get(0).title());
+        verify(boardRepository, times(1)).findTop10ByOrderByLikeCountDesc();
     }
 
+    @Test
+    void searchBoards_shouldReturnPagedResults() {
+        // Given
+        PageRequest pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "title"));
 
+        // Mock 데이터 생성
+        List<BoardsReadRes> boards = Collections.singletonList(
+                new BoardsReadRes(1L, "Title", 0L) // BoardsReadRes DTO로 데이터 준비
+        );
+        Page<BoardsReadRes> boardPage = new PageImpl<>(boards, pageable, 1);
 
+        // Mock 동작 설정
+        when(boardRepository.searchBoards(pageable, "keyword")).thenReturn(boardPage);
+
+        // When
+        Page<BoardsReadRes> response = boardService.searchBoards(0, 10, "title", true, "keyword");
+
+        // Then
+        assertNotNull(response);
+        assertEquals(1, response.getContent().size());
+        assertEquals("Title", response.getContent().get(0).title()); // 제목 확인
+        assertEquals(0, response.getContent().get(0).boardLikeCount());  // 좋아요 수 확인
+
+        // Repository 호출 여부 검증
+        verify(boardRepository, times(1)).searchBoards(pageable, "keyword");
+    }
 }
