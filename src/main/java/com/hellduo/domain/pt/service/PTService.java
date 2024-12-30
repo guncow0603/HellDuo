@@ -155,8 +155,11 @@ public class PTService {
     public PTDeleteRes ptDelete(Long ptId, User trainer) {
         PT pt = ptRepository.findPTByIdWithThrow(ptId);
 
-        if (!pt.getTrainer().getId().equals(trainer.getId())&& !trainer.getRole().equals(UserRoleType.ADMIN)) {
-            throw new PTException(PTErrorCode.NOT_OWN_TRAINER);
+        if (!pt.getTrainer().getId().equals(trainer.getId())) {
+            if (!trainer.getRole().equals(UserRoleType.ADMIN)) {
+                throw new PTException(PTErrorCode.NOT_OWN_TRAINER);
+            }
+
         }
 
         imageFileService.deleteImages(ptId,"pt",trainer);

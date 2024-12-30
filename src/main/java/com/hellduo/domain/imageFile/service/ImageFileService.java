@@ -16,7 +16,6 @@ import com.hellduo.domain.user.exception.UserException;
 import com.hellduo.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -174,7 +173,7 @@ public class ImageFileService {
         ImageFile imageFile = imageFileRepository.findById(imageId)
                 .orElseThrow(() -> new ImageException(ImageErrorCode.NOT_FOUND_IMAGE));
 
-        if(user.getId().equals(imageFile.getUser().getId())){
+        if(!user.getId().equals(imageFile.getUser().getId())){
             throw new ImageException(ImageErrorCode.IMAGE_CURRENT_USER);
         }
 
@@ -196,8 +195,10 @@ public class ImageFileService {
         // targetId와 category에 해당하는 이미지 조회
         List<ImageFile> imageFiles = imageFileRepository.findByTargetIdAndType(targetId, imageType);
 
-        if(user.getId().equals(imageFiles.get(0).getUser().getId())){
-            throw new ImageException(ImageErrorCode.IMAGE_CURRENT_USER);
+        if(!user.getId().equals(imageFiles.get(0).getUser().getId())){
+            if (!user.getRole().equals(UserRoleType.ADMIN)) {
+                throw new ImageException(ImageErrorCode.IMAGE_CURRENT_USER);
+            }
         }
 
         // 조회된 이미지가 없으면 예외 처리
