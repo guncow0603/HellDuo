@@ -903,3 +903,157 @@ public BoardReadRes getBoard(Long boardId) {
 - **코드 가독성**: 명확하고 효율적인 데이터 접근 방식을 사용.
 </details>
 
+# 프로젝트 디렉토리 구조
+
+이 프로젝트의 디렉토리 구조는 아래와 같습니다:크게 domain과 global로 나누었습니다.
+<details>
+  <summary>BackEnd</summary>
+├─main
+│  ├─java
+│  │  └─com
+│  │      └─hellduo
+│  │          ├─domain
+│  │          │  ├─admin
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  ├─request
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  │  └─enums
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─board
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  ├─request
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─board_like
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─chat
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  ├─request
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─chatRoom
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  ├─entity
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─comment
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  ├─request
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─common
+│  │          │  ├─imageFile
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  │  └─enums
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─notify
+│  │          │  ├─page
+│  │          │  │  └─controller
+│  │          │  ├─payment
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  ├─request
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─pt
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  ├─request
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  │  └─enums
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  ├─review
+│  │          │  │  ├─controller
+│  │          │  │  ├─dto
+│  │          │  │  │  ├─request
+│  │          │  │  │  └─response
+│  │          │  │  ├─entity
+│  │          │  │  ├─exception
+│  │          │  │  ├─repository
+│  │          │  │  └─service
+│  │          │  └─user
+│  │          │      ├─controller
+│  │          │      ├─dto
+│  │          │      │  ├─request
+│  │          │      │  └─response
+│  │          │      ├─entity
+│  │          │      │  └─enums
+│  │          │      ├─exception
+│  │          │      ├─repository
+│  │          │      └─service
+│  │          └─global
+│  │              ├─config
+│  │              ├─exception
+│  │              ├─intercept
+│  │              ├─jwt
+│  │              ├─redis
+│  │              ├─security
+│  │              └─util
+│  └─resources
+│      ├─static
+│      │  ├─images
+│      │  └─js
+│      └─templates
+│          ├─admin
+│          ├─auth
+│          ├─board
+│          ├─chat
+│          ├─payment
+│          ├─profile
+│          ├─pt
+│          └─review
+└─test
+    └─java
+        └─com
+            └─hellduo
+                └─domain
+                    ├─admin
+                    │  └─service
+                    ├─board
+                    │  └─service
+                    ├─board_like
+                    │  └─service
+                    ├─comment
+                    │  └─service
+                    ├─pt
+                    │  └─service
+                    ├─review
+                    │  └─service
+                    └─user
+                        └─service
+
+</details>
