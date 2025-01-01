@@ -395,7 +395,7 @@ hooks:
 </details>
 
 <details>
-  <summary> **채팅 시스템 구현**</summary>
+  <summary> 채팅 시스템 구현</summary>
 
 
 - **WebSocket**: 클라이언트와 서버 간의 지속적인 양방향 연결을 유지하며, 실시간 통신을 지원합니다. WebSocket을 통해 클라이언트와 서버가 실시간으로 데이터를 주고받을 수 있습니다.
@@ -538,7 +538,7 @@ public class ChatService {
 </details>
 
 <details>
-  <summary> **이미지 리사이징**</summary>
+  <summary> 이미지 리사이징</summary>
 
 ### 1. **리사이징을 위한 `BufferedImage` 사용**
 
@@ -737,7 +737,7 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
 </details>
 
 <details>
-  <summary> **실시간 알림 기능 구현**SSE(Server-Sent Events)를 사용</summary>
+  <summary> 실시간 알림 기능 구현 SSE(Server-Sent Events)를 사용</summary>
 
 
 ### **실시간 알림 기능 구현**SSE(Server-Sent Events)를 사용하여 서버에서 클라이언트로 실시간 메시지를 전달.
