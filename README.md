@@ -108,7 +108,7 @@
 
 ## 기술적 의사 결정
 <details>
-  <summary>### 인증 및 인가</summary>
+  <summary> 인증 및 인가</summary>
 
 ### JWT와 Redis 기반 리프레시 토큰 관리
 
@@ -151,7 +151,7 @@
 </details>
 
 <details>
-  <summary>### 레디스 분산락을 활용한 피티 예약 및 게시글 좋아요 구현</summary>
+  <summary> 레디스 분산락을 활용한 피티 예약 및 게시글 좋아요 구현</summary>
 
 
 ### 1. 분산락(Distributed Lock) 개념
@@ -185,7 +185,7 @@
 </details>
 
 <details>
-  <summary>### 캐싱을 통한 성능 최적화</summary>
+  <summary> 캐싱을 통한 성능 최적화</summary>
 
 ### 1. **캐싱된 기능 구현**
 
@@ -227,7 +227,7 @@
 </details>
 
 <details>
-  <summary>### 도커를 활용한 블루-그린 배포 구현(무중단 배포)</summary>
+  <summary> 도커를 활용한 블루-그린 배포 구현(무중단 배포)</summary>
 
 
 ### 1. **무중단 운영**
@@ -395,7 +395,7 @@ hooks:
 </details>
 
 <details>
-  <summary>### **채팅 시스템 구현**</summary>
+  <summary> **채팅 시스템 구현**</summary>
 
 
 - **WebSocket**: 클라이언트와 서버 간의 지속적인 양방향 연결을 유지하며, 실시간 통신을 지원합니다. WebSocket을 통해 클라이언트와 서버가 실시간으로 데이터를 주고받을 수 있습니다.
@@ -538,7 +538,7 @@ public class ChatService {
 </details>
 
 <details>
-  <summary>### **이미지 리사이징**</summary>
+  <summary> **이미지 리사이징**</summary>
 
 ### 1. **리사이징을 위한 `BufferedImage` 사용**
 
@@ -590,7 +590,7 @@ public class ChatService {
 </details>
 
 <details>
-  <summary>### QueryDSL을 활용한 페이징 처리</summary>
+  <summary> QueryDSL을 활용한 페이징 처리</summary>
 
 
 ### QueryDSL의 장점
@@ -737,7 +737,7 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
 </details>
 
 <details>
-  <summary>### **실시간 알림 기능 구현**SSE(Server-Sent Events)를 사용</summary>
+  <summary> **실시간 알림 기능 구현**SSE(Server-Sent Events)를 사용</summary>
 
 
 ### **실시간 알림 기능 구현**SSE(Server-Sent Events)를 사용하여 서버에서 클라이언트로 실시간 메시지를 전달.
@@ -826,7 +826,7 @@ public void notifyMessage(Long receiverId) {
 </details>
 
 <details>
-  <summary>### N+1 문제 해결(게시글 댓글 N+1 )</summary>
+  <summary>N+1 문제 해결(게시글 댓글 N+1 )</summary>
 
 ### 1. **N+1 문제란?**
 
