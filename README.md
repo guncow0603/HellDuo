@@ -344,7 +344,7 @@ jobs:
 
 ```
 dockerfile
-코드 복사
+
 FROM openjdk:17
 
 ARG JAR_FILE=build/libs/HellDuo-0.0.1-SNAPSHOT.jar
@@ -360,7 +360,7 @@ CMD ["sh", "-c", "java -jar -Dspring.profiles.active=prod app.jar"]
 
 ```yaml
 yaml
-코드 복사
+
 version: 0.0
 os: linux
 
@@ -422,7 +422,7 @@ hooks:
 
 ```java
 java
-코드 복사
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -484,7 +484,7 @@ public class ChatRoomService {
 
 ```java
 java
-코드 복사
+
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -557,7 +557,7 @@ public class ChatService {
     
     ```java
     java
-    코드 복사
+    
     Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
     BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
     outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
@@ -574,7 +574,7 @@ public class ChatService {
     
     ```java
     java
-    코드 복사
+    
     BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
     outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
     
@@ -606,7 +606,7 @@ public class ChatService {
 
 ```java
 java
-코드 복사
+
 @RequiredArgsConstructor
 public class CustomPTRepositoryImpl implements CustomPTRepository {
 
@@ -669,7 +669,7 @@ public class CustomPTRepositoryImpl implements CustomPTRepository {
 
 ```java
 java
-코드 복사
+
 @Repository
 @RequiredArgsConstructor
 public class CustomBoardRepositoryImpl implements CustomBoardRepository {
@@ -771,7 +771,7 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
 
 ```java
 java
-코드 복사
+
 @GetMapping("/api/v2/notifications/subscribe")
 public SseEmitter subscribe(@AuthenticationPrincipal UserDetailsImpl userDetails) {
     Long userId = userDetails.getUser().getId();
@@ -784,7 +784,7 @@ public SseEmitter subscribe(@AuthenticationPrincipal UserDetailsImpl userDetails
 
 ```java
 java
-코드 복사
+
 public SseEmitter subscribe(Long userId) {
     SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
 
@@ -845,7 +845,7 @@ N+1 문제는 JPA 또는 ORM(객체-관계 매핑)을 사용할 때 자주 발�
 
 ```java
 java
-코드 복사
+
 @Query("SELECT b FROM Board b LEFT JOIN FETCH b.commentList WHERE b.id = :boardId")
 Board findBoardByIdWithThrow(Long boardId);
 
@@ -863,7 +863,7 @@ Board findBoardByIdWithThrow(Long boardId);
 
 ```java
 java
-코드 복사
+
 @Transactional(readOnly = true)
 public BoardReadRes getBoard(Long boardId) {
     // JOIN FETCH로 N+1 문제를 해결하며 Board 엔티티를 조회
@@ -907,7 +907,7 @@ public BoardReadRes getBoard(Long boardId) {
 이 프로젝트의 디렉토리 구조는 아래와 같습니다:크게 domain과 global로 나누었습니다.
 <details>
   <summary>BackEnd</summary>
-```
+```java
 ├─main
 │  ├─java
 │  │  └─com
@@ -1055,6 +1055,7 @@ public BoardReadRes getBoard(Long boardId) {
                     │  └─service
                     └─user
                         └─service
+
 ```
 
 </details>
