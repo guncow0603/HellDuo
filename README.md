@@ -273,7 +273,6 @@
 
 ```yaml
 yaml
-코드 복사
 name: CICD
 
 on:
@@ -908,6 +907,7 @@ public BoardReadRes getBoard(Long boardId) {
 이 프로젝트의 디렉토리 구조는 아래와 같습니다:크게 domain과 global로 나누었습니다.
 <details>
   <summary>BackEnd</summary>
+```
 ├─main
 │  ├─java
 │  │  └─com
@@ -1055,5 +1055,6 @@ public BoardReadRes getBoard(Long boardId) {
                     │  └─service
                     └─user
                         └─service
+```
 
 </details>
